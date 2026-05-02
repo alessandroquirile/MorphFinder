@@ -1,15 +1,17 @@
 from abc import ABC
-from typing import Any, Dict, Iterable, Optional, Set, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 
 
 class AlgebraicStructure(ABC):
-    def __init__(self, elements: Iterable[Any]):
+    def __init__(self, elements: Iterable[Any], operations: Iterable[Dict[Tuple[Any, Any], Any]]):
         """
         Initializes an algebraic structure (a set of elements together with one or more operations).
 
         :param elements: An iterable of elements in the structure.
+        :param operations: An iterable of Cayley tables (dictionaries mapping (a, b) to results).
         """
         self.elements: Set[Any] = set(elements)
+        self.operations: List[Dict[Tuple[Any, Any], Any]] = list(operations)
 
 
 class Magma(AlgebraicStructure):
@@ -21,9 +23,13 @@ class Magma(AlgebraicStructure):
         :param cayley_table: A dictionary mapping (a, b) to the result of a * b.
         :raises ValueError: If the magma is not closed or the table is incomplete.
         """
-        super().__init__(elements)
-        self.cayley_table = cayley_table
+        super().__init__(elements, [cayley_table])
         self._validate()
+
+    @property
+    def cayley_table(self) -> Dict[Tuple[Any, Any], Any]:
+        """Returns the primary (and only) Cayley table for this Magma."""
+        return self.operations[0]
 
     def _validate(self) -> None:
         """Validates closure and completeness of the operation table."""

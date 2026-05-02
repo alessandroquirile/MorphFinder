@@ -30,9 +30,15 @@ MorphFinder is a Python-based library for working with finite algebraic structur
 ## Development Conventions
 
 ### Coding Style
-- **Naming**: Use `cayley_table` for internal operation storage and `op(a, b)` for the public operation interface.
+- **Naming**: Use `self.operations` (a list of Cayley tables) in the base class. Single-operation structures (like `Magma`) should provide a `@property` named `cayley_table` pointing to `self.operations[0]`.
 - **Types**: Use Python type hints (`typing` module) for all method signatures.
 - **Quantifiers**: Use Unicode symbols `∀` (for all) and `∃` (there exists) in docstrings to define mathematical axioms formally.
+
+### Multi-Operation Structures
+- For structures with multiple operations (like Rings and Fields), follow the convention:
+    - `index 0`: Addition
+    - `index 1`: Multiplication
+- Provide descriptive `@property` aliases (e.g., `addition_table`, `multiplication_table`) for clarity.
 
 ### Testing Practices
 - **Framework**: Use `pytest` for test execution.
