@@ -5,6 +5,9 @@ MorphFinder is a Python-based library for working with finite algebraic structur
 ## Project Overview
 
 - **Core Logic**: Located in `src/algebraic_structures.py`. It uses a Cayley table-based representation for finite magmas.
+- **Definitions**:
+    - **Algebraic Structure**: A set of elements together with one or more operations defined on it.
+    - **Magma**: An algebraic structure with a single binary operation.
 - **Architecture**: A strict inheritance hierarchy representing mathematical axioms:
     - `AlgebraicStructure` (Base)
     - `Magma` (Set + Operation)

@@ -5,7 +5,7 @@ from typing import Any, Dict, Iterable, Optional, Set, Tuple
 class AlgebraicStructure(ABC):
     def __init__(self, elements: Iterable[Any]):
         """
-        Initializes an algebraic structure.
+        Initializes an algebraic structure (a set of elements together with one or more operations).
 
         :param elements: An iterable of elements in the structure.
         """
@@ -15,7 +15,7 @@ class AlgebraicStructure(ABC):
 class Magma(AlgebraicStructure):
     def __init__(self, elements: Iterable[Any], cayley_table: Dict[Tuple[Any, Any], Any]):
         """
-        Initializes a finite Magma (a magma is a set with a single operation defined on it).
+        Initializes a finite Magma (an algebraic structure with a single operation defined on it).
 
         :param elements: An iterable of elements in the magma.
         :param cayley_table: A dictionary mapping (a, b) to the result of a * b.
