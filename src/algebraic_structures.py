@@ -154,7 +154,7 @@ class AbelianGroup(Group):
 
 def classify(elements: Set[Any], operation: Callable[[Any, Any], Any]) -> Magma:
     """
-    Analyzes the algebraic structure (S, op1) and returns an instance of the most specific subclass.
+    Analyzes the algebraic structure (S, op1, op2, ..., opn) and returns an instance of the most specific subclass.
     """
     magma = Magma(elements, operation)
 
