@@ -1,20 +1,24 @@
 # MorphFinder
 
-MorphFinder is a Python library designed for the study of finite algebraic structures. It provides a robust framework for verifying algebraic properties (associativity, commutativity, etc.) and automatically classifying structures into a formal mathematical hierarchy.
+MorphFinder is a Python library designed for the study of finite algebraic structures. It provides a robust framework
+for verifying algebraic properties (associativity, commutativity, etc.) and automatically classifying structures into a
+formal mathematical hierarchy.
 
-The project is built to support future work in finding and classifying morphisms (homomorphisms, isomorphisms, etc.) between finite algebraic structures.
+The project is built to support future work in finding and classifying morphisms (homomorphisms, isomorphisms, etc.)
+between finite algebraic structures.
 
 ## Features
 
 - **Formal Hierarchy**: Implements a strict inheritance-based model:
-  - `Magma` → `Semigroup` → `Monoid` → `Group` → `AbelianGroup`.
-- **Automatic Classification**: A `classify()` factory function that analyzes a Cayley table and returns the most specific applicable subclass.
+    - `Magma` → `Semigroup` → `Monoid` → `Group` → `AbelianGroup`.
+- **Automatic Classification**: A `classify()` factory function that analyzes a Cayley table and returns the most
+  specific applicable subclass.
 - **Property Verification**: Built-in logic for checking:
-  - Closure and Completeness
-  - Associativity (∀ a, b, c: (a*b)*c = a*(b*c))
-  - Identity element (∃ e: e*a = a*e = a)
-  - Inverses (∀ a, ∃ b: a*b = b*a = e)
-  - Commutativity (∀ a, b: a*b = b*a)
+    - Closure and Completeness
+    - Associativity (∀ a, b, c: (a*b)*c = a*(b*c))
+    - Identity element (∃ e: e*a = a*e = a)
+    - Inverses (∀ a, ∃ b: a*b = b*a = e)
+    - Commutativity (∀ a, b: a*b = b*a)
 - **Pre-computed Properties**: `Group` objects automatically pre-calculate inverse maps for efficient lookup.
 
 ## Usage
@@ -49,10 +53,13 @@ if hasattr(structure, 'inverse'):
 ## Installation
 
 ### Prerequisites
+
 - Python 3.12+
 
 ### Running Tests
+
 MorphFinder uses `pytest` for its test suite.
+
 ```bash
 pip install pytest
 pytest
