@@ -6,9 +6,10 @@ from src.algebras.monoid import Monoid
 class Group(Monoid):
     """A Monoid where every element has an inverse."""
 
-    def __init__(self, elements: Set[Any], operation: Callable[[Any, Any], Any], identity: Optional[Any] = None, op_name: str = "*"):
+    def __init__(self, elements: Set[Any], operation: Callable[[Any, Any], Any], identity: Optional[Any] = None):
         self._inverse_map: Dict[Any, Any] = {}
-        super().__init__(elements, operation, identity, op_name=op_name)
+        super().__init__(elements, operation, identity)
+        self.validate()
 
     @property
     def inverse_map(self) -> Dict[Any, Any]:
@@ -22,18 +23,18 @@ class Group(Monoid):
     def _build_inverse_map(self) -> Dict[Any, Any]:
         """Finds inverses: ∀ a ∈ S, ∃ b ∈ S s.t. a * b = b * a = e."""
         inv_map = {}
-        for a in self._elements:
-            for b in self._elements:
+        for a in self.elements:
+            for b in self.elements:
                 if self.op(a, b) == self.identity and self.op(b, a) == self.identity:
                     inv_map[a] = b
                     break
         return inv_map
 
     def validate(self) -> None:
-        """Validates closure, associativity, identity, and inverses."""
+        """Validates Monoid axioms and inverses."""
         super().validate()
         self._inverse_map = self._build_inverse_map()
-        if len(self._inverse_map) != len(self._elements):
+        if len(self._inverse_map) != len(self.elements):
             raise ValueError("Inverse elements not found for all elements in the Group.")
 
     def element_orders(self) -> Dict[Any, int]:
@@ -42,7 +43,7 @@ class Group(Monoid):
         In a finite group, every element has a finite order.
         """
         orders = {}
-        for x in self._elements:
+        for x in self.elements:
             current = x
             order = 1
             while current != self.identity:

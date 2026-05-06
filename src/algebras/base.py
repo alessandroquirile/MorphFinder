@@ -1,3 +1,4 @@
+import inspect
 from abc import ABC, abstractmethod
 from typing import Any, Callable, Dict, Set, Tuple
 
@@ -9,7 +10,7 @@ class CayleyTable:
     """
 
     def __init__(self, elements: Set[Any], operation: Callable[[Any, Any], Any]):
-        self._table = {
+        self._table: Dict[Tuple[Any, Any], Any] = {
             (a, b): operation(a, b) for a in elements for b in elements
         }
 
@@ -26,10 +27,13 @@ class BinaryOperation:
     Wraps a Callable and its pre-computed CayleyTable.
     """
 
-    def __init__(self, elements: Set[Any], operation: Callable[[Any, Any], Any], name: str = "*"):
-        self.name = name
+    def __init__(self, elements: Set[Any], operation: Callable[[Any, Any], Any]):
+        self._elements = frozenset(elements)
         self._operation = operation
+        
+        self._validate_arity()
         self._table = CayleyTable(elements, operation)
+        self.validate()
 
     def __call__(self, a: Any, b: Any) -> Any:
         """Evaluates the operation a * b using the Cayley table."""
@@ -39,6 +43,24 @@ class BinaryOperation:
     def table(self) -> CayleyTable:
         return self._table
 
+    def validate(self) -> None:
+        """Validates the properties of the binary operation."""
+        self._validate_arity()
+        self._validate_closure()
+
+    def _validate_arity(self) -> None:
+        """Validates that the operation is binary (arity 2)."""
+        signature = inspect.signature(self._operation)
+        arity = len(signature.parameters)
+        if arity != 2:
+            raise TypeError(f"Operation must be binary (arity 2), but got arity {arity}.")
+
+    def _validate_closure(self) -> None:
+        """Validates that the operation is closed on the carrier set."""
+        for result in self._table.values():
+            if result not in self._elements:
+                raise ValueError(f"Operation is not closed on the given set: result {result} not in S.")
+
 
 class AlgebraicStructure(ABC):
     """
@@ -47,16 +69,14 @@ class AlgebraicStructure(ABC):
     """
 
     def __init__(self, elements: Set[Any], *operations: BinaryOperation):
-        self._elements = frozenset(elements)
-        self._operations = tuple(operations)
+        self.elements = frozenset(elements)
+        self.operations = tuple(operations)
 
-    @property
     def elements(self) -> Set[Any]:
-        return set(self._elements)
+        return set(self.elements)
 
-    @property
     def operations(self) -> Tuple[BinaryOperation, ...]:
-        return self._operations
+        return self.operations
 
     @abstractmethod
     def validate(self) -> None:

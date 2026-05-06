@@ -6,35 +6,23 @@ from src.algebras.semigroup import Semigroup
 class Monoid(Semigroup):
     """A Semigroup with an identity element e."""
 
-    def __init__(self, elements: Set[Any], operation: Callable[[Any, Any], Any], identity: Optional[Any] = None, op_name: str = "*"):
-        # Initialize identity before calling super().__init__ which triggers validate()
+    def __init__(self, elements: Set[Any], operation: Callable[[Any, Any], Any], identity: Optional[Any] = None):
         self._identity = identity
-        super().__init__(elements, operation, op_name=op_name)
+        super().__init__(elements, operation)
 
     @property
     def identity(self) -> Any:
         """Returns the identity element of the monoid."""
         return self._identity
 
-    def _find_identity(self) -> Optional[Any]:
-        """Finds the identity element e ∈ S s.t. ∀ a ∈ S, e * a = a * e = a."""
-        for e in self._elements:
-            is_identity = True
-            for a in self._elements:
-                if self.op(e, a) != a or self.op(a, e) != a:
-                    is_identity = False
-                    break
-            if is_identity:
-                return e
-        return None
-
     def validate(self) -> None:
-        """Validates closure, associativity, and existence of identity."""
+        """Validates Semigroup axioms and existence of identity."""
         super().validate()
+
         if self._identity is None:
             self._identity = self._find_identity()
 
-        if self._identity is None or self._identity not in self._elements:
+        if self._identity is None or self._identity not in self.elements:
             raise ValueError("Identity element not found or invalid for Monoid.")
 
     def element_orders(self) -> Dict[Any, Optional[int]]:
@@ -43,7 +31,7 @@ class Monoid(Semigroup):
         The order of x is the smallest n > 0 such that x^n = e.
         """
         orders = {}
-        for x in self._elements:
+        for x in self.elements:
             current = x
             order = 1
             seen = {x}
@@ -56,3 +44,17 @@ class Monoid(Semigroup):
                 seen.add(current)
             orders[x] = order
         return orders
+
+    def _find_identity(self) -> Optional[Any]:
+        """Finds the identity element e ∈ S s.t. ∀ a ∈ S, e * a = a * e = a."""
+        for e in self.elements:
+            is_identity = True
+            for a in self.elements:
+                if self.op(e, a) != a or self.op(a, e) != a:
+                    is_identity = False
+                    break
+            if is_identity:
+                return e
+        return None
+
+

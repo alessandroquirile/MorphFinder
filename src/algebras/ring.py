@@ -7,37 +7,33 @@ from src.algebras.semigroup import Semigroup
 
 class Ring(AlgebraicStructure):
     """
-    A Ring (S, +, *) is an algebraic structure where:
-    1. (S, +) is an Abelian Group.
-    2. (S, *) is a Semigroup.
+    A Ring (R, +, *) is an algebraic structure where:
+    1. (R, +) is an Abelian Group.
+    2. (R, *) is a Semigroup.
     3. Multiplication distributes over addition.
     """
 
     def __init__(self, elements: Set[Any], add_op: Callable[[Any, Any], Any], mul_op: Callable[[Any, Any], Any]):
-        self.add = BinaryOperation(elements, add_op, name="+")
-        self.mul = BinaryOperation(elements, mul_op, name="*")
-        super().__init__(elements, self.add, self.mul)
+        self.additive_abelian_group = AbelianGroup(elements, add_op)
+        self.multiplicative_semigroup = Semigroup(elements, mul_op)
+        super().__init__(elements, self.additive_abelian_group.op, self.multiplicative_semigroup.op)
 
-        # Use composition to reuse validation logic
-        self._additive_part = AbelianGroup(elements, add_op, op_name="+")
-        self._multiplicative_part = Semigroup(elements, mul_op, op_name="*")
         self.validate()
 
     def validate(self) -> None:
-        """Validates ring axioms: additive group, multiplicative semigroup, and distributivity."""
-        # Validation for additive and multiplicative parts is handled during their instantiation.
+        """Validates ring axioms: additive ab. group, multiplicative semigroup, and distributivity."""
         if not self._is_distributive():
             raise ValueError("Distributivity violated: Structure is not a Ring.")
 
     def _is_distributive(self) -> bool:
         """Checks if multiplication distributes over addition: a*(b+c) = a*b + a*c and (a+b)*c = a*c + b*c."""
-        for a in self._elements:
-            for b in self._elements:
-                for c in self._elements:
+        for a in self.elements:
+            for b in self.elements:
+                for c in self.elements:
                     # Left distributivity: a * (b + c) = (a * b) + (a * c)
-                    if self.mul(a, self.add(b, c)) != self.add(self.mul(a, b), self.mul(a, c)):
+                    if self.multiplicative_semigroup.op(a, self.additive_abelian_group.op(b, c)) != self.additive_abelian_group.op(self.multiplicative_semigroup.op(a, b), self.multiplicative_semigroup.op(a, c)):
                         return False
                     # Right distributivity: (a + b) * c = (a * c) + (b * c)
-                    if self.mul(self.add(a, b), c) != self.add(self.mul(a, c), self.mul(b, c)):
+                    if self.multiplicative_semigroup.op(self.additive_abelian_group.op(a, b), c) != self.additive_abelian_group.op(self.multiplicative_semigroup.op(a, c), self.multiplicative_semigroup.op(b, c)):
                         return False
         return True

@@ -15,7 +15,7 @@ class TestAlgebrasModular(unittest.TestCase):
         g = AbelianGroup(elements, lambda a, b: (a + b) % 2)
         self.assertEqual(g.identity, 0)
         self.assertEqual(g.inverse(1), 1)
-        self.assertEqual(g.op_bin(1, 1), 0)
+        self.assertEqual(g.op(1, 1), 0)
 
     def test_z3_abelian_group(self):
         # Z3 under addition
@@ -23,7 +23,7 @@ class TestAlgebrasModular(unittest.TestCase):
         g = AbelianGroup(elements, lambda a, b: (a + b) % 3)
         self.assertEqual(g.identity, 0)
         self.assertEqual(g.inverse(1), 2)
-        self.assertEqual(g.op_bin(1, 2), 0)
+        self.assertEqual(g.op(1, 2), 0)
 
     def test_monoid_not_group(self):
         # {0, 1, 2} mod 3 under multiplication is a Monoid but not a Group
@@ -55,15 +55,15 @@ class TestAlgebrasModular(unittest.TestCase):
         add_op = lambda a, b: (a + b) % 2
         mul_op = lambda a, b: (a * b) % 2
         r = Ring(elements, add_op, mul_op)
-        self.assertEqual(r.add(1, 1), 0)
-        self.assertEqual(r.mul(1, 1), 1)
+        self.assertEqual(r.additive_abelian_group.op(1, 1), 0)
+        self.assertEqual(r.multiplicative_semigroup.op(1, 1), 1)
 
     def test_distributivity_violation(self):
-        # A structure that is not a ring (e.g., changing mul to always return 1)
+        # A structure that is not a ring (e.g., changing multiplicative_semigroup to always return 1)
         elements = {0, 1}
         add_op = lambda a, b: (a + b) % 2
         mul_op = lambda a, b: 1
-        # This will fail multiplication validation if we strictly use Semigroup for mul
+        # This will fail multiplication validation if we strictly use Semigroup for multiplicative_semigroup
         # because (0, 1) -> 1, (1, 1) -> 1, (0, 0) -> 1, (1, 0) -> 1 is associative.
         # But 1*(0+0) = 1*0 = 1 vs 1*0 + 1*0 = 1+1 = 0.
         with self.assertRaisesRegex(ValueError, "Distributivity violated"):
@@ -110,6 +110,18 @@ class TestAlgebrasModular(unittest.TestCase):
         orders = m.element_orders()
         self.assertEqual(orders[1], 1)
         self.assertIsNone(orders[0])
+
+    def test_invalid_arity(self):
+        # Magma requires a binary operation, but we provide a unary one
+        elements = {0, 1}
+        with self.assertRaisesRegex(TypeError, "must be binary"):
+            Magma(elements, lambda x: x)
+
+    def test_closure_violation(self):
+        # Operation a + b on {0, 1} is not closed (1 + 1 = 2)
+        elements = {0, 1}
+        with self.assertRaisesRegex(ValueError, "not closed"):
+            Magma(elements, lambda a, b: a + b)
 
 
 if __name__ == '__main__':

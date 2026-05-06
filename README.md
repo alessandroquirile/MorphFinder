@@ -36,8 +36,8 @@ print(f"Generating Set: {z2_add.find_generating_set()}")
 mul_op = lambda a, b: (a * b) % 2
 z2_ring = Ring(elements, add_op, mul_op)
 
-print(f"Ring Addition (1+1): {z2_ring.add(1, 1)}")
-print(f"Ring Multiplication (1*1): {z2_ring.mul(1, 1)}")
+print(f"Ring Addition (1+1): {z2_ring.additive_abelian_group(1, 1)}")
+print(f"Ring Multiplication (1*1): {z2_ring.multiplicative_semigroup(1, 1)}")
 ```
 
 ## Installation
