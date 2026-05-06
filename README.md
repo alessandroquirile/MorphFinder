@@ -1,82 +1,75 @@
 # MorphFinder
 
-MorphFinder is a Python library designed for the study of finite algebraic structures. It provides a robust framework
-for verifying algebraic properties (associativity, commutativity, etc.) and automatically classifying structures into a
-formal mathematical hierarchy.
-
-The project is built to support future work in finding and classifying morphisms (homomorphisms, isomorphisms, etc.)
-between finite algebraic structures.
+MorphFinder is a Python library designed for the study and exploration of finite algebraic structures. It provides a modular, readable framework for verifying algebraic axioms and finding relationships (morphisms) between structures using optimized backtracking.
 
 ## Features
 
-- **Formal Hierarchy**: Implements a strict inheritance-based model:
+- **Modular Formal Hierarchy**: Implements a strict inheritance-based model across dedicated modules:
     - `Magma` → `Semigroup` → `Monoid` → `Group` → `AbelianGroup`.
-- **Automatic Classification**: A `classify()` factory function that analyzes a Cayley table and returns the most
-  specific applicable subclass.
-- **Property Verification**: Built-in logic for checking:
-    - Closure and Completeness
-    - Associativity (∀ a, b, c: (a*b)*c = a*(b*c))
-    - Identity element (∃ e: e*a = a*e = a)
-    - Inverses (∀ a, ∃ b: a*b = b*a = e)
-    - Commutativity (∀ a, b: a*b = b*a)
-- **Pre-computed Properties**: `Group` objects automatically pre-calculate inverse maps for efficient lookup.
+- **Multi-Operation Structures**: Support for `Ring` structures using composition-based logic (Additive Abelian Group + Multiplicative Semigroup).
+- **Search Optimization (CSP)**: Built-in invariants to facilitate high-speed morphism discovery:
+    - **Generating Sets**: Find minimal subsets that generate the entire structure.
+    - **Element Orders**: Pre-computed orders for pruning search spaces.
+    - **Idempotents & Centers**: Structural invariants for mapping constraints.
+- **Readable Abstractions**:
+    - `CayleyTable`: Efficient and readable data storage.
+    - `BinaryOperation`: Textbook-like notation (`self.op(a, b)`) for mathematical clarity.
 
 ## Usage
 
 ```python
-from src.algebraic_structures import classify
+from src.algebras.abelian_group import AbelianGroup
+from src.algebras.ring import Ring
 
 # Define Z2 (integers modulo 2) under addition
 elements = {0, 1}
-cayley_table = {
-    (0, 0): 0,
-    (0, 1): 1,
-    (1, 0): 1,
-    (1, 1): 0,
-}
+add_op = lambda a, b: (a + b) % 2
 
-# Classify the structure
-structure = classify(elements, cayley_table)
+# Instantiate an Abelian Group
+z2_add = AbelianGroup(elements, add_op)
 
-print(f"Type: {type(structure).__name__}")
-# Output: Type: AbelianGroup
+print(f"Structure: {type(z2_add).__name__}")
+print(f"Identity: {z2_add.identity}")
+print(f"Generating Set: {z2_add.find_generating_set()}")
 
-if hasattr(structure, 'identity'):
-    print(f"Identity: {structure.identity}")
-    # Output: Identity: 0
+# Define Z2 as a Ring
+mul_op = lambda a, b: (a * b) % 2
+z2_ring = Ring(elements, add_op, mul_op)
 
-if hasattr(structure, 'inverse'):
-    print(f"Inverse of 1: {structure.inverse(1)}")
-    # Output: Inverse of 1: 1
+print(f"Ring Addition (1+1): {z2_ring.add(1, 1)}")
+print(f"Ring Multiplication (1*1): {z2_ring.mul(1, 1)}")
 ```
 
 ## Installation
 
 ### Prerequisites
 
-- Python 3.12+
+- Python 3.10+
 
 ### Running Tests
 
 MorphFinder uses `pytest` for its test suite.
 
 ```bash
-pip install pytest
-pytest
+pytest tests/test_algebras_modular.py
 ```
 
 ## Project Structure
 
-- `src/algebraic_structures.py`: Core logic and structure definitions.
-- `tests/test_algebraic_structures.py`: Unit tests for various algebraic structures.
-- `GEMINI.md`: Internal documentation and development conventions.
+- `src/algebras/`: Core algebraic logic.
+    - `base.py`: Operation and table abstractions.
+    - `magma.py` to `abelian_group.py`: Single-operation hierarchy.
+    - `ring.py`: Multi-operation structures.
+- `src/core/`: CSP-based backtracking and morphism discovery (In Progress).
+- `tests/`: Comprehensive validation suite.
 
 ## Roadmap
 
-- [ ] Implement Homomorphism finding algorithm between two `Magma` structures.
-- [ ] Implement Isomorphism verification.
-- [ ] Add support for multi-operation structures (Rings, Fields).
-- [ ] Visualization of Cayley tables.
+- [ ] Implement Optimized Backtracking Engine for Homomorphisms.
+- [ ] Implement Isomorphism/Automorphism classification.
+- [ ] Add support for Fields and Galois Theory.
+- [ ] Add support for Lattices and Order Relations.
+- [ ] Visualization of Categorical Morphisms (Graphviz/Cytoscape).
 
 ## License
 

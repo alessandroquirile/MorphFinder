@@ -1,62 +1,74 @@
-# MorphFinder
+# 🌀 MorphFinder: Project Blueprint
 
-MorphFinder is a Python-based library for working with finite algebraic structures. Its primary goal is to provide tools
-for verifying algebraic properties, classifying structures into a formal hierarchy, and ultimately finding and
-classifying morphisms between them.
+> **Status:** Implementation Phase (Algebras Complete)  
+> **Concept:** Automated Algebraic Morphism Discovery & Categorical Visualization
 
-## Project Overview
+---
 
-- **Core Logic**: Located in `src/algebraic_structures.py`. It uses a Cayley table-based representation for finite
-  magmas.
-- **Definitions**:
-    - **Algebraic Structure**: A set of elements together with one or more operations defined on it.
-    - **Magma**: An algebraic structure with a single binary operation.
-- **Architecture**: A strict inheritance hierarchy representing mathematical axioms:
-    - `AlgebraicStructure` (Base)
-    - `Magma` (Set + Operation)
-    - `Semigroup` (Associative Magma)
-    - `Monoid` (Semigroup + Identity)
-    - `Group` (Monoid + Inverses)
-    - `AbelianGroup` (Commutative Group)
-- **Factory Pattern**: The `classify()` function automatically identifies the most specific subclass for a given set and
-  Cayley table.
+## 📌 1. Project Vision
+**MorphFinder** is a computational algebra tool designed to explore the relationships between finite algebraic structures. It uses optimized backtracking algorithms to find, classify, and visualize homomorphisms, treating algebras as objects and mappings as morphisms within a categorical framework.
 
-## Building and Running
+## 🏗 2. System Architecture (`src/` layout)
+The project is structured to separate mathematical logic from search optimization and visualization.
 
-### Prerequisites
+```text
+src/
+├── core/                   # The CSP-based backtracking engine
+│   ├── backtracking.py     # Main recursive search logic
+│   ├── pruning.py          # Algebraic invariant filters (Order, Idempotency)
+│   └── classification.py   # Labeling (Mono/Epi/Iso/Auto)
+│
+├── algebras/               # Structural definitions (Modular & Readable)
+│   ├── base.py             # BinaryOperation & CayleyTable abstractions
+│   ├── magma.py            # Basic closure logic
+│   ├── semigroup.py        # Associative structures
+│   ├── monoid.py           # Identity element & orders
+│   ├── group.py            # Inverses & group properties
+│   ├── abelian_group.py    # Commutative groups
+│   └── ring.py             # Dual-operation structures (Composition-based)
+│
+├── graph/                  # Categorical visualization
+│   ├── builder.py          # Maps structures to Nodes and morphisms to Edges
+│   └── exporters.py        # Export to JSON, DOT, or Cytoscape.js
+│
+├── utils/                  # Support modules
+│   ├── generators.py       # Minimum generating set discovery
+│   └── sympy_bridge.py     # Conversion between SymPy objects
+│
+└── api.py                  # Main entry point for the MorphFinder class
+```
 
-- Python 3.12+
-- `pytest` for running tests.
+## 🧠 3. Core Algorithm: Optimized Backtracking
+To find all homomorphisms $f: A \to B$ where $f(a * b) = f(a) * f(b)$, MorphFinder treats the problem as a **Constraint Satisfaction Problem (CSP)**.
 
-### Key Commands
+### Key Strategies:
+1. **Minimum Generating Set ($G_{min}$):** Instead of mapping all elements of $A$, we only map a minimum set of generators. This reduces search space from $|B|^{|A|}$ to $|B|^{|G_{min}|}$.
+2. **Pruning Heuristics:**
+    *   **Groups:** The order of $f(g)$ in $B$ must divide the order of $g$ in $A$.
+    *   **Rings:** $f(1_A) = 1_B$ must hold for unital rings.
+    *   **Fields:** Characteristics must match ($char(A) = char(B)$).
+    *   **Semigroups:** Idempotent elements ($x^2=x$) must map to idempotent elements.
+3. **Consistency Checking:** As each generator is mapped, the engine checks for violations of structural relations before proceeding deeper into the recursion.
 
-- **Run Tests**: `pytest` or `python3 -m pytest tests/test_algebraic_structures.py`
-- **Install Dependencies**: (Currently only `pytest` is required) `pip install pytest`
+## 📈 4. Development Roadmap
+Development follows a path from maximum structural rigidity to maximum entropy.
 
-## Development Conventions
+1.  **Phase 1: Foundation (COMPLETED):** Modular implementation of Magmas, Semigroups, Monoids, Groups, and Rings with structural invariants (generating sets, orders, centers).
+2.  **Phase 2: CSP Engine:** Implementation of the optimized backtracking search and pruning heuristics.
+3.  **Phase 4: Fields & Galois Theory:** Implementation of $\mathbb{F}_{p^n}$ and field homomorphisms.
+4.  **Phase 5: Lattices:** Mapping order-preserving relations ($\le$) and Join/Meet operations.
 
-### Coding Style
+## 🏷 5. Categorical Classification
+Every discovered morphism is automatically classified based on its properties:
+*   **Monomorphism:** Injective mapping.
+*   **Epimorphism:** Surjective mapping.
+*   **Isomorphism:** Bijective mapping (Structural identity).
+*   **Endomorphism:** Mapping of a structure to itself ($A \to A$).
+*   **Automorphism:** A bijective endomorphism.
 
-- **Naming**: Use `self.operations` (a list of Cayley tables) in the base class. Single-operation structures (like
-  `Magma`) should provide a `@property` named `cayley_table` pointing to `self.operations[0]`.
-- **Types**: Use Python type hints (`typing` module) for all method signatures.
-- **Quantifiers**: Use Unicode symbols `∀` (for all) and `∃` (there exists) in docstrings to define mathematical axioms
-  formally.
+## 🛠 6. Tech Stack
+*   **Language:** Python 3.10+
+*   **Math Engine:** **SymPy** (for structure generation and symbolic pre-processing).
+*   **Storage:** **Dictionary-based Cayley Tables** (optimized for readability and mathematical clarity).
+*   **Visualization:** Graphviz / Cytoscape.js.
 
-### Multi-Operation Structures
-
-- For structures with multiple operations (like Rings and Fields), follow the convention:
-    - `index 0`: Addition
-    - `index 1`: Multiplication
-- Provide descriptive `@property` aliases (e.g., `addition_table`, `multiplication_table`) for clarity.
-
-### Testing Practices
-
-- **Framework**: Use `pytest` for test execution.
-- **Coverage**: Every new algebraic property or classification logic must be accompanied by tests using known finite
-  structures (e.g., $Z_n$ under addition, power sets under union/intersection).
-
-### Morphism Finding (Planned)
-
-- Future development will focus on implementing logic to find all homomorphisms $f: G \to H$
-  satisfying $f(a * b) = f(a) * f(b)$.
