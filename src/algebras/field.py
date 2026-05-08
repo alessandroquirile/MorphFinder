@@ -15,7 +15,6 @@ class Field(CommutativeRing, UnityRing):
 
     def __init__(self, elements: Set[Any], add_op: Callable[[Any, Any], Any], mul_op: Callable[[Any, Any], Any],
                  unity: Optional[Any] = None):
-        # Pass unity as a keyword argument to ensure it reaches UnityRing
         super().__init__(elements, add_op, mul_op, unity=unity)
 
     def validate(self) -> None:
