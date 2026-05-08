@@ -1,5 +1,3 @@
-from typing import Any, Callable, Set
-
 from src.algebras.magma import Magma
 
 

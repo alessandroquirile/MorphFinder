@@ -56,5 +56,3 @@ class Monoid(Semigroup):
             if is_identity:
                 return e
         return None
-
-

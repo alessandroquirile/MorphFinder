@@ -13,15 +13,17 @@ class Field(CommutativeRing, UnityRing):
     ℘(S,△,∩) is a field iff |S|=1.
     """
 
-    def __init__(self, elements: Set[Any], add_op: Callable[[Any, Any], Any], mul_op: Callable[[Any, Any], Any], unity: Optional[Any] = None):
+    def __init__(self, elements: Set[Any], add_op: Callable[[Any, Any], Any], mul_op: Callable[[Any, Any], Any],
+                 unity: Optional[Any] = None):
         # Pass unity as a keyword argument to ensure it reaches UnityRing
         super().__init__(elements, add_op, mul_op, unity=unity)
 
     def validate(self) -> None:
         """Validates ring axioms, commutativity, unity, and existence of inverses."""
         super().validate()
-        
+
         zero = self.zero
         for a in self.elements:
             if a != zero and not self.is_invertible(a):
-                raise ValueError(f"Non-zero element {a} does not have a multiplicative inverse: Structure is not a Field.")
+                raise ValueError(
+                    f"Non-zero element {a} does not have a multiplicative inverse: Structure is not a Field.")

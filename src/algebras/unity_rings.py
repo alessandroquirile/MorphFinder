@@ -10,14 +10,14 @@ class UnityRing(Ring):
     """
 
     def __init__(self, elements: Set[Any], add_op: Callable[[Any, Any], Any], mul_op: Callable[[Any, Any], Any],
-                 unity: Optional[Any] = None):
+                 unity: Optional[Any] = None, **kwargs):
         super().__init__(elements, add_op, mul_op)
-        self.multiplicative_monoid = Monoid(elements, mul_op, unity)
+        self.multiplicative_semigroup = Monoid(elements, mul_op, unity)
         self.validate()
 
     def validate(self) -> None:
         """Validates ring axioms and existence of multiplicative identity."""
         super().validate()
-        self.multiplicative_monoid.validate()
+        self.multiplicative_semigroup.validate()
         if self.unity is None:
             raise ValueError("Multiplicative identity (unity) not found: Structure is not a Unity Ring.")

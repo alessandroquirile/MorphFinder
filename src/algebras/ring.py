@@ -1,7 +1,7 @@
 from typing import Any, Callable, Set
 
 from src.algebras.abelian_group import AbelianGroup
-from src.algebras.base import AlgebraicStructure, BinaryOperation
+from src.algebras.base import AlgebraicStructure
 from src.algebras.semigroup import Semigroup
 
 
@@ -102,7 +102,7 @@ class Ring(AlgebraicStructure):
         from src.algebras.monoid import Monoid
         if isinstance(self.multiplicative_semigroup, Monoid):
             return self.multiplicative_semigroup.identity
-        
+
         # Manual search if it's just a Semigroup
         for e in self.elements:
             is_identity = True
@@ -134,9 +134,13 @@ class Ring(AlgebraicStructure):
             for b in self.elements:
                 for c in self.elements:
                     # Left distributivity: a * (b + c) = (a * b) + (a * c)
-                    if self.multiplicative_semigroup.op(a, self.additive_abelian_group.op(b, c)) != self.additive_abelian_group.op(self.multiplicative_semigroup.op(a, b), self.multiplicative_semigroup.op(a, c)):
+                    if self.multiplicative_semigroup.op(a, self.additive_abelian_group.op(b,
+                                                                                          c)) != self.additive_abelian_group.op(
+                            self.multiplicative_semigroup.op(a, b), self.multiplicative_semigroup.op(a, c)):
                         return False
                     # Right distributivity: (a + b) * c = (a * c) + (b * c)
-                    if self.multiplicative_semigroup.op(self.additive_abelian_group.op(a, b), c) != self.additive_abelian_group.op(self.multiplicative_semigroup.op(a, c), self.multiplicative_semigroup.op(b, c)):
+                    if self.multiplicative_semigroup.op(self.additive_abelian_group.op(a, b),
+                                                        c) != self.additive_abelian_group.op(
+                            self.multiplicative_semigroup.op(a, c), self.multiplicative_semigroup.op(b, c)):
                         return False
         return True

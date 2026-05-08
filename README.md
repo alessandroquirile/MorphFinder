@@ -1,12 +1,18 @@
 # MorphFinder
 
-MorphFinder is a Python library designed for the study and exploration of finite algebraic structures. It provides a modular, readable framework for verifying algebraic axioms and finding relationships (morphisms) between structures using optimized backtracking.
+MorphFinder is a Python library designed for the study and exploration of finite algebraic structures. It provides a
+modular, readable framework for verifying algebraic axioms and finding relationships (morphisms) between structures
+using optimized backtracking.
 
 ## Features
 
 - **Modular Formal Hierarchy**: Implements a strict inheritance-based model across dedicated modules:
     - `Magma` → `Semigroup` → `Monoid` → `Group` → `AbelianGroup`.
-- **Multi-Operation Structures**: Support for `Ring` structures using composition-based logic (Additive Abelian Group + Multiplicative Semigroup).
+- **Multi-Operation Structures**: Support for `Ring`, `CommutativeRing`, `UnityRing`, and `Field` structures using composition-based logic.
+- **Algebraic Discovery**: Built-in logic to identify:
+    - **Zero Divisors**: Discovery of left, right, and two-sided zero divisors.
+    - **Cancellation**: Verification of left/right cancellation properties.
+    - **Units & Inverses**: Identification of invertible elements and unity.
 - **Search Optimization (CSP)**: Built-in invariants to facilitate high-speed morphism discovery:
     - **Generating Sets**: Find minimal subsets that generate the entire structure.
     - **Element Orders**: Pre-computed orders for pruning search spaces.
@@ -18,26 +24,20 @@ MorphFinder is a Python library designed for the study and exploration of finite
 ## Usage
 
 ```python
-from src.algebras.abelian_group import AbelianGroup
-from src.algebras.ring import Ring
+from src.algebras.field import Field
 
-# Define Z2 (integers modulo 2) under addition
-elements = {0, 1}
-add_op = lambda a, b: (a + b) % 2
+# Define Z5 (integers modulo 5) as a Field
+elements = set(range(5))
+add_op = lambda a, b: (a + b) % 5
+mul_op = lambda a, b: (a * b) % 5
 
-# Instantiate an Abelian Group
-z2_add = AbelianGroup(elements, add_op)
+z5 = Field(elements, add_op, mul_op)
 
-print(f"Structure: {type(z2_add).__name__}")
-print(f"Identity: {z2_add.identity}")
-print(f"Generating Set: {z2_add.find_generating_set()}")
-
-# Define Z2 as a Ring
-mul_op = lambda a, b: (a * b) % 2
-z2_ring = Ring(elements, add_op, mul_op)
-
-print(f"Ring Addition (1+1): {z2_ring.additive_abelian_group(1, 1)}")
-print(f"Ring Multiplication (1*1): {z2_ring.multiplicative_semigroup(1, 1)}")
+print(f"Structure: {type(z5).__name__}")
+print(f"Zero: {z5.zero}")
+print(f"Unity: {z5.unity}")
+print(f"Zero Divisors: {z5.find_zero_divisors()}") # Empty set for a field
+print(f"Invertible Elements: {z5.find_invertible_elements()}") # {1, 2, 3, 4}
 ```
 
 ## Installation
@@ -51,7 +51,7 @@ print(f"Ring Multiplication (1*1): {z2_ring.multiplicative_semigroup(1, 1)}")
 MorphFinder uses `pytest` for its test suite.
 
 ```bash
-pytest tests/test_algebras_modular.py
+.venv/bin/pytest tests/test_algebras_modular.py
 ```
 
 ## Project Structure
@@ -59,7 +59,7 @@ pytest tests/test_algebras_modular.py
 - `src/algebras/`: Core algebraic logic.
     - `base.py`: Operation and table abstractions.
     - `magma.py` to `abelian_group.py`: Single-operation hierarchy.
-    - `ring.py`: Multi-operation structures.
+    - `ring.py` to `field.py`: Dual-operation structures.
 - `src/core/`: CSP-based backtracking and morphism discovery (In Progress).
 - `tests/`: Comprehensive validation suite.
 
@@ -67,7 +67,7 @@ pytest tests/test_algebras_modular.py
 
 - [ ] Implement Optimized Backtracking Engine for Homomorphisms.
 - [ ] Implement Isomorphism/Automorphism classification.
-- [ ] Add support for Fields and Galois Theory.
+- [x] Add support for Fields and Galois Theory.
 - [ ] Add support for Lattices and Order Relations.
 - [ ] Visualization of Categorical Morphisms (Graphviz/Cytoscape).
 

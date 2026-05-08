@@ -1,5 +1,4 @@
 import itertools
-from abc import abstractmethod
 from typing import Any, Callable, Set
 
 from src.algebras.base import AlgebraicStructure, BinaryOperation

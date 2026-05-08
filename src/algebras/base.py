@@ -30,7 +30,7 @@ class BinaryOperation:
     def __init__(self, elements: Set[Any], operation: Callable[[Any, Any], Any]):
         self._elements = frozenset(elements)
         self._operation = operation
-        
+
         self._validate_arity()
         self._table = CayleyTable(elements, operation)
         self.validate()

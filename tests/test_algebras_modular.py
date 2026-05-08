@@ -2,11 +2,13 @@ import unittest
 
 from src.algebras.abelian_group import AbelianGroup
 from src.algebras.commutative_ring import CommutativeRing
+from src.algebras.field import Field
 from src.algebras.group import Group
 from src.algebras.magma import Magma
 from src.algebras.monoid import Monoid
 from src.algebras.ring import Ring
 from src.algebras.semigroup import Semigroup
+from src.algebras.unity_rings import UnityRing
 
 
 class TestAlgebrasModular(unittest.TestCase):
@@ -58,7 +60,7 @@ class TestAlgebrasModular(unittest.TestCase):
         r = Ring(elements, add_op, mul_op)
         self.assertEqual(r.zero, 0)
         self.assertEqual(r.additive_abelian_group.op(1, 1), 0)
-        self.assertEqual(r.multiplicative_monoid.op(1, 1), 1)
+        self.assertEqual(r.multiplicative_semigroup.op(1, 1), 1)
 
     def test_zero_divisors_z6(self):
         # Z6 under addition and multiplication
@@ -107,6 +109,49 @@ class TestAlgebrasModular(unittest.TestCase):
         # 7. Units are a subset of cancellable elements
         self.assertTrue(units.issubset(cancellable))
 
+    def test_unity_ring_z6(self):
+        # Z6 is a unity ring
+        elements = set(range(6))
+        add_op = lambda a, b: (a + b) % 6
+        mul_op = lambda a, b: (a * b) % 6
+        ur = UnityRing(elements, add_op, mul_op)
+        self.assertEqual(ur.unity, 1)
+        self.assertTrue(ur.is_invertible(ur.unity))
+        self.assertTrue(ur.is_cancellable(ur.unity))
+
+    def test_unity_ring_validation(self):
+        # {0, 2} mod 4 is a ring but not a unity ring
+        elements = {0, 2}
+        add_op = lambda a, b: (a + b) % 4
+        mul_op = lambda a, b: (a * b) % 4
+        # Should work as a Ring
+        Ring(elements, add_op, mul_op)
+        # Should fail as a UnityRing
+        with self.assertRaisesRegex(ValueError, r"Multiplicative identity \(unity\) not found"):
+            UnityRing(elements, add_op, mul_op)
+
+    def test_field_z5(self):
+        # Z5 is a field
+        elements = set(range(5))
+        add_op = lambda a, b: (a + b) % 5
+        mul_op = lambda a, b: (a * b) % 5
+        f = Field(elements, add_op, mul_op)
+        self.assertEqual(f.unity, 1)
+        self.assertEqual(f.zero, 0)
+        # Check inverses: 1:1, 2:3, 3:2, 4:4
+        self.assertTrue(f.is_invertible(1))
+        self.assertTrue(f.is_invertible(2))
+        self.assertTrue(f.is_invertible(3))
+        self.assertTrue(f.is_invertible(4))
+
+    def test_field_z6_validation(self):
+        # Z6 is not a field (2, 3, 4 are zero divisors and not invertible)
+        elements = set(range(6))
+        add_op = lambda a, b: (a + b) % 6
+        mul_op = lambda a, b: (a * b) % 6
+        with self.assertRaisesRegex(ValueError, "does not have a multiplicative inverse"):
+            Field(elements, add_op, mul_op)
+
     def test_commutative_ring_validation(self):
         # Z2 is commutative
         elements = {0, 1}
@@ -119,13 +164,10 @@ class TestAlgebrasModular(unittest.TestCase):
         CommutativeRing(elements, add_op, mul_op)
 
     def test_distributivity_violation(self):
-        # A structure that is not a ring (e.g., changing multiplicative_monoid to always return 1)
+        # A structure that is not a ring (e.g., changing multiplicative_semigroup to always return 1)
         elements = {0, 1}
         add_op = lambda a, b: (a + b) % 2
         mul_op = lambda a, b: 1
-        # This will fail multiplication validation if we strictly use Semigroup for multiplicative_monoid
-        # because (0, 1) -> 1, (1, 1) -> 1, (0, 0) -> 1, (1, 0) -> 1 is associative.
-        # But 1*(0+0) = 1*0 = 1 vs 1*0 + 1*0 = 1+1 = 0.
         with self.assertRaisesRegex(ValueError, "Distributivity violated"):
             Ring(elements, add_op, mul_op)
 
@@ -158,8 +200,6 @@ class TestAlgebrasModular(unittest.TestCase):
         m = Monoid(elements, lambda a, b: (a * b) % 2)
 
         # Generating set: {0, 1} is needed? No, {0} generates {0}, {1} generates {1}.
-        # Wait, closure of {0} is {0}, closure of {1} is {1}. 
-        # To get {0, 1}, we need both.
         gen_set = m.find_generating_set()
         self.assertEqual(gen_set, {0, 1})
 
