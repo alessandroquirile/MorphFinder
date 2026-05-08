@@ -1,0 +1,23 @@
+from typing import Any, Callable, Optional, Set
+
+from src.algebras.monoid import Monoid
+from src.algebras.ring import Ring
+
+
+class UnityRing(Ring):
+    """
+    A Unity Ring (or Unital Ring) is a Ring (R,+,⋅) where (R,⋅) is a Monoid
+    """
+
+    def __init__(self, elements: Set[Any], add_op: Callable[[Any, Any], Any], mul_op: Callable[[Any, Any], Any],
+                 unity: Optional[Any] = None):
+        super().__init__(elements, add_op, mul_op)
+        self.multiplicative_monoid = Monoid(elements, mul_op, unity)
+        self.validate()
+
+    def validate(self) -> None:
+        """Validates ring axioms and existence of multiplicative identity."""
+        super().validate()
+        self.multiplicative_monoid.validate()
+        if self.unity is None:
+            raise ValueError("Multiplicative identity (unity) not found: Structure is not a Unity Ring.")
