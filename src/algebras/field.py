@@ -1,10 +1,10 @@
 from typing import Any, Callable, Optional, Set
 
 from src.algebras.commutative_ring import CommutativeRing
-from src.algebras.unity_rings import UnityRing
+from src.algebras.unital_ring import UnitalRing
 
 
-class Field(CommutativeRing, UnityRing):
+class Field(CommutativeRing, UnitalRing):
     """
     A Field is a Commutative Unity Ring where every non-zero element has a multiplicative inverse.
 

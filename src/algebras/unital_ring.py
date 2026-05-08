@@ -4,9 +4,9 @@ from src.algebras.monoid import Monoid
 from src.algebras.ring import Ring
 
 
-class UnityRing(Ring):
+class UnitalRing(Ring):
     """
-    A Unity Ring (or Unital Ring) is a Ring (R,+,⋅) where (R,⋅) is a Monoid
+    A Unital Ring is a Ring (R,+,⋅) where (R,⋅) is a Monoid
     """
 
     def __init__(self, elements: Set[Any], add_op: Callable[[Any, Any], Any], mul_op: Callable[[Any, Any], Any],

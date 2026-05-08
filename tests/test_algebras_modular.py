@@ -8,7 +8,7 @@ from src.algebras.magma import Magma
 from src.algebras.monoid import Monoid
 from src.algebras.ring import Ring
 from src.algebras.semigroup import Semigroup
-from src.algebras.unity_rings import UnityRing
+from src.algebras.unital_ring import UnitalRing
 
 
 class TestAlgebrasModular(unittest.TestCase):
@@ -114,7 +114,7 @@ class TestAlgebrasModular(unittest.TestCase):
         elements = set(range(6))
         add_op = lambda a, b: (a + b) % 6
         mul_op = lambda a, b: (a * b) % 6
-        ur = UnityRing(elements, add_op, mul_op)
+        ur = UnitalRing(elements, add_op, mul_op)
         self.assertEqual(ur.unity, 1)
         self.assertTrue(ur.is_invertible(ur.unity))
         # self.assertTrue(ur.is_cancellable(ur.unity))
@@ -126,9 +126,9 @@ class TestAlgebrasModular(unittest.TestCase):
         mul_op = lambda a, b: (a * b) % 4
         # Should work as a Ring
         Ring(elements, add_op, mul_op)
-        # Should fail as a UnityRing
+        # Should fail as a UnitalRing
         with self.assertRaisesRegex(ValueError, r"Multiplicative identity \(unity\) not found"):
-            UnityRing(elements, add_op, mul_op)
+            UnitalRing(elements, add_op, mul_op)
 
     def test_field_z5(self):
         # Z5 is a field
