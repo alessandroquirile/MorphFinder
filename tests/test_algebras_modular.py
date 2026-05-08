@@ -5,6 +5,7 @@ from src.algebras.group import Group
 from src.algebras.magma import Magma
 from src.algebras.monoid import Monoid
 from src.algebras.ring import Ring
+from src.algebras.commutative_ring import CommutativeRing
 from src.algebras.semigroup import Semigroup
 
 
@@ -55,8 +56,67 @@ class TestAlgebrasModular(unittest.TestCase):
         add_op = lambda a, b: (a + b) % 2
         mul_op = lambda a, b: (a * b) % 2
         r = Ring(elements, add_op, mul_op)
+        self.assertEqual(r.zero, 0)
         self.assertEqual(r.additive_abelian_group.op(1, 1), 0)
         self.assertEqual(r.multiplicative_semigroup.op(1, 1), 1)
+
+    def test_zero_divisors_z6(self):
+        # Z6 under addition and multiplication
+        elements = set(range(6))
+        add_op = lambda a, b: (a + b) % 6
+        mul_op = lambda a, b: (a * b) % 6
+        r = CommutativeRing(elements, add_op, mul_op)
+        
+        zero_divisors = r.find_zero_divisors()
+        # 2*3=0, 3*2=0, 3*4=0, 4*3=0
+        self.assertEqual(zero_divisors, {2, 3, 4})
+
+    def test_ring_propositions_z6(self):
+        # Z6 under addition and multiplication
+        elements = set(range(6))
+        add_op = lambda a, b: (a + b) % 6
+        mul_op = lambda a, b: (a * b) % 6
+        r = CommutativeRing(elements, add_op, mul_op)
+        
+        # 1. Unity exists and is 1
+        self.assertEqual(r.unity, 1)
+        
+        # 2. Zero divisors in Z6 are {2, 3, 4}
+        zero_divisors = r.find_zero_divisors()
+        self.assertEqual(zero_divisors, {2, 3, 4})
+        
+        # 3. Cancellable elements in Z6 are {1, 5}
+        cancellable = r.find_cancellable_elements()
+        self.assertEqual(cancellable, {1, 5})
+        
+        # 4. Invertible elements (units) in Z6 are {1, 5} (elements coprime to 6)
+        units = r.find_invertible_elements()
+        self.assertEqual(units, {1, 5})
+        
+        # 5. Proposition: Each non-zero element is either a zero divisor XOR cancellable
+        non_zero_elements = elements - {r.zero}
+        for a in non_zero_elements:
+            is_zd = a in zero_divisors
+            is_can = a in cancellable
+            # XOR logic: (A or B) and not (A and B)
+            self.assertTrue((is_zd or is_can) and not (is_zd and is_can), f"Element {a} failed XOR proposition")
+
+        # 6. Unity is cancellable
+        self.assertTrue(r.is_cancellable(r.unity))
+        
+        # 7. Units are a subset of cancellable elements
+        self.assertTrue(units.issubset(cancellable))
+
+    def test_commutative_ring_validation(self):
+        # Z2 is commutative
+        elements = {0, 1}
+        add_op = lambda a, b: (a + b) % 2
+        mul_op = lambda a, b: (a * b) % 2
+        r = Ring(elements, add_op, mul_op)
+        self.assertTrue(r.is_commutative())
+        
+        # Test that CommutativeRing accepts it
+        CommutativeRing(elements, add_op, mul_op)
 
     def test_distributivity_violation(self):
         # A structure that is not a ring (e.g., changing multiplicative_semigroup to always return 1)
