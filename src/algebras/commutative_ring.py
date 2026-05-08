@@ -8,7 +8,7 @@ class CommutativeRing(Ring):
 
     def __init__(self, elements: Set[Any], add_op: Callable[[Any, Any], Any], mul_op: Callable[[Any, Any], Any],
                  **kwargs):
-        super().__init__(elements, add_op, mul_op, **kwargs)
+        super().__init__(elements, add_op, mul_op)
 
     def validate(self) -> None:
         """Validates ring axioms and multiplicative commutativity."""
