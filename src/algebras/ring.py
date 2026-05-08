@@ -2,6 +2,7 @@ from typing import Any, Callable, Set
 
 from src.algebras.abelian_group import AbelianGroup
 from src.algebras.algebraic_structure import AlgebraicStructure
+from src.algebras.monoid import Monoid
 from src.algebras.semigroup import Semigroup
 
 
@@ -24,15 +25,30 @@ class Ring(AlgebraicStructure):
 
         self.validate()
 
+    def validate(self) -> None:
+        """Validates ring axioms: additive ab. group, multiplicative semigroup, and distributivity."""
+        if not self._is_distributive():
+            raise ValueError("Distributivity violated: Structure is not a Ring.")
+
     @property
     def zero(self) -> Any:
         """Returns the additive identity (zero) of the ring."""
         return self.additive_abelian_group.identity
 
-    def validate(self) -> None:
-        """Validates ring axioms: additive ab. group, multiplicative semigroup, and distributivity."""
-        if not self._is_distributive():
-            raise ValueError("Distributivity violated: Structure is not a Ring.")
+    @property
+    def unity(self) -> Any:
+        """Returns the multiplicative identity (1) if it exists, else None."""
+        if isinstance(self.multiplicative_semigroup, Monoid):
+            return self.multiplicative_semigroup.identity
+        for e in self.elements:
+            is_identity = True
+            for a in self.elements:
+                if self.multiplicative_semigroup.op(e, a) != a or self.multiplicative_semigroup.op(a, e) != a:
+                    is_identity = False
+                    break
+            if is_identity:
+                return e
+        return None
 
     def find_zero_divisors(self) -> Set[Any]:
         """
@@ -61,59 +77,6 @@ class Ring(AlgebraicStructure):
                     return False
         return True
 
-    def is_left_cancellable(self, a: Any) -> bool:
-        """Checks if a is left-cancellable: a*b = a*c => b = c for all b, c."""
-        for b in self.elements:
-            for c in self.elements:
-                if self.multiplicative_semigroup.op(a, b) == self.multiplicative_semigroup.op(a, c):
-                    if b != c:
-                        return False
-        return True
-
-    def find_left_cancellable_elements(self) -> Set[Any]:
-        """Returns the set of all left-cancellable elements."""
-        return {a for a in self.elements if self.is_left_cancellable(a)}
-
-    def is_right_cancellable(self, a: Any) -> bool:
-        """Checks if a is right-cancellable: b*a = c*a => b = c for all b, c."""
-        for b in self.elements:
-            for c in self.elements:
-                if self.multiplicative_semigroup.op(b, a) == self.multiplicative_semigroup.op(c, a):
-                    if b != c:
-                        return False
-        return True
-
-    def find_right_cancellable_elements(self) -> Set[Any]:
-        """Returns the set of all right-cancellable elements."""
-        return {a for a in self.elements if self.is_right_cancellable(a)}
-
-    def is_cancellable(self, a: Any) -> bool:
-        """An element is cancellable if it is both left and right cancellable."""
-        return self.is_left_cancellable(a) and self.is_right_cancellable(a)
-
-    def find_cancellable_elements(self) -> Set[Any]:
-        """Returns the set of all cancellable elements."""
-        return {a for a in self.elements if self.is_cancellable(a)}
-
-    @property
-    def unity(self) -> Any:
-        """Returns the multiplicative identity (1) if it exists, else None."""
-        # Check if the multiplicative structure is already a Monoid
-        from src.algebras.monoid import Monoid
-        if isinstance(self.multiplicative_semigroup, Monoid):
-            return self.multiplicative_semigroup.identity
-
-        # Manual search if it's just a Semigroup
-        for e in self.elements:
-            is_identity = True
-            for a in self.elements:
-                if self.multiplicative_semigroup.op(e, a) != a or self.multiplicative_semigroup.op(a, e) != a:
-                    is_identity = False
-                    break
-            if is_identity:
-                return e
-        return None
-
     def is_invertible(self, a: Any) -> bool:
         """Checks if an element has a multiplicative inverse (requires unity)."""
         u = self.unity
@@ -136,11 +99,11 @@ class Ring(AlgebraicStructure):
                     # Left distributivity: a * (b + c) = (a * b) + (a * c)
                     if self.multiplicative_semigroup.op(a, self.additive_abelian_group.op(b,
                                                                                           c)) != self.additive_abelian_group.op(
-                            self.multiplicative_semigroup.op(a, b), self.multiplicative_semigroup.op(a, c)):
+                        self.multiplicative_semigroup.op(a, b), self.multiplicative_semigroup.op(a, c)):
                         return False
                     # Right distributivity: (a + b) * c = (a * c) + (b * c)
                     if self.multiplicative_semigroup.op(self.additive_abelian_group.op(a, b),
                                                         c) != self.additive_abelian_group.op(
-                            self.multiplicative_semigroup.op(a, c), self.multiplicative_semigroup.op(b, c)):
+                        self.multiplicative_semigroup.op(a, c), self.multiplicative_semigroup.op(b, c)):
                         return False
         return True

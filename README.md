@@ -8,7 +8,8 @@ using optimized backtracking.
 
 - **Modular Formal Hierarchy**: Implements a strict inheritance-based model across dedicated modules:
     - `Magma` → `Semigroup` → `Monoid` → `Group` → `AbelianGroup`.
-- **Multi-Operation Structures**: Support for `Ring`, `CommutativeRing`, `UnityRing`, and `Field` structures using composition-based logic.
+- **Multi-Operation Structures**: Support for `Ring`, `CommutativeRing`, `UnityRing`, and `Field` structures using
+  composition-based logic.
 - **Algebraic Discovery**: Built-in logic to identify:
     - **Zero Divisors**: Discovery of left, right, and two-sided zero divisors.
     - **Cancellation**: Verification of left/right cancellation properties.
@@ -36,8 +37,8 @@ z5 = Field(elements, add_op, mul_op)
 print(f"Structure: {type(z5).__name__}")
 print(f"Zero: {z5.zero}")
 print(f"Unity: {z5.unity}")
-print(f"Zero Divisors: {z5.find_zero_divisors()}") # Empty set for a field
-print(f"Invertible Elements: {z5.find_invertible_elements()}") # {1, 2, 3, 4}
+print(f"Zero Divisors: {z5.find_zero_divisors()}")  # Empty set for a field
+print(f"Invertible Elements: {z5.find_invertible_elements()}")  # {1, 2, 3, 4}
 ```
 
 ## Installation

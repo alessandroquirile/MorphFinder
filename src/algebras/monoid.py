@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, Optional, Set
+from typing import Any, Callable, Optional, Set
 
 from src.algebras.semigroup import Semigroup
 
@@ -24,26 +24,6 @@ class Monoid(Semigroup):
 
         if self._identity is None or self._identity not in self.elements:
             raise ValueError("Identity element not found or invalid for Monoid.")
-
-    def element_orders(self) -> Dict[Any, Optional[int]]:
-        """
-        Computes the order of each element in the monoid.
-        The order of x is the smallest n > 0 such that x^n = e.
-        """
-        orders = {}
-        for x in self.elements:
-            current = x
-            order = 1
-            seen = {x}
-            while current != self.identity:
-                current = self.op(current, x)
-                order += 1
-                if current in seen and current != self.identity:
-                    order = None
-                    break
-                seen.add(current)
-            orders[x] = order
-        return orders
 
     def _find_identity(self) -> Optional[Any]:
         """Finds the identity element e ∈ S s.t. ∀ a ∈ S, e * a = a * e = a."""

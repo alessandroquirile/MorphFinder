@@ -32,7 +32,7 @@ class BinaryOperation:
 
         self._validate_arity()
         self._table = CayleyTable(elements, operation)
-        self.validate()
+        self._validate_closure()
 
     def __call__(self, a: Any, b: Any) -> Any:
         """Evaluates the operation a * b using the Cayley table."""
@@ -41,11 +41,6 @@ class BinaryOperation:
     @property
     def table(self) -> CayleyTable:
         return self._table
-
-    def validate(self) -> None:
-        """Validates the properties of the binary operation."""
-        self._validate_arity()
-        self._validate_closure()
 
     def _validate_arity(self) -> None:
         """Validates that the operation is binary (arity 2)."""

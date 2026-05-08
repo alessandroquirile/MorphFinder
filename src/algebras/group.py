@@ -36,18 +36,3 @@ class Group(Monoid):
         self._inverse_map = self._build_inverse_map()
         if len(self._inverse_map) != len(self.elements):
             raise ValueError("Inverse elements not found for all elements in the Group.")
-
-    def element_orders(self) -> Dict[Any, int]:
-        """
-        Computes the order of each element in the group.
-        In a finite group, every element has a finite order.
-        """
-        orders = {}
-        for x in self.elements:
-            current = x
-            order = 1
-            while current != self.identity:
-                current = self.op(current, x)
-                order += 1
-            orders[x] = order
-        return orders
