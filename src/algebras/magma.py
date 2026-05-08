@@ -1,7 +1,8 @@
 import itertools
 from typing import Any, Callable, Set
 
-from src.algebras.base import AlgebraicStructure, BinaryOperation
+from src.algebras.algebraic_structure import AlgebraicStructure
+from src.algebras.binary_operation import BinaryOperation
 
 
 class Magma(AlgebraicStructure):
