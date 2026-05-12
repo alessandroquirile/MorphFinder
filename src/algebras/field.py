@@ -14,14 +14,12 @@ class Field(CommutativeRing, UnitalRing):
     """
 
     def __init__(self, elements: Set, add_op: Callable, mul_op: Callable, unity: Optional[Any] = None):
-        # Explicitly call parent constructors
         UnitalRing.__init__(self, elements, add_op, mul_op, unity=unity)
         CommutativeRing.__init__(self, elements, add_op, mul_op)
 
     def validate(self) -> None:
         """Validates ring axioms, commutativity, unity, and existence of inverses."""
         super().validate()
-
         zero = self.zero
         for a in self.elements:
             if a != zero and not self.is_invertible(a):

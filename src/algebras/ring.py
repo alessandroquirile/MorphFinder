@@ -21,7 +21,6 @@ class Ring(AlgebraicStructure):
         self.additive_abelian_group = AbelianGroup(elements, add_op)
         self.multiplicative_semigroup = Semigroup(elements, mul_op)
         super().__init__(elements, self.additive_abelian_group.op, self.multiplicative_semigroup.op)
-
         self.validate()
 
     def validate(self) -> None:
@@ -87,7 +86,6 @@ class Ring(AlgebraicStructure):
         """Checks if multiplication distributes over addition: a*(b+c) = a*b + a*c and (a+b)*c = a*c + b*c."""
         add_op = self.additive_abelian_group.op
         mul_op = self.multiplicative_semigroup.op
-
         for a in self.elements:
             for b in self.elements:
                 for c in self.elements:

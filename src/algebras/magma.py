@@ -12,7 +12,6 @@ class Magma(AlgebraicStructure):
     def __init__(self, elements: Set, operation: Callable):
         self.op = BinaryOperation(elements, operation)
         super().__init__(elements, self.op)
-
         self.validate()
 
     def validate(self) -> None:
