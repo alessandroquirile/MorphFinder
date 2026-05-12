@@ -10,7 +10,7 @@ class UnitalRing(Ring):
     """
 
     def __init__(self, elements: Set, add_op: Callable, mul_op: Callable,
-                 unity: Optional[Any] = None, **kwargs):
+                 unity: Optional[Any] = None):
         super().__init__(elements, add_op, mul_op)
         self.multiplicative_semigroup = Monoid(elements, mul_op, unity)
         self.validate()

@@ -6,8 +6,7 @@ from src.algebras.ring import Ring
 class CommutativeRing(Ring):
     """A Ring where multiplication is commutative."""
 
-    def __init__(self, elements: Set, add_op: Callable, mul_op: Callable,
-                 **kwargs):
+    def __init__(self, elements: Set, add_op: Callable, mul_op: Callable):
         super().__init__(elements, add_op, mul_op)
 
     def validate(self) -> None:
