@@ -1,4 +1,4 @@
-from typing import Any, Callable, Optional, Set
+from typing import Callable, Optional, Set, Any
 
 from src.algebras.commutative_ring import CommutativeRing
 from src.algebras.unital_ring import UnitalRing
@@ -13,7 +13,7 @@ class Field(CommutativeRing, UnitalRing):
     ℘(S,△,∩) is a field iff |S|=1.
     """
 
-    def __init__(self, elements: Set[Any], add_op: Callable[[Any, Any], Any], mul_op: Callable[[Any, Any], Any],
+    def __init__(self, elements: Set, add_op: Callable, mul_op: Callable,
                  unity: Optional[Any] = None):
         super().__init__(elements, add_op, mul_op, unity=unity)
 

@@ -9,7 +9,7 @@ class UnitalRing(Ring):
     A Unital Ring is a Ring (R,+,⋅) where (R,⋅) is a Monoid
     """
 
-    def __init__(self, elements: Set[Any], add_op: Callable[[Any, Any], Any], mul_op: Callable[[Any, Any], Any],
+    def __init__(self, elements: Set, add_op: Callable, mul_op: Callable,
                  unity: Optional[Any] = None, **kwargs):
         super().__init__(elements, add_op, mul_op)
         self.multiplicative_semigroup = Monoid(elements, mul_op, unity)

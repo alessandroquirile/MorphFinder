@@ -1,5 +1,5 @@
 import inspect
-from typing import Any, Callable, Dict, Set, Tuple
+from typing import Callable, Dict, Set, Tuple, Any
 
 
 class CayleyTable:
@@ -8,12 +8,12 @@ class CayleyTable:
     Maps (a, b) -> result for elements in the carrier set.
     """
 
-    def __init__(self, elements: Set[Any], operation: Callable[[Any, Any], Any]):
-        self._table: Dict[Tuple[Any, Any], Any] = {
+    def __init__(self, elements: Set, operation: Callable):
+        self._table: Dict[Tuple, Any] = {
             (a, b): operation(a, b) for a in elements for b in elements
         }
 
-    def __getitem__(self, pair: Tuple[Any, Any]) -> Any:
+    def __getitem__(self, pair: Tuple) -> Any:
         return self._table[pair]
 
     def values(self):
@@ -26,7 +26,7 @@ class BinaryOperation:
     Wraps a Callable and its pre-computed CayleyTable.
     """
 
-    def __init__(self, elements: Set[Any], operation: Callable[[Any, Any], Any]):
+    def __init__(self, elements: Set, operation: Callable):
         self._elements = frozenset(elements)
         self._operation = operation
 

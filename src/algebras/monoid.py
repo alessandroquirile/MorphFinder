@@ -1,4 +1,4 @@
-from typing import Any, Callable, Optional, Set
+from typing import Callable, Optional, Set, Any
 
 from src.algebras.semigroup import Semigroup
 
@@ -6,7 +6,7 @@ from src.algebras.semigroup import Semigroup
 class Monoid(Semigroup):
     """A Semigroup with an identity element e."""
 
-    def __init__(self, elements: Set[Any], operation: Callable[[Any, Any], Any], identity: Optional[Any] = None):
+    def __init__(self, elements: Set, operation: Callable, identity: Optional[Any] = None):
         self._identity = identity
         super().__init__(elements, operation)
 

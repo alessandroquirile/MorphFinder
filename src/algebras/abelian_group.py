@@ -1,4 +1,4 @@
-from typing import Any, Callable, Optional, Set
+from typing import Callable, Optional, Set, Any
 
 from src.algebras.group import Group
 
@@ -6,7 +6,7 @@ from src.algebras.group import Group
 class AbelianGroup(Group):
     """A commutative Group."""
 
-    def __init__(self, elements: Set[Any], operation: Callable[[Any, Any], Any], identity: Optional[Any] = None):
+    def __init__(self, elements: Set, operation: Callable, identity: Optional[Any] = None):
         super().__init__(elements, operation, identity)
         self.validate()
 

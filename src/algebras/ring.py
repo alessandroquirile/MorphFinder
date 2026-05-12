@@ -1,4 +1,4 @@
-from typing import Any, Callable, Set
+from typing import Callable, Set, Any
 
 from src.algebras.abelian_group import AbelianGroup
 from src.algebras.algebraic_structure import AlgebraicStructure
@@ -18,7 +18,7 @@ class Ring(AlgebraicStructure):
     (ℕ,+,⋅) is not a ring.
     """
 
-    def __init__(self, elements: Set[Any], add_op: Callable[[Any, Any], Any], mul_op: Callable[[Any, Any], Any]):
+    def __init__(self, elements: Set, add_op: Callable, mul_op: Callable):
         self.additive_abelian_group = AbelianGroup(elements, add_op)
         self.multiplicative_semigroup = Semigroup(elements, mul_op)
         super().__init__(elements, self.additive_abelian_group.op, self.multiplicative_semigroup.op)
@@ -50,7 +50,7 @@ class Ring(AlgebraicStructure):
                 return e
         return None
 
-    def find_zero_divisors(self) -> Set[Any]:
+    def find_zero_divisors(self) -> Set:
         """
         Finds all zero divisors of the ring.
         An element a ∈ R, a ≠ 0, is a zero divisor if there exists
@@ -87,7 +87,7 @@ class Ring(AlgebraicStructure):
                 return True
         return False
 
-    def find_invertible_elements(self) -> Set[Any]:
+    def find_invertible_elements(self) -> Set:
         """Returns the set of all units (invertible elements)."""
         return {a for a in self.elements if self.is_invertible(a)}
 

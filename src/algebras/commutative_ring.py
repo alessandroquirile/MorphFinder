@@ -1,4 +1,4 @@
-from typing import Any, Callable, Set
+from typing import Callable, Set, Any
 
 from src.algebras.ring import Ring
 
@@ -6,7 +6,7 @@ from src.algebras.ring import Ring
 class CommutativeRing(Ring):
     """A Ring where multiplication is commutative."""
 
-    def __init__(self, elements: Set[Any], add_op: Callable[[Any, Any], Any], mul_op: Callable[[Any, Any], Any],
+    def __init__(self, elements: Set, add_op: Callable, mul_op: Callable,
                  **kwargs):
         super().__init__(elements, add_op, mul_op)
 

@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, Optional, Set
+from typing import Callable, Dict, Optional, Set, Any
 
 from src.algebras.monoid import Monoid
 
@@ -6,13 +6,13 @@ from src.algebras.monoid import Monoid
 class Group(Monoid):
     """A Monoid where every element has an inverse."""
 
-    def __init__(self, elements: Set[Any], operation: Callable[[Any, Any], Any], identity: Optional[Any] = None):
-        self._inverse_map: Dict[Any, Any] = {}
+    def __init__(self, elements: Set, operation: Callable, identity: Optional[Any] = None):
+        self._inverse_map: Dict = {}
         super().__init__(elements, operation, identity)
         self.validate()
 
     @property
-    def inverse_map(self) -> Dict[Any, Any]:
+    def inverse_map(self) -> Dict:
         """Returns the mapping of elements to their inverses."""
         return self._inverse_map
 
@@ -20,7 +20,7 @@ class Group(Monoid):
         """Returns the inverse of element a."""
         return self._inverse_map[a]
 
-    def _build_inverse_map(self) -> Dict[Any, Any]:
+    def _build_inverse_map(self) -> Dict:
         """Finds inverses: ∀ a ∈ S, ∃ b ∈ S s.t. a * b = b * a = e."""
         inv_map = {}
         for a in self.elements:
