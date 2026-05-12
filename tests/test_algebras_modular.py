@@ -87,27 +87,9 @@ class TestAlgebrasModular(unittest.TestCase):
         zero_divisors = r.find_zero_divisors()
         self.assertEqual(zero_divisors, {2, 3, 4})
 
-        # # 3. Cancellable elements in Z6 are {1, 5}
-        # cancellable = r.find_cancellable_elements()
-        # self.assertEqual(cancellable, {1, 5})
-
         # 4. Invertible elements (units) in Z6 are {1, 5} (elements coprime to 6)
         units = r.find_invertible_elements()
         self.assertEqual(units, {1, 5})
-
-        # # 5. Proposition: Each non-zero element is either a zero divisor XOR cancellable
-        # non_zero_elements = elements - {r.zero}
-        # for a in non_zero_elements:
-        #     is_zd = a in zero_divisors
-        #     is_can = a in cancellable
-        #     # XOR logic: (A or B) and not (A and B)
-        #     self.assertTrue((is_zd or is_can) and not (is_zd and is_can), f"Element {a} failed XOR proposition")
-
-        # # 6. Unity is cancellable
-        # self.assertTrue(r.is_cancellable(r.unity))
-
-        # # 7. Units are a subset of cancellable elements
-        # self.assertTrue(units.issubset(cancellable))
 
     def test_unital_ring_z6(self):
         # Z6 is a unital ring
@@ -117,7 +99,6 @@ class TestAlgebrasModular(unittest.TestCase):
         ur = UnitalRing(elements, add_op, mul_op)
         self.assertEqual(ur.unity, 1)
         self.assertTrue(ur.is_invertible(ur.unity))
-        # self.assertTrue(ur.is_cancellable(ur.unity))
 
     def test_unital_ring_validation(self):
         # {0, 2} mod 4 is a ring but not a unital ring
@@ -176,40 +157,10 @@ class TestAlgebrasModular(unittest.TestCase):
         elements = {0, 1, 2, 3}
         g = AbelianGroup(elements, lambda a, b: (a + b) % 4)
 
-        # # Generating set: {1} or {3} are minimal
-        # gen_set = g.find_generating_set()
-        # self.assertEqual(len(gen_set), 1)
-        # self.assertTrue(1 in gen_set or 3 in gen_set)
-        #
-        # # Idempotents: only 0 is idempotent (0+0=0)
-        # self.assertEqual(g.idempotents(), {0})
-        #
-        # # Center: entire group since it's Abelian
-        # self.assertEqual(g.center(), elements)
-        #
-        # # Orders: 0:1, 1:4, 2:2, 3:4
-        # orders = g.element_orders()
-        # self.assertEqual(orders[0], 1)
-        # self.assertEqual(orders[1], 4)
-        # self.assertEqual(orders[2], 2)
-        # self.assertEqual(orders[3], 4)
-
     def test_invariants_s2_monoid(self):
         # {0, 1} under multiplication (S2 monoid)
         elements = {0, 1}
         m = Monoid(elements, lambda a, b: (a * b) % 2)
-
-        # # Generating set: {0, 1} is needed? No, {0} generates {0}, {1} generates {1}.
-        # gen_set = m.find_generating_set()
-        # self.assertEqual(gen_set, {0, 1})
-        #
-        # # Idempotents: both 0 and 1 are idempotent
-        # self.assertEqual(m.idempotents(), {0, 1})
-        #
-        # # Orders: 1 is identity (order 1), 0 (0^n is never 1)
-        # orders = m.element_orders()
-        # self.assertEqual(orders[1], 1)
-        # self.assertIsNone(orders[0])
 
     def test_invalid_arity(self):
         # Magma requires a binary operation, but we provide a unary one
