@@ -47,32 +47,35 @@ class Ring(AlgebraicStructure):
         """
         zero_divisors = set()
         zero = self.zero
+        mul_op = self.multiplicative_semigroup.op
         for a in self.elements:
             if a == zero:
                 continue
             for b in self.elements:
                 if b == zero:
                     continue
-                if self.multiplicative_semigroup.op(a, b) == zero or self.multiplicative_semigroup.op(b, a) == zero:
+                if mul_op(a,b) == zero or mul_op(b,a) == zero:
                     zero_divisors.add(a)
                     break
         return zero_divisors
 
     def is_commutative(self) -> bool:
         """Checks if the multiplicative semigroup is commutative."""
+        mul_op = self.multiplicative_semigroup.op
         for a in self.elements:
             for b in self.elements:
-                if self.multiplicative_semigroup.op(a, b) != self.multiplicative_semigroup.op(b, a):
+                if mul_op(a,b) != mul_op(b,a):
                     return False
         return True
 
     def is_invertible(self, a: Any) -> bool:
         """Checks if an element has a multiplicative inverse (requires unity)."""
-        u = self.unity
-        if u is None:
+        unity = self.unity
+        mul_op = self.multiplicative_semigroup.op
+        if unity is None:
             return False
         for b in self.elements:
-            if self.multiplicative_semigroup.op(a, b) == u and self.multiplicative_semigroup.op(b, a) == u:
+            if mul_op(a,b) == unity and mul_op(b,a) == unity:
                 return True
         return False
 
@@ -82,17 +85,16 @@ class Ring(AlgebraicStructure):
 
     def _is_distributive(self) -> bool:
         """Checks if multiplication distributes over addition: a*(b+c) = a*b + a*c and (a+b)*c = a*c + b*c."""
+        add_op = self.additive_abelian_group.op
+        mul_op = self.multiplicative_semigroup.op
+
         for a in self.elements:
             for b in self.elements:
                 for c in self.elements:
                     # Left distributivity: a * (b + c) = (a * b) + (a * c)
-                    if self.multiplicative_semigroup.op(a, self.additive_abelian_group.op(b,
-                                                                                          c)) != self.additive_abelian_group.op(
-                        self.multiplicative_semigroup.op(a, b), self.multiplicative_semigroup.op(a, c)):
+                    if mul_op(a, add_op(b, c)) != add_op(mul_op(a, b), mul_op(a, c)):
                         return False
                     # Right distributivity: (a + b) * c = (a * c) + (b * c)
-                    if self.multiplicative_semigroup.op(self.additive_abelian_group.op(a, b),
-                                                        c) != self.additive_abelian_group.op(
-                        self.multiplicative_semigroup.op(a, c), self.multiplicative_semigroup.op(b, c)):
+                    if mul_op(add_op(a, b), c) != add_op(mul_op(a, c), mul_op(b, c)):
                         return False
         return True
