@@ -1,4 +1,4 @@
-from typing import Callable, Set, Any
+from typing import Callable, Set
 
 from src.algebras.ring import Ring
 

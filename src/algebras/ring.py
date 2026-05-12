@@ -2,7 +2,6 @@ from typing import Callable, Set, Any
 
 from src.algebras.abelian_group import AbelianGroup
 from src.algebras.algebraic_structure import AlgebraicStructure
-from src.algebras.monoid import Monoid
 from src.algebras.semigroup import Semigroup
 
 
