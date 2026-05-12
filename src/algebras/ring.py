@@ -38,17 +38,7 @@ class Ring(AlgebraicStructure):
     @property
     def unity(self) -> Any:
         """Returns the multiplicative identity (1) if it exists, else None."""
-        if isinstance(self.multiplicative_semigroup, Monoid):
-            return self.multiplicative_semigroup.identity
-        for e in self.elements:
-            is_identity = True
-            for a in self.elements:
-                if self.multiplicative_semigroup.op(e, a) != a or self.multiplicative_semigroup.op(a, e) != a:
-                    is_identity = False
-                    break
-            if is_identity:
-                return e
-        return None
+        return self.multiplicative_semigroup.identity
 
     def find_zero_divisors(self) -> Set:
         """
