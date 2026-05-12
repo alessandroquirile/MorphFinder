@@ -38,6 +38,25 @@ class BinaryOperation:
         return self._table[(a, b)]
 
     @property
+    def is_associative(self) -> bool:
+        """Checks ∀ a, b, c ∈ S, (a * b) * c = a * (b * c)."""
+        for a in self._elements:
+            for b in self._elements:
+                for c in self._elements:
+                    if self(self(a, b), c) != self(a, self(b, c)):
+                        return False
+        return True
+
+    @property
+    def is_commutative(self) -> bool:
+        """Checks ∀ a, b ∈ S, a * b = b * a."""
+        for a in self._elements:
+            for b in self._elements:
+                if self(a, b) != self(b, a):
+                    return False
+        return True
+
+    @property
     def table(self) -> CayleyTable:
         return self._table
 

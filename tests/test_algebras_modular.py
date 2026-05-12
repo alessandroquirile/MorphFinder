@@ -41,7 +41,7 @@ class TestAlgebrasModular(unittest.TestCase):
         # Actually, let's use a simpler one: {0, 2} mod 4 under multiplication is associative but has no identity (1 is not in set)
         elements = {0, 2}
         s = Semigroup(elements, lambda a, b: (a * b) % 4)
-        self.assertTrue(s.is_associative())
+        self.assertTrue(s.op.is_associative)
         with self.assertRaisesRegex(ValueError, "Identity element not found"):
             Monoid(elements, lambda a, b: (a * b) % 4)
 

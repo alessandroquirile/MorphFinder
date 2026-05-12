@@ -13,13 +13,5 @@ class AbelianGroup(Group):
     def validate(self) -> None:
         """Validates group axioms and commutativity."""
         super().validate()
-        if not self.is_commutative():
+        if not self.op.is_commutative:
             raise ValueError("Commutativity violated: Group is not Abelian.")
-
-    def is_commutative(self) -> bool:
-        """Checks ∀ a, b ∈ S, a * b = b * a."""
-        for a in self.elements:
-            for b in self.elements:
-                if self.op(a, b) != self.op(b, a):
-                    return False
-        return True

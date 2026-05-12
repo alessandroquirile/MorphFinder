@@ -60,12 +60,7 @@ class Ring(AlgebraicStructure):
 
     def is_commutative(self) -> bool:
         """Checks if the multiplicative semigroup is commutative."""
-        mul_op = self.multiplicative_semigroup.op
-        for a in self.elements:
-            for b in self.elements:
-                if mul_op(a,b) != mul_op(b,a):
-                    return False
-        return True
+        return self.multiplicative_semigroup.op.is_commutative
 
     def is_invertible(self, a: Any) -> bool:
         """Checks if an element has a multiplicative inverse (requires unity)."""
