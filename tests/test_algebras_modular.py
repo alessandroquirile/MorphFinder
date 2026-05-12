@@ -109,8 +109,8 @@ class TestAlgebrasModular(unittest.TestCase):
         # # 7. Units are a subset of cancellable elements
         # self.assertTrue(units.issubset(cancellable))
 
-    def test_unity_ring_z6(self):
-        # Z6 is a unity ring
+    def test_unital_ring_z6(self):
+        # Z6 is a unital ring
         elements = set(range(6))
         add_op = lambda a, b: (a + b) % 6
         mul_op = lambda a, b: (a * b) % 6
@@ -119,8 +119,8 @@ class TestAlgebrasModular(unittest.TestCase):
         self.assertTrue(ur.is_invertible(ur.unity))
         # self.assertTrue(ur.is_cancellable(ur.unity))
 
-    def test_unity_ring_validation(self):
-        # {0, 2} mod 4 is a ring but not a unity ring
+    def test_unital_ring_validation(self):
+        # {0, 2} mod 4 is a ring but not a unital ring
         elements = {0, 2}
         add_op = lambda a, b: (a + b) % 4
         mul_op = lambda a, b: (a * b) % 4
