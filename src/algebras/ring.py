@@ -38,6 +38,13 @@ class Ring(AlgebraicStructure):
         """Returns the multiplicative identity (1) if it exists, else None."""
         return self.multiplicative_semigroup.identity
 
+    @property
+    def constants(self) -> Set[Any]:
+        c = {self.zero}
+        if self.unity is not None:
+            c.add(self.unity)
+        return c
+
     def find_zero_divisors(self) -> Set:
         """
         Finds all zero divisors of the ring.

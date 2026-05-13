@@ -15,6 +15,10 @@ class Monoid(Semigroup):
         """Returns the identity element of the monoid."""
         return self._identity
 
+    @property
+    def constants(self) -> Set[Any]:
+        return {self.identity}
+
     def validate(self) -> None:
         """Validates Semigroup axioms and existence of identity."""
         super().validate()

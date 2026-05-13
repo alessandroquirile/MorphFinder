@@ -20,6 +20,11 @@ class AlgebraicStructure(ABC):
     def operations(self) -> Tuple[BinaryOperation, ...]:
         return self.operations
 
+    @property
+    def constants(self) -> Set:
+        """Returns the set of distinguished elements (identity, zero, etc.)."""
+        return set()
+
     @abstractmethod
     def validate(self) -> None:
         """Validates the axioms of the specific algebraic structure."""

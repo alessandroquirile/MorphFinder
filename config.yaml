@@ -1,0 +1,2 @@
+# Strategy used to compute a minimal generating set for an algebraic structure
+strategy: greedy
