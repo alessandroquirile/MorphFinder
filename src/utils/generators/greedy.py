@@ -8,27 +8,21 @@ class GreedyPruningStrategy(GeneratingSetStrategy):
     """
 
     def find(self, structure) -> Set[Any]:
+        generators = self._greedy_expansion(structure)
+        return self._prune_generators(structure, generators)
+
+    def _greedy_expansion(self, structure):
         elements = set(structure.elements)
         operations = structure.operations
         constants = structure.constants
 
-        # Phase 1: greedy expansion
         generators = []
         current_closure = _get_closure(set(), constants, operations)
 
         while len(current_closure) < len(elements):
-            best_candidate = None
-            max_growth = -1
-            candidates = elements - current_closure
-
-            for x in candidates:
-                test_set = set(generators) | {x}
-                potential_closure = _get_closure(test_set, constants, operations)
-                growth = len(potential_closure) - len(current_closure)
-
-                if growth > max_growth:
-                    max_growth = growth
-                    best_candidate = x
+            best_candidate = self._find_best_candidate(
+                elements, operations, constants, generators, current_closure
+            )
 
             if best_candidate is not None:
                 generators.append(best_candidate)
@@ -36,7 +30,29 @@ class GreedyPruningStrategy(GeneratingSetStrategy):
             else:
                 break
 
-        # Phase 2: pruning
+        return generators
+
+    def _find_best_candidate(self, elements, operations, constants, generators, current_closure):
+        best_candidate = None
+        max_growth = -1
+        candidates = elements - current_closure
+
+        for x in candidates:
+            test_set = set(generators) | {x}
+            potential_closure = _get_closure(test_set, constants, operations)
+            growth = len(potential_closure) - len(current_closure)
+
+            if growth > max_growth:
+                max_growth = growth
+                best_candidate = x
+
+        return best_candidate
+
+    def _prune_generators(self, structure, generators):
+        elements = set(structure.elements)
+        operations = structure.operations
+        constants = structure.constants
+
         minimal_generators = set(generators)
         for g in generators:
             test_set = minimal_generators - {g}
