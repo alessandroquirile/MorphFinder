@@ -2,6 +2,7 @@ from typing import Any, Callable, Optional, Set
 
 from src.algebras.commutative_ring import CommutativeRing
 from src.algebras.unital_ring import UnitalRing
+from src.algebras.analyzer import StructureAnalyzer
 
 
 class Field(CommutativeRing, UnitalRing):
@@ -22,6 +23,6 @@ class Field(CommutativeRing, UnitalRing):
         super().validate()
         zero = self.zero
         for a in self.elements:
-            if a != zero and not self.is_invertible(a):
+            if a != zero and not StructureAnalyzer.is_invertible(self, a):
                 raise ValueError(
                     f"Non-zero element {a} does not have a multiplicative inverse: Structure is not a Field.")

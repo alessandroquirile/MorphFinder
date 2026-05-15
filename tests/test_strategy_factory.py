@@ -1,5 +1,4 @@
 import unittest
-from unittest.mock import patch
 from src.algebras.group import Group
 from src.utils.generators.discovery import find_minimal_generating_set
 from src.utils.generators.factory import StrategyFactory
@@ -31,19 +30,17 @@ class TestStrategyFactory(unittest.TestCase):
         default = StrategyFactory.get_strategy("unknown")
         self.assertIsInstance(default, GreedyPruningStrategy)
 
-    @patch('src.utils.config.reader.ConfigFileReader.get_strategy_name')
-    def test_find_minimal_generating_set_with_greedy(self, mock_get_name):
-        """Verify find_minimal_generating_set uses Greedy strategy when configured."""
-        mock_get_name.return_value = "greedy"
-        gen_set = find_minimal_generating_set(self.group)
+    def test_find_minimal_generating_set_with_greedy(self):
+        """Verify find_minimal_generating_set uses Greedy strategy when provided."""
+        strategy = StrategyFactory.get_strategy("greedy")
+        gen_set = find_minimal_generating_set(self.group, strategy)
         self.assertEqual(len(gen_set), 2)
         self.assertNotIn('e', gen_set)
 
-    @patch('src.utils.config.reader.ConfigFileReader.get_strategy_name')
-    def test_find_minimal_generating_set_with_brute_force(self, mock_get_name):
-        """Verify find_minimal_generating_set uses BruteForce strategy when configured."""
-        mock_get_name.return_value = "brute_force"
-        gen_set = find_minimal_generating_set(self.group)
+    def test_find_minimal_generating_set_with_brute_force(self):
+        """Verify find_minimal_generating_set uses BruteForce strategy when provided."""
+        strategy = StrategyFactory.get_strategy("brute_force")
+        gen_set = find_minimal_generating_set(self.group, strategy)
         self.assertEqual(len(gen_set), 2)
         self.assertNotIn('e', gen_set)
 

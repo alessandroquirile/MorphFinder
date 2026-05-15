@@ -1,4 +1,5 @@
 from src.algebras.magma import Magma
+from src.algebras.analyzer import StructureAnalyzer
 
 
 class Semigroup(Magma):
@@ -7,5 +8,5 @@ class Semigroup(Magma):
     def validate(self) -> None:
         """Validates associativity."""
         super().validate()
-        if not self.op.is_associative:
+        if not StructureAnalyzer.is_associative(self.op):
             raise ValueError("Associativity violated: Structure is not a Semigroup.")

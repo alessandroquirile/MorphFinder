@@ -4,15 +4,19 @@ from src.algebras.group import Group
 from src.algebras.ring import Ring
 from src.algebras.magma import Magma
 from src.utils.generators.discovery import find_minimal_generating_set
+from src.utils.generators.factory import StrategyFactory
 
 class TestGenerators(unittest.TestCase):
+    def setUp(self):
+        self.strategy = StrategyFactory.get_strategy("greedy")
+
     def test_minimal_gen_set_z4(self):
         # Z4 under addition: Minimal generating set should be {1} or {3}
         elements = {0, 1, 2, 3}
         op = lambda a, b: (a + b) % 4
         g = AbelianGroup(elements, op)
         
-        gen_set = find_minimal_generating_set(g)
+        gen_set = find_minimal_generating_set(g, self.strategy)
         self.assertEqual(len(gen_set), 1)
         self.assertTrue(1 in gen_set or 3 in gen_set)
 
@@ -28,7 +32,7 @@ class TestGenerators(unittest.TestCase):
         }
         g = Group(elements, lambda x, y: table[(x, y)], identity='e')
         
-        gen_set = find_minimal_generating_set(g)
+        gen_set = find_minimal_generating_set(g, self.strategy)
         # Should be size 2, and should not contain the identity 'e'
         self.assertEqual(len(gen_set), 2)
         self.assertNotIn('e', gen_set)
@@ -42,7 +46,7 @@ class TestGenerators(unittest.TestCase):
         mul_op = lambda a, b: (a * b) % 6
         r = Ring(elements, add_op, mul_op)
         
-        gen_set = find_minimal_generating_set(r)
+        gen_set = find_minimal_generating_set(r, self.strategy)
         self.assertEqual(len(gen_set), 0)
 
     def test_magma_non_associative(self):
@@ -52,7 +56,7 @@ class TestGenerators(unittest.TestCase):
         op = lambda a, b: (a - b) % 3
         m = Magma(elements, op)
         
-        gen_set = find_minimal_generating_set(m)
+        gen_set = find_minimal_generating_set(m, self.strategy)
         self.assertEqual(len(gen_set), 1)
         self.assertIn(gen_set, [{1}, {2}])
 

@@ -1,6 +1,7 @@
 from typing import Callable, Set
 
 from src.algebras.ring import Ring
+from src.algebras.analyzer import StructureAnalyzer
 
 
 class CommutativeRing(Ring):
@@ -12,5 +13,5 @@ class CommutativeRing(Ring):
     def validate(self) -> None:
         """Validates ring axioms and multiplicative commutativity."""
         super().validate()
-        if not self.is_commutative():
+        if not StructureAnalyzer.is_commutative(self.multiplicative_semigroup.op):
             raise ValueError("Commutativity violated: Ring is not commutative.")

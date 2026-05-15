@@ -3,6 +3,7 @@ from typing import Callable, Set, Any
 from src.algebras.abelian_group import AbelianGroup
 from src.algebras.algebraic_structure import AlgebraicStructure
 from src.algebras.semigroup import Semigroup
+from src.algebras.analyzer import StructureAnalyzer
 
 
 class Ring(AlgebraicStructure):
@@ -25,7 +26,7 @@ class Ring(AlgebraicStructure):
 
     def validate(self) -> None:
         """Validates ring axioms: additive ab. group, multiplicative semigroup, and distributivity."""
-        if not self._is_distributive():
+        if not StructureAnalyzer.is_distributive(self):
             raise ValueError("Distributivity violated: Structure is not a Ring.")
 
     @property
@@ -44,57 +45,3 @@ class Ring(AlgebraicStructure):
         if self.unity is not None:
             c.add(self.unity)
         return c
-
-    def find_zero_divisors(self) -> Set:
-        """
-        Finds all zero divisors of the ring.
-        An element a ∈ R, a ≠ 0, is a zero divisor if there exists
-        b ∈ R, b ≠ 0, such that a ⋅ b = 0 or b ⋅ a = 0.
-        """
-        zero_divisors = set()
-        zero = self.zero
-        mul_op = self.multiplicative_semigroup.op
-        for a in self.elements:
-            if a == zero:
-                continue
-            for b in self.elements:
-                if b == zero:
-                    continue
-                if mul_op(a,b) == zero or mul_op(b,a) == zero:
-                    zero_divisors.add(a)
-                    break
-        return zero_divisors
-
-    def is_commutative(self) -> bool:
-        """Checks if the multiplicative semigroup is commutative."""
-        return self.multiplicative_semigroup.op.is_commutative
-
-    def is_invertible(self, a: Any) -> bool:
-        """Checks if an element has a multiplicative inverse (requires unity)."""
-        unity = self.unity
-        mul_op = self.multiplicative_semigroup.op
-        if unity is None:
-            return False
-        for b in self.elements:
-            if mul_op(a,b) == unity and mul_op(b,a) == unity:
-                return True
-        return False
-
-    def find_invertible_elements(self) -> Set:
-        """Returns the set of all units (invertible elements)."""
-        return {a for a in self.elements if self.is_invertible(a)}
-
-    def _is_distributive(self) -> bool:
-        """Checks if multiplication distributes over addition: a*(b+c) = a*b + a*c and (a+b)*c = a*c + b*c."""
-        add_op = self.additive_abelian_group.op
-        mul_op = self.multiplicative_semigroup.op
-        for a in self.elements:
-            for b in self.elements:
-                for c in self.elements:
-                    # Left distributivity: a * (b + c) = (a * b) + (a * c)
-                    if mul_op(a, add_op(b, c)) != add_op(mul_op(a, b), mul_op(a, c)):
-                        return False
-                    # Right distributivity: (a + b) * c = (a * c) + (b * c)
-                    if mul_op(add_op(a, b), c) != add_op(mul_op(a, c), mul_op(b, c)):
-                        return False
-        return True

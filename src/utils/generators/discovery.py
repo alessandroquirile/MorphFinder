@@ -1,11 +1,8 @@
 from typing import Set, Any
-from src.utils.config.reader import ConfigFileReader
-from src.utils.generators.factory import StrategyFactory
+from src.utils.generators.base import GeneratingSetStrategy
 
-def find_minimal_generating_set(structure) -> Set[Any]:
+def find_minimal_generating_set(structure, strategy: GeneratingSetStrategy) -> Set[Any]:
     """
-    Main entry point that delegates to the configured strategy.
+    Finds a minimal generating set using the provided strategy (Dependency Injection).
     """
-    strategy_name = ConfigFileReader.get_strategy_name()
-    strategy = StrategyFactory.get_strategy(strategy_name)
     return strategy.find(structure)

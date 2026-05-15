@@ -9,6 +9,7 @@ from src.algebras.monoid import Monoid
 from src.algebras.ring import Ring
 from src.algebras.semigroup import Semigroup
 from src.algebras.unital_ring import UnitalRing
+from src.algebras.analyzer import StructureAnalyzer
 
 
 class TestAlgebrasModular(unittest.TestCase):
@@ -41,7 +42,7 @@ class TestAlgebrasModular(unittest.TestCase):
         # Actually, let's use a simpler one: {0, 2} mod 4 under multiplication is associative but has no identity (1 is not in set)
         elements = {0, 2}
         s = Semigroup(elements, lambda a, b: (a * b) % 4)
-        self.assertTrue(s.op.is_associative)
+        self.assertTrue(StructureAnalyzer.is_associative(s.op))
         with self.assertRaisesRegex(ValueError, "Identity element not found"):
             Monoid(elements, lambda a, b: (a * b) % 4)
 
@@ -69,7 +70,7 @@ class TestAlgebrasModular(unittest.TestCase):
         mul_op = lambda a, b: (a * b) % 6
         r = CommutativeRing(elements, add_op, mul_op)
 
-        zero_divisors = r.find_zero_divisors()
+        zero_divisors = StructureAnalyzer.find_zero_divisors(r)
         # 2*3=0, 3*2=0, 3*4=0, 4*3=0
         self.assertEqual(zero_divisors, {2, 3, 4})
 
@@ -84,11 +85,11 @@ class TestAlgebrasModular(unittest.TestCase):
         self.assertEqual(r.unity, 1)
 
         # 2. Zero divisors in Z6 are {2, 3, 4}
-        zero_divisors = r.find_zero_divisors()
+        zero_divisors = StructureAnalyzer.find_zero_divisors(r)
         self.assertEqual(zero_divisors, {2, 3, 4})
 
         # 4. Invertible elements (units) in Z6 are {1, 5} (elements coprime to 6)
-        units = r.find_invertible_elements()
+        units = StructureAnalyzer.find_invertible_elements(r)
         self.assertEqual(units, {1, 5})
 
     def test_unital_ring_z6(self):
@@ -98,7 +99,7 @@ class TestAlgebrasModular(unittest.TestCase):
         mul_op = lambda a, b: (a * b) % 6
         ur = UnitalRing(elements, add_op, mul_op)
         self.assertEqual(ur.unity, 1)
-        self.assertTrue(ur.is_invertible(ur.unity))
+        self.assertTrue(StructureAnalyzer.is_invertible(ur, ur.unity))
 
     def test_unital_ring_validation(self):
         # {0, 2} mod 4 is a ring but not a unital ring
@@ -120,10 +121,10 @@ class TestAlgebrasModular(unittest.TestCase):
         self.assertEqual(f.unity, 1)
         self.assertEqual(f.zero, 0)
         # Check inverses: 1:1, 2:3, 3:2, 4:4
-        self.assertTrue(f.is_invertible(1))
-        self.assertTrue(f.is_invertible(2))
-        self.assertTrue(f.is_invertible(3))
-        self.assertTrue(f.is_invertible(4))
+        self.assertTrue(StructureAnalyzer.is_invertible(f, 1))
+        self.assertTrue(StructureAnalyzer.is_invertible(f, 2))
+        self.assertTrue(StructureAnalyzer.is_invertible(f, 3))
+        self.assertTrue(StructureAnalyzer.is_invertible(f, 4))
 
     def test_field_z6_validation(self):
         # Z6 is not a field (2, 3, 4 are zero divisors and not invertible)
@@ -139,7 +140,7 @@ class TestAlgebrasModular(unittest.TestCase):
         add_op = lambda a, b: (a + b) % 2
         mul_op = lambda a, b: (a * b) % 2
         r = Ring(elements, add_op, mul_op)
-        self.assertTrue(r.is_commutative())
+        self.assertTrue(StructureAnalyzer.is_commutative(r.multiplicative_semigroup.op))
 
         # Test that CommutativeRing accepts it
         CommutativeRing(elements, add_op, mul_op)
