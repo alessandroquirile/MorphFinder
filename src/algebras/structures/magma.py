@@ -1,9 +1,9 @@
 from typing import Callable, Any
 
-from src.algebras.algebraic_structure import AlgebraicStructure
-from src.algebras.binary_operation import FiniteBinaryOperation
-from src.algebras.carrier_set import FiniteCarrierSet
-from src.utils.validator import FiniteAxiomValidator
+from src.algebras.structures.base import AlgebraicStructure
+from src.algebras.structures.binary_operation import FiniteBinaryOperation
+from src.algebras.structures.carrier_set import FiniteCarrierSet
+from src.algebras.validation.finite_axiom_validator import FiniteAxiomValidator
 
 
 class Magma(AlgebraicStructure):

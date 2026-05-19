@@ -2,10 +2,10 @@ from abc import ABC
 from collections.abc import Iterable
 from typing import Any
 
-from src.algebras.axiom import Axiom
-from src.algebras.binary_operation import BinaryOperation
-from src.algebras.carrier_set import CarrierSet
-from src.utils.validator import Validator
+from src.algebras.axioms.base import Axiom
+from src.algebras.structures.binary_operation import BinaryOperation
+from src.algebras.structures.carrier_set import CarrierSet
+from src.algebras.validation.base import Validator
 
 
 class AlgebraicStructure(ABC):

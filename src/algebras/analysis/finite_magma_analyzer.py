@@ -1,7 +1,7 @@
 from typing import Any, Optional
 
-from src.algebras.magma import Magma
-from src.utils.analysis.base import Analyzer
+from src.algebras.structures.magma import Magma
+from src.algebras.analysis.base import Analyzer
 
 
 class FiniteMagmaAnalyzer(Analyzer):

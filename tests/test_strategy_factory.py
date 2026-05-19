@@ -1,10 +1,10 @@
 import unittest
 
-from src.algebras.group import Group
-from src.generators.brute_force import BruteForceStrategy
-from src.generators.discovery import find_minimal_generating_set
-from src.generators.factory import StrategyFactory
-from src.generators.greedy import GreedyPruningStrategy
+from src.algebras.structures.group import Group
+from src.algebras.generators.brute_force import BruteForceStrategy
+from src.algebras.generators.discovery import find_minimal_generating_set
+from src.algebras.generators.factory import StrategyFactory
+from src.algebras.generators.greedy import GreedyPruningStrategy
 
 
 class TestStrategyFactory(unittest.TestCase):

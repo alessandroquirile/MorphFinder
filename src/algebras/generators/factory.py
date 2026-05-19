@@ -1,6 +1,6 @@
-from src.generators.base import GeneratingSetStrategy
-from src.generators.brute_force import BruteForceStrategy
-from src.generators.greedy import GreedyPruningStrategy
+from src.algebras.generators.base import GeneratingSetStrategy
+from src.algebras.generators.brute_force import BruteForceStrategy
+from src.algebras.generators.greedy import GreedyPruningStrategy
 
 
 class StrategyFactory:

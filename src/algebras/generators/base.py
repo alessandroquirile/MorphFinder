@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Set, Any
 
-from src.algebras.algebraic_structure import AlgebraicStructure
+from src.algebras.structures.base import AlgebraicStructure
 
 
 class GeneratingSetStrategy(ABC):

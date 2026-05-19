@@ -1,7 +1,7 @@
 from typing import Callable, Dict, Optional, Set, Any
 
-from src.algebras.axiom import InverseExistenceAxiom
-from src.algebras.monoid import Monoid
+from src.algebras.axioms.inverse_existence import InverseExistenceAxiom
+from src.algebras.structures.monoid import Monoid
 
 
 class Group(Monoid):

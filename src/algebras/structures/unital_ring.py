@@ -1,8 +1,9 @@
 from typing import Any, Callable, Optional, Set
 
-from src.algebras.axiom import IdentityExistenceAxiom, DistributivityAxiom
-from src.algebras.monoid import Monoid
-from src.algebras.ring import Ring
+from src.algebras.axioms.identity_existence import IdentityExistenceAxiom
+from src.algebras.axioms.distributivity import DistributivityAxiom
+from src.algebras.structures.monoid import Monoid
+from src.algebras.structures.ring import Ring
 
 
 class UnitalRing(Ring):

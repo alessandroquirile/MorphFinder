@@ -1,8 +1,8 @@
 from itertools import combinations
 from typing import Set, Any
 
-from src.generators.base import GeneratingSetStrategy
-from src.generators.helpers import _get_closure
+from src.algebras.generators.base import GeneratingSetStrategy
+from src.algebras.generators.helpers import _get_closure
 
 
 class BruteForceStrategy(GeneratingSetStrategy):

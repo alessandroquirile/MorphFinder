@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Callable
 from typing import Any
 
-from src.algebras.carrier_set import CarrierSet
+from src.algebras.structures.carrier_set import CarrierSet
 
 
 class CayleyTable:

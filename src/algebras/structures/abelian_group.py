@@ -1,8 +1,8 @@
 from collections.abc import Callable
 from typing import Optional, Any
 
-from src.algebras.axiom import CommutativityAxiom
-from src.algebras.group import Group
+from src.algebras.axioms.commutativity import CommutativityAxiom
+from src.algebras.structures.group import Group
 
 
 class AbelianGroup(Group):

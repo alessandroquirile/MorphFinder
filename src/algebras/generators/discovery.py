@@ -1,6 +1,6 @@
 from typing import Set, Any
 
-from src.generators.base import GeneratingSetStrategy
+from src.algebras.generators.base import GeneratingSetStrategy
 
 
 def find_minimal_generating_set(structure, strategy: GeneratingSetStrategy) -> Set[Any]:

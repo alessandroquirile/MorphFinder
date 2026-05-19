@@ -1,8 +1,8 @@
 from collections.abc import Callable
 from typing import Any
 
-from src.algebras.axiom import AssociativityAxiom
-from src.algebras.magma import Magma
+from src.algebras.axioms.associativity import AssociativityAxiom
+from src.algebras.structures.magma import Magma
 
 
 class Semigroup(Magma):

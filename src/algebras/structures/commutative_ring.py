@@ -1,8 +1,8 @@
 from collections.abc import Callable
 from typing import Any
 
-from src.algebras.axiom import CommutativityAxiom
-from src.algebras.ring import Ring
+from src.algebras.axioms.commutativity import CommutativityAxiom
+from src.algebras.structures.ring import Ring
 
 
 class CommutativeRing(Ring):

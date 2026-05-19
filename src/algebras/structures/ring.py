@@ -1,13 +1,13 @@
 from typing import Callable, Any
 
-from src.algebras.abelian_group import AbelianGroup
-from src.algebras.algebraic_structure import AlgebraicStructure
-from src.algebras.axiom import DistributivityAxiom
-from src.algebras.binary_operation import FiniteBinaryOperation
-from src.algebras.carrier_set import FiniteCarrierSet
-from src.algebras.semigroup import Semigroup
-from src.utils.validator import FiniteAxiomValidator
-from src.utils.analysis.finite_magma_analyzer import FiniteMagmaAnalyzer
+from src.algebras.structures.abelian_group import AbelianGroup
+from src.algebras.structures.base import AlgebraicStructure
+from src.algebras.axioms.distributivity import DistributivityAxiom
+from src.algebras.structures.binary_operation import FiniteBinaryOperation
+from src.algebras.structures.carrier_set import FiniteCarrierSet
+from src.algebras.structures.semigroup import Semigroup
+from src.algebras.validation.finite_axiom_validator import FiniteAxiomValidator
+from src.algebras.analysis.finite_magma_analyzer import FiniteMagmaAnalyzer
 
 
 class Ring(AlgebraicStructure):

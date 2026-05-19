@@ -1,8 +1,8 @@
 from typing import Callable, Optional, Any
 
-from src.algebras.axiom import IdentityExistenceAxiom
-from src.algebras.semigroup import Semigroup
-from src.utils.analysis.finite_magma_analyzer import FiniteMagmaAnalyzer
+from src.algebras.axioms.identity_existence import IdentityExistenceAxiom
+from src.algebras.structures.semigroup import Semigroup
+from src.algebras.analysis.finite_magma_analyzer import FiniteMagmaAnalyzer
 
 
 class Monoid(Semigroup):

@@ -1,9 +1,9 @@
 from collections.abc import Callable
 from typing import Any, Optional
 
-from src.algebras.axiom import MultiplicativeInversesAxiom
-from src.algebras.commutative_ring import CommutativeRing
-from src.algebras.unital_ring import UnitalRing
+from src.algebras.axioms.multiplicative_inverses import MultiplicativeInversesAxiom
+from src.algebras.structures.commutative_ring import CommutativeRing
+from src.algebras.structures.unital_ring import UnitalRing
 
 
 class Field(CommutativeRing, UnitalRing):
