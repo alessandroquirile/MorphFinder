@@ -37,7 +37,7 @@ Per determinare un sistema di generatori $G$ per $S$ ho diverse strategie:
 
 Ci sono alcune considerazioni importanti da fare: innanzitutto non è detto che il sistema di generatori $G$ sia chiuso rispetto all'operazione, ovvero non è detto che $\forall a,b \in G\ a * b \in G$. Anzi, essendo $|G| \ll |S|$ è molto probabile che $a * b \in S \setminus G$.
 
-Per convincerci di questo consideriamo le seguenti strutture algebriche $S = (\mathbb{Z}_4, +)$ e $T = (\mathbb{Z}_3, +)$, dove $+$ denota l'usuale operazione binaria di somma. Determinato $G_S = \{ 1 \}$, si nota facilmente che  $\exists g_1, g_2 \in G\ \text{s.t.}\ g_1+g_2 \notin G$, ad esempio $\bar{1}+\bar{1} = \bar{2}$.
+Per convincerci di questo consideriamo le seguenti strutture algebriche $S = (\mathbb{Z}_4, +)$ e $T = (\mathbb{Z}_3, +)$, dove $+$ denota l'usuale operazione binaria di somma. Determinato $G_S = \lbrace 1 \rbrace$, si nota facilmente che  $\exists g_1, g_2 \in G\ \text{s.t.}\ g_1+g_2 \notin G$, ad esempio $\bar{1}+\bar{1} = \bar{2}$.
 
 Dato che $G$ non è chiuso, in generale, rispetto all'operazione $*$, l'algoritmo sfrutta questa proprietà come un vantaggio per modellare il problema come un Constraint Satisfaction Problem (CSP) e propagare i vincoli.
 
