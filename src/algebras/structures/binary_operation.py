@@ -23,6 +23,30 @@ class CayleyTable:
     def values(self):
         return self._table.values()
 
+    def is_associative(self, elements: set[Any]) -> bool:
+        """Checks if the operation is associative: (a*b)*c == a*(b*c)."""
+        for a in elements:
+            for b in elements:
+                for c in elements:
+                    if self[(self[(a, b)], c)] != self[(a, self[(b, c)])]:
+                        return False
+        return True
+
+    def is_commutative(self, elements: set[Any]) -> bool:
+        """Checks if the operation is commutative: a*b == b*a."""
+        for a in elements:
+            for b in elements:
+                if self[(a, b)] != self[(b, a)]:
+                    return False
+        return True
+
+    def find_identity(self, elements: set[Any]) -> Any | None:
+        """Returns the identity element if it exists, else None."""
+        for e in elements:
+            if all(self[(e, a)] == a and self[(a, e)] == a for a in elements):
+                return e
+        return None
+
 
 class BinaryOperation(ABC):
     """

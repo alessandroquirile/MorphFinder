@@ -23,38 +23,17 @@ class FiniteAxiomValidator(Validator):
         return axiom.accept(self, structure)
 
     def visit_associativity(self, axiom: AssociativityAxiom, structure: Any) -> bool:
-        elements = structure.carrier.elements
-        for a in elements:
-            for b in elements:
-                for c in elements:
-                    # (a * b) * c
-                    ab = self.table[(a, b)]
-                    left = self.table[(ab, c)]
-                    # a * (b * c)
-                    bc = self.table[(b, c)]
-                    right = self.table[(a, bc)]
-                    if left != right:
-                        return False
-        return True
+        return self.table.is_associative(structure.carrier.elements)
 
     def visit_commutativity(self, axiom: CommutativityAxiom, structure: Any) -> bool:
-        elements = structure.carrier.elements
-        for a in elements:
-            for b in elements:
-                if self.table[(a, b)] != self.table[(b, a)]:
-                    return False
-        return True
+        return self.table.is_commutative(structure.carrier.elements)
 
     def visit_identity_existence(self, axiom: IdentityExistenceAxiom, structure: Any) -> bool:
-        elements = structure.carrier.elements
-        for e in elements:
-            if all(self.table[(e, a)] == a and self.table[(a, e)] == a for a in elements):
-                return True
-        return False
+        return self.table.find_identity(structure.carrier.elements) is not None
 
     def visit_inverse_existence(self, axiom: InverseExistenceAxiom, structure: Any) -> bool:
         elements = structure.carrier.elements
-        # Find identity first
+
         identity = None
         for e in elements:
             if all(self.table[(e, a)] == a and self.table[(a, e)] == a for a in elements):
