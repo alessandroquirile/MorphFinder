@@ -29,7 +29,7 @@ class Ring(AlgebraicStructure):
             carrier=self.carrier,
             operations=[self._addition, self._multiplication]
         )
-        self.axioms = [DistributivityAxiom()]
+        self.axioms = super().axioms + [DistributivityAxiom()]
 
         self.validator = FiniteAxiomValidator(self._multiplication.table)
         self.validate(self.validator)

@@ -10,5 +10,5 @@ class CommutativeRing(Ring):
 
     def __init__(self, elements: set[Any], add_op: Callable[[Any, Any], Any], mul_op: Callable[[Any, Any], Any]):
         super().__init__(elements=elements, add_op=add_op, mul_op=mul_op)
-        self.axioms = self.axioms + [CommutativityAxiom()]
+        self.axioms = super().axioms + [CommutativityAxiom()]
         self.validate(self.validator)

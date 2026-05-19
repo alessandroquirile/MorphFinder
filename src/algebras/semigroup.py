@@ -10,5 +10,5 @@ class Semigroup(Magma):
 
     def __init__(self, elements: set[Any], operation: Callable[[Any, Any], Any]):
         super().__init__(elements=elements, operation=operation)
-        self.axioms = self.axioms + [AssociativityAxiom()]
+        self.axioms = super().axioms + [AssociativityAxiom()]
         self.validate(self.validator)

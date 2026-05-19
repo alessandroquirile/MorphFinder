@@ -17,7 +17,7 @@ class Magma(AlgebraicStructure):
         super().__init__(carrier=self.carrier, operations=[self._op])
 
         self.validator = FiniteAxiomValidator(self._op.table)
-        self.axioms = []
+        self.axioms = super().axioms
         self.validate(self.validator)
 
     @property
