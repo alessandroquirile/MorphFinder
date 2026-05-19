@@ -7,7 +7,7 @@ class Analyzer(ABC):
 
     @abstractmethod
     def supports(self, structure: 'AlgebraicStructure') -> bool:
-        """Checks if the analyzer supports the given algebraic structure."""
+        """Checks if the analysis supports the given algebraic structure."""
         pass
 
 

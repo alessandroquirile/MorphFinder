@@ -1,7 +1,7 @@
 from typing import Any
 
 from src.algebras.ring import Ring
-from src.utils.analyzer.base import RingAnalyzer
+from src.utils.analysis.base import RingAnalyzer
 
 
 class FiniteRingAnalyzer(RingAnalyzer):

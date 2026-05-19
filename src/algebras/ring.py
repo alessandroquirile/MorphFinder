@@ -7,7 +7,7 @@ from src.algebras.binary_operation import FiniteBinaryOperation
 from src.algebras.carrier_set import FiniteCarrierSet
 from src.algebras.semigroup import Semigroup
 from src.utils.validator import FiniteAxiomValidator
-from src.utils.analyzer.finite_magma_analyzer import FiniteMagmaAnalyzer
+from src.utils.analysis.finite_magma_analyzer import FiniteMagmaAnalyzer
 
 
 class Ring(AlgebraicStructure):
@@ -24,7 +24,7 @@ class Ring(AlgebraicStructure):
         self._multiplication = FiniteBinaryOperation(self.carrier, mul_op)
 
         self.additive_abelian_group = AbelianGroup(elements, add_op)
-        # We define a temporary magma to use the analyzer for identity
+        # We define a temporary magma to use the analysis for identity
         self._mult_magma = Semigroup(elements, mul_op)
 
         super().__init__(
