@@ -1,7 +1,9 @@
 from itertools import combinations
 from typing import Set, Any
-from src.utils.generators.base import GeneratingSetStrategy
-from src.utils.generators.helpers import _get_closure
+
+from src.generators.base import GeneratingSetStrategy
+from src.generators.helpers import _get_closure
+
 
 class BruteForceStrategy(GeneratingSetStrategy):
     """
@@ -20,5 +22,5 @@ class BruteForceStrategy(GeneratingSetStrategy):
             for combo in combinations(elements, size):
                 if len(_get_closure(set(combo), constants, operations)) == target_size:
                     return set(combo)
-        
+
         return set(elements)

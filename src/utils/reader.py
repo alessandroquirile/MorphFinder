@@ -1,11 +1,11 @@
 import yaml
-import os
+
 
 class ConfigFileReader:
     """
     Reads configuration from config.yaml in the project root.
     """
-    
+
     _CONFIG_FILE = "config.yaml"
 
     @staticmethod

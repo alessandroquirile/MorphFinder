@@ -1,12 +1,14 @@
 import unittest
+
 from src.algebras.group import Group
-from src.utils.generators.discovery import find_minimal_generating_set
-from src.utils.generators.factory import StrategyFactory
-from src.utils.generators.greedy import GreedyPruningStrategy
-from src.utils.generators.brute_force import BruteForceStrategy
+from src.generators.brute_force import BruteForceStrategy
+from src.generators.discovery import find_minimal_generating_set
+from src.generators.factory import StrategyFactory
+from src.generators.greedy import GreedyPruningStrategy
+
 
 class TestStrategyFactory(unittest.TestCase):
-    
+
     def setUp(self):
         # Klein Four-Group: {e, a, b, c} where x*x = e, a*b = c
         self.elements = {'e', 'a', 'b', 'c'}
@@ -22,10 +24,10 @@ class TestStrategyFactory(unittest.TestCase):
         """Verify that StrategyFactory returns the correct classes."""
         greedy = StrategyFactory.get_strategy("greedy")
         self.assertIsInstance(greedy, GreedyPruningStrategy)
-        
+
         brute = StrategyFactory.get_strategy("brute_force")
         self.assertIsInstance(brute, BruteForceStrategy)
-        
+
         # Default case
         default = StrategyFactory.get_strategy("unknown")
         self.assertIsInstance(default, GreedyPruningStrategy)
@@ -50,6 +52,7 @@ class TestStrategyFactory(unittest.TestCase):
         gen_set = strategy.find(self.group)
         self.assertEqual(len(gen_set), 2)
         self.assertNotIn('e', gen_set)
+
 
 if __name__ == '__main__':
     unittest.main()

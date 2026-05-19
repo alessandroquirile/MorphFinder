@@ -1,12 +1,14 @@
+from collections.abc import Callable
+from typing import Any
+
+from src.algebras.axiom import AssociativityAxiom
 from src.algebras.magma import Magma
-from src.algebras.analyzer import StructureAnalyzer
 
 
 class Semigroup(Magma):
     """An associative Magma."""
 
-    def validate(self) -> None:
-        """Validates associativity."""
-        super().validate()
-        if not StructureAnalyzer.is_associative(self.op):
-            raise ValueError("Associativity violated: Structure is not a Semigroup.")
+    def __init__(self, elements: set[Any], operation: Callable[[Any, Any], Any]):
+        super().__init__(elements=elements, operation=operation)
+        self.axioms = self.axioms + [AssociativityAxiom()]
+        self.validate(self.validator)

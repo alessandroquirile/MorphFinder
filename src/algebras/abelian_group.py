@@ -1,18 +1,14 @@
-from typing import Callable, Optional, Set, Any
+from collections.abc import Callable
+from typing import Optional, Any
 
+from src.algebras.axiom import CommutativityAxiom
 from src.algebras.group import Group
-from src.algebras.analyzer import StructureAnalyzer
 
 
 class AbelianGroup(Group):
     """A commutative Group."""
 
-    def __init__(self, elements: Set, operation: Callable, identity: Optional[Any] = None):
-        super().__init__(elements, operation, identity)
-        self.validate()
-
-    def validate(self) -> None:
-        """Validates group axioms and commutativity."""
-        super().validate()
-        if not StructureAnalyzer.is_commutative(self.op):
-            raise ValueError("Commutativity violated: Group is not Abelian.")
+    def __init__(self, elements: set, operation: Callable[[Any, Any], Any], identity: Optional[Any] = None):
+        super().__init__(elements=elements, operation=operation, identity=identity)
+        self.axioms = super().axioms + [CommutativityAxiom()]
+        self.validate(self.validator)

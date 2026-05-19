@@ -1,5 +1,9 @@
 import inspect
-from typing import Callable, Dict, Set, Tuple, Any
+from abc import ABC, abstractmethod
+from collections.abc import Callable
+from typing import Any
+
+from src.algebras.carrier_set import CarrierSet
 
 
 class CayleyTable:
@@ -8,29 +12,54 @@ class CayleyTable:
     Maps (a, b) -> result for elements in the carrier set.
     """
 
-    def __init__(self, elements: Set, operation: Callable):
-        self._table: Dict[Tuple, Any] = {
+    def __init__(self, elements: set[Any], operation: Callable[[Any, Any], Any]):
+        self._table: dict[tuple[Any, Any], Any] = {
             (a, b): operation(a, b) for a in elements for b in elements
         }
 
-    def __getitem__(self, pair: Tuple) -> Any:
+    def __getitem__(self, pair: tuple[Any, Any]) -> Any:
         return self._table[pair]
 
     def values(self):
         return self._table.values()
 
 
-class BinaryOperation:
+class BinaryOperation(ABC):
     """
+    Abstract Base Class for a binary operation.
     Responsible for the behavior and evaluation of a binary operation.
-    Wraps a Callable and its pre-computed CayleyTable.
     """
 
-    def __init__(self, elements: Set, operation: Callable):
-        self.elements = frozenset(elements)
+    def __init__(self, carrier: CarrierSet, operation: Callable[[Any, Any], Any]):
+        self.carrier = carrier
         self.operation = operation
         self._validate_arity()
-        self._table = CayleyTable(elements, operation)
+
+    @abstractmethod
+    def __call__(self, a: Any, b: Any) -> Any:
+        """Evaluates the operation a * b."""
+        pass
+
+    @property
+    def elements(self) -> set[Any]:
+        return self.carrier.elements
+
+    def _validate_arity(self) -> None:
+        """Validates that the operation is binary (arity 2)."""
+        signature = inspect.signature(self.operation)
+        arity = len(signature.parameters)
+        if arity != 2:
+            raise TypeError(f"Operation must be binary (arity 2), but got arity {arity}.")
+
+
+class FiniteBinaryOperation(BinaryOperation):
+    """
+    Implementation of a binary operation for finite structures using a CayleyTable.
+    """
+
+    def __init__(self, carrier: CarrierSet, operation: Callable[[Any, Any], Any]):
+        super().__init__(carrier, operation)
+        self._table = CayleyTable(self.elements, operation)
         self._validate_closure()
 
     def __call__(self, a: Any, b: Any) -> Any:
@@ -41,15 +70,8 @@ class BinaryOperation:
     def table(self) -> CayleyTable:
         return self._table
 
-    def _validate_arity(self) -> None:
-        """Validates that the operation is binary (arity 2)."""
-        signature = inspect.signature(self.operation)
-        arity = len(signature.parameters)
-        if arity != 2:
-            raise TypeError(f"Operation must be binary (arity 2), but got arity {arity}.")
-
     def _validate_closure(self) -> None:
         """Validates that the operation is closed on the carrier set."""
         for result in self._table.values():
-            if result not in self.elements:
+            if result not in self.carrier:
                 raise ValueError(f"Operation is not closed on the given set: result {result} not in S.")

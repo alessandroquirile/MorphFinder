@@ -1,5 +1,7 @@
 from typing import Set, Any
-from src.utils.generators.base import GeneratingSetStrategy
+
+from src.generators.base import GeneratingSetStrategy
+
 
 def find_minimal_generating_set(structure, strategy: GeneratingSetStrategy) -> Set[Any]:
     """

@@ -1,10 +1,12 @@
 import unittest
+
 from src.algebras.abelian_group import AbelianGroup
 from src.algebras.group import Group
-from src.algebras.ring import Ring
 from src.algebras.magma import Magma
-from src.utils.generators.discovery import find_minimal_generating_set
-from src.utils.generators.factory import StrategyFactory
+from src.algebras.ring import Ring
+from src.generators.discovery import find_minimal_generating_set
+from src.generators.factory import StrategyFactory
+
 
 class TestGenerators(unittest.TestCase):
     def setUp(self):
@@ -15,7 +17,7 @@ class TestGenerators(unittest.TestCase):
         elements = {0, 1, 2, 3}
         op = lambda a, b: (a + b) % 4
         g = AbelianGroup(elements, op)
-        
+
         gen_set = find_minimal_generating_set(g, self.strategy)
         self.assertEqual(len(gen_set), 1)
         self.assertTrue(1 in gen_set or 3 in gen_set)
@@ -31,7 +33,7 @@ class TestGenerators(unittest.TestCase):
             ('c', 'e'): 'c', ('c', 'a'): 'b', ('c', 'b'): 'a', ('c', 'c'): 'e',
         }
         g = Group(elements, lambda x, y: table[(x, y)], identity='e')
-        
+
         gen_set = find_minimal_generating_set(g, self.strategy)
         # Should be size 2, and should not contain the identity 'e'
         self.assertEqual(len(gen_set), 2)
@@ -45,7 +47,7 @@ class TestGenerators(unittest.TestCase):
         add_op = lambda a, b: (a + b) % 6
         mul_op = lambda a, b: (a * b) % 6
         r = Ring(elements, add_op, mul_op)
-        
+
         gen_set = find_minimal_generating_set(r, self.strategy)
         self.assertEqual(len(gen_set), 0)
 
@@ -55,10 +57,11 @@ class TestGenerators(unittest.TestCase):
         elements = {0, 1, 2}
         op = lambda a, b: (a - b) % 3
         m = Magma(elements, op)
-        
+
         gen_set = find_minimal_generating_set(m, self.strategy)
         self.assertEqual(len(gen_set), 1)
         self.assertIn(gen_set, [{1}, {2}])
+
 
 if __name__ == '__main__':
     unittest.main()

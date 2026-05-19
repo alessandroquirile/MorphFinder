@@ -1,17 +1,14 @@
-from typing import Callable, Set
+from collections.abc import Callable
+from typing import Any
 
+from src.algebras.axiom import CommutativityAxiom
 from src.algebras.ring import Ring
-from src.algebras.analyzer import StructureAnalyzer
 
 
 class CommutativeRing(Ring):
     """A Ring where multiplication is commutative."""
 
-    def __init__(self, elements: Set, add_op: Callable, mul_op: Callable):
-        super().__init__(elements, add_op, mul_op)
-
-    def validate(self) -> None:
-        """Validates ring axioms and multiplicative commutativity."""
-        super().validate()
-        if not StructureAnalyzer.is_commutative(self.multiplicative_semigroup.op):
-            raise ValueError("Commutativity violated: Ring is not commutative.")
+    def __init__(self, elements: set[Any], add_op: Callable[[Any, Any], Any], mul_op: Callable[[Any, Any], Any]):
+        super().__init__(elements=elements, add_op=add_op, mul_op=mul_op)
+        self.axioms = self.axioms + [CommutativityAxiom()]
+        self.validate(self.validator)

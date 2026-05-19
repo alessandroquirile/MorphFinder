@@ -1,7 +1,11 @@
-from abc import ABC, abstractmethod
-from typing import Set, Tuple
+from abc import ABC
+from collections.abc import Iterable
+from typing import Any
 
+from src.algebras.axiom import Axiom
 from src.algebras.binary_operation import BinaryOperation
+from src.algebras.carrier_set import CarrierSet
+from src.algebras.validator import Validator
 
 
 class AlgebraicStructure(ABC):
@@ -10,22 +14,36 @@ class AlgebraicStructure(ABC):
     Focuses on readability and proximity to mathematical representation.
     """
 
-    def __init__(self, elements: Set, *operations: BinaryOperation):
-        self.elements = frozenset(elements)
+    def __init__(self, carrier: CarrierSet, operations: Iterable[BinaryOperation]):
+        self.carrier = carrier
         self.operations = tuple(operations)
-
-    def elements(self) -> Set:
-        return set(self.elements)
-
-    def operations(self) -> Tuple[BinaryOperation, ...]:
-        return self.operations
+        self._axioms: list[Axiom] = []
 
     @property
-    def constants(self) -> Set:
+    def elements(self) -> set[Any]:
+        """Returns the elements of the algebraic structure."""
+        return self.carrier.elements
+
+    @property
+    def constants(self) -> set[Any]:
         """Returns the set of distinguished elements (identity, zero, etc.)."""
         return set()
 
-    @abstractmethod
-    def validate(self) -> None:
+    @property
+    def axioms(self) -> list[Axiom]:
+        """Returns the list of axioms of the algebraic structure."""
+        return self._axioms
+
+    @axioms.setter
+    def axioms(self, value: list[Axiom]):
+        self._axioms = value
+
+    def validate(self, validator: Validator) -> None:
         """Validates the axioms of the specific algebraic structure."""
-        pass
+        for axiom in self.axioms:
+            if not validator.validate(self, axiom):
+                raise ValueError(f"Axiom {axiom.name} is not satisfied.")
+
+    def get_operation(self, index: int) -> BinaryOperation:
+        """Standardized access to operations."""
+        return self.operations[index]

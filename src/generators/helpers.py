@@ -1,5 +1,6 @@
 from typing import Set, Any
 
+
 def _get_closure(generators: Set[Any], constants: Set[Any], operations: Any) -> Set[Any]:
     """
     Computes the algebraic closure <G> of a set of generators G and constants.
@@ -18,7 +19,7 @@ def _get_closure(generators: Set[Any], constants: Set[Any], operations: Any) -> 
                         if res not in closure:
                             closure.add(res)
                             next_generation.add(res)
-        
+
         new_elements = next_generation
-        
+
     return closure
