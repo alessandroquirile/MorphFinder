@@ -3,7 +3,7 @@ from typing import Callable, Any, Optional
 from src.algebras.algebraic_structure import AlgebraicStructure
 from src.algebras.binary_operation import FiniteBinaryOperation
 from src.algebras.carrier_set import FiniteCarrierSet
-from src.algebras.validator import FiniteAxiomValidator
+from src.utils.validator import FiniteAxiomValidator
 
 
 class Magma(AlgebraicStructure):

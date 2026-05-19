@@ -6,7 +6,7 @@ from src.algebras.axiom import DistributivityAxiom
 from src.algebras.binary_operation import FiniteBinaryOperation
 from src.algebras.carrier_set import FiniteCarrierSet
 from src.algebras.semigroup import Semigroup
-from src.algebras.validator import FiniteAxiomValidator
+from src.utils.validator import FiniteAxiomValidator
 
 
 class Ring(AlgebraicStructure):

@@ -10,7 +10,7 @@ from src.algebras.monoid import Monoid
 from src.algebras.ring import Ring
 from src.algebras.semigroup import Semigroup
 from src.algebras.unital_ring import UnitalRing
-from src.algebras.validator import FiniteAxiomValidator
+from src.utils.validator import FiniteAxiomValidator
 
 
 class TestAlgebrasModular(unittest.TestCase):

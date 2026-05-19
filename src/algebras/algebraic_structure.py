@@ -5,7 +5,7 @@ from typing import Any
 from src.algebras.axiom import Axiom
 from src.algebras.binary_operation import BinaryOperation
 from src.algebras.carrier_set import CarrierSet
-from src.algebras.validator import Validator
+from src.utils.validator import Validator
 
 
 class AlgebraicStructure(ABC):
