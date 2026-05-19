@@ -7,6 +7,7 @@ from src.algebras.binary_operation import FiniteBinaryOperation
 from src.algebras.carrier_set import FiniteCarrierSet
 from src.algebras.semigroup import Semigroup
 from src.utils.validator import FiniteAxiomValidator
+from src.utils.analyzer.finite_magma_analyzer import FiniteMagmaAnalyzer
 
 
 class Ring(AlgebraicStructure):
@@ -23,7 +24,8 @@ class Ring(AlgebraicStructure):
         self._multiplication = FiniteBinaryOperation(self.carrier, mul_op)
 
         self.additive_abelian_group = AbelianGroup(elements, add_op)
-        self.multiplicative_semigroup = Semigroup(elements, mul_op)
+        # We define a temporary magma to use the analyzer for identity
+        self._mult_magma = Semigroup(elements, mul_op)
 
         super().__init__(
             carrier=self.carrier,
@@ -48,7 +50,8 @@ class Ring(AlgebraicStructure):
 
     @property
     def unity(self) -> Any:
-        return self.multiplicative_semigroup.identity
+        analyzer = FiniteMagmaAnalyzer()
+        return analyzer.find_identity(self._mult_magma)
 
     @property
     def constants(self) -> set[Any]:
@@ -56,29 +59,3 @@ class Ring(AlgebraicStructure):
         if self.unity is not None:
             constants.add(self.unity)
         return constants
-
-    def find_zero_divisors(self) -> set[Any]:
-        zero_divisors = set()
-        zero = self.zero
-        for a in self.carrier.elements:
-            if a == zero:
-                continue
-            for b in self.carrier.elements:
-                if b == zero:
-                    continue
-                if self.multiplication(a, b) == zero or self.multiplication(b, a) == zero:
-                    zero_divisors.add(a)
-                    break
-        return zero_divisors
-
-    def is_invertible(self, a: Any) -> bool:
-        unity = self.unity
-        if unity is None:
-            return False
-        for b in self.carrier.elements:
-            if self.multiplication(a, b) == unity and self.multiplication(b, a) == unity:
-                return True
-        return False
-
-    def find_invertible_elements(self) -> set[Any]:
-        return {a for a in self.carrier.elements if self.is_invertible(a)}

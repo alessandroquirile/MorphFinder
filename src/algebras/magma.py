@@ -1,4 +1,4 @@
-from typing import Callable, Any, Optional
+from typing import Callable, Any
 
 from src.algebras.algebraic_structure import AlgebraicStructure
 from src.algebras.binary_operation import FiniteBinaryOperation
@@ -23,12 +23,3 @@ class Magma(AlgebraicStructure):
     @property
     def operation(self) -> FiniteBinaryOperation:
         return self._op
-
-    @property
-    def identity(self) -> Optional[Any]:
-        """Returns the identity element e ∈ S s.t. ∀ a ∈ S, e * a = a * e = a."""
-        elements = self.carrier.elements
-        for e in elements:
-            if all(self.operation(e, a) == a and self.operation(a, e) == a for a in elements):
-                return e
-        return None

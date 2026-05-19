@@ -10,6 +10,7 @@ from src.algebras.monoid import Monoid
 from src.algebras.ring import Ring
 from src.algebras.semigroup import Semigroup
 from src.algebras.unital_ring import UnitalRing
+from src.utils.analyzer.finite_ring_analyzer import FiniteRingAnalyzer
 from src.utils.validator import FiniteAxiomValidator
 
 
@@ -65,33 +66,23 @@ class TestAlgebrasModular(unittest.TestCase):
         self.assertEqual(r.addition(1, 1), 0)
         self.assertEqual(r.multiplication(1, 1), 1)
 
-    def test_zero_divisors_z6(self):
-        # Z6 under addition and multiplication
-        elements = set(range(6))
-        add_op = lambda a, b: (a + b) % 6
-        mul_op = lambda a, b: (a * b) % 6
-        r = CommutativeRing(elements, add_op, mul_op)
-
-        zero_divisors = r.find_zero_divisors()
-        # 2*3=0, 3*2=0, 3*4=0, 4*3=0
-        self.assertEqual(zero_divisors, {2, 3, 4})
-
     def test_ring_propositions_z6(self):
         # Z6 under addition and multiplication
         elements = set(range(6))
         add_op = lambda a, b: (a + b) % 6
         mul_op = lambda a, b: (a * b) % 6
         r = CommutativeRing(elements, add_op, mul_op)
+        analyzer = FiniteRingAnalyzer()
 
         # 1. Unity exists and is 1
         self.assertEqual(r.unity, 1)
 
         # 2. Zero divisors in Z6 are {2, 3, 4}
-        zero_divisors = r.find_zero_divisors()
+        zero_divisors = analyzer.get_zero_divisors(r)
         self.assertEqual(zero_divisors, {2, 3, 4})
 
         # 4. Invertible elements (units) in Z6 are {1, 5} (elements coprime to 6)
-        units = r.find_invertible_elements()
+        units = analyzer.get_unit(r)
         self.assertEqual(units, {1, 5})
 
     def test_unital_ring_z6(self):
@@ -100,8 +91,9 @@ class TestAlgebrasModular(unittest.TestCase):
         add_op = lambda a, b: (a + b) % 6
         mul_op = lambda a, b: (a * b) % 6
         ur = UnitalRing(elements, add_op, mul_op)
+        analyzer = FiniteRingAnalyzer()
         self.assertEqual(ur.unity, 1)
-        self.assertTrue(ur.is_invertible(ur.unity))
+        self.assertTrue(analyzer.is_invertible(ur, ur.unity))
 
     def test_unital_ring_validation(self):
         # {0, 2} mod 4 is a ring but not a unital ring
@@ -120,13 +112,14 @@ class TestAlgebrasModular(unittest.TestCase):
         add_op = lambda a, b: (a + b) % 5
         mul_op = lambda a, b: (a * b) % 5
         f = Field(elements, add_op, mul_op)
+        analyzer = FiniteRingAnalyzer()
         self.assertEqual(f.unity, 1)
         self.assertEqual(f.zero, 0)
         # Check inverses: 1:1, 2:3, 3:2, 4:4
-        self.assertTrue(f.is_invertible(1))
-        self.assertTrue(f.is_invertible(2))
-        self.assertTrue(f.is_invertible(3))
-        self.assertTrue(f.is_invertible(4))
+        self.assertTrue(analyzer.is_invertible(f, 1))
+        self.assertTrue(analyzer.is_invertible(f, 2))
+        self.assertTrue(analyzer.is_invertible(f, 3))
+        self.assertTrue(analyzer.is_invertible(f, 4))
 
     def test_field_z6_validation(self):
         # Z6 is not a field (2, 3, 4 are zero divisors and not invertible)
