@@ -8,7 +8,7 @@ Le strutture algebriche attualmente implementate sono magmi, semigruppi, monoidi
 Date due strutture algebriche $(S,*)$ e $(T,\square)$, si vuole determinare l'insieme degli omomorfismi da S a T ovvero
 
 $$
-\mathcal{Hom}(S,T) := \lbrace f: S \to T\;\  \text{s.t.}\  \forall a,b \in S\ f(a*b) = f(a)\ \square\ f(b) \rbrace
+\mathcal{Hom}(S,T) := \lbrace f: S \to T\ \text{s.t.}\  \forall a,b \in S\ f(a*b) = f(a)\ \square\ f(b) \rbrace
 $$
 
 Si nota facilmente che $|\mathcal{Hom}(S,T)| \le |Map(S,T)| = |T|^{|S|}$, dove $Map(S,T)$ rappresenta l'insieme delle applicazioni da $S$ a $T$.
