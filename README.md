@@ -13,9 +13,7 @@ $$
 
 Si nota facilmente che $|\mathcal{Hom}(S,T)| \le |Map(S,T)| = |T|^{|S|}$, dove $Map(S,T)$ rappresenta l'insieme delle applicazioni da $S$ a $T$.
 
-Un algoritmo che ricerca esaustivamente tutti i possibili omomorfismi da $S$ a $T$ impiegherebbe tempo esponenziale, ovvero $O(|T|^{|S|})$. Il che significa che, ad esempio, se $|S| = 100$ e $T = 500$, allora l'algoritmo richiederebbe $500^{100}$ passi.
-
-Se riuscissimo a trovare un sistema di generatori $G$ per $S$, allora passeremmo da $O(|T|^{|S|})$ a $O(|T|^{|G|})$, con $|G| \ll |S|$. Ad esempio,se $|S| = 100$, $|G| = 1$ e $T = 500$, allora l'algoritmo richiederebbe $500^{1}$ passi.
+Un algoritmo che ricerca esaustivamente tutti i possibili omomorfismi da $S$ a $T$ impiegherebbe tempo esponenziale, ovvero $O(|T|^{|S|})$. Se riuscissimo a trovare un sistema di generatori $G$ per $S$, allora passeremmo da $O(|T|^{|S|})$ a $O(|T|^{|G|})$, con $|G| \ll |S|$.
 
 Si vuole quindi determinare
 
