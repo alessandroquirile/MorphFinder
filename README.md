@@ -2,7 +2,7 @@
 
 MorphFinder è una libreria per esplorare omomorfismi tra strutture algebriche finite.
 
-Le strutture algebriche attualmente implementate sono magmi, semigruppi, monoidi, gruppi, gruppi abeliani, anelli, anelli commutativi, anelli unitari, campi.
+Le strutture algebriche attualmente implementate sono: magmi, semigruppi, monoidi, gruppi, gruppi abeliani, anelli, anelli commutativi, anelli unitari, campi.
 
 # Background teorico
 Date due strutture algebriche $(S,*)$ e $(T,\square)$, si vuole determinare l'insieme degli omomorfismi da S a T ovvero
@@ -23,7 +23,7 @@ $$
 
 
 
-## Come determino un sistema di generatori $G$ per $S$?
+## Come determinare un sistema di generatori $G$ per $S$?
 
 Per determinare un sistema di generatori $G$ per $S$ ho diverse strategie:
 
@@ -31,7 +31,7 @@ Per determinare un sistema di generatori $G$ per $S$ ho diverse strategie:
 
 - Algoritmo greedy: costruisce un insieme di generatori $G$ che aggiunge iterativamente l’elemento che massimizza l’incremento della chiusura $\langle G \rangle$ fino a coprire tutta la struttura $S$, e successivamente rimuove gli elementi ridondanti ottenendo un insieme $G$ tale che $\langle G \rangle = S$ e nessun suo sottoinsieme proprio genera ancora $S$, senza però garantire che $G$ sia di cardinalità minima globale.
 
-## Come determino $\mathcal{Hom}(S,T)$?
+## Come determinare $\mathcal{Hom}(S,T)$?
 
 Ci sono alcune considerazioni importanti da fare: innanzitutto non è detto che il sistema di generatori $G$ sia chiuso rispetto all'operazione, ovvero non è detto che $\forall a,b \in G\ a * b \in G$. Anzi, essendo $|G| \ll |S|$ è molto probabile che $a * b \in S \setminus G$.
 
@@ -42,7 +42,7 @@ L'algoritmo costruisce una funzione $h: S \setminus G \to S \times S$ per tracci
 
 Riprendendo l'esempio precedente, si ha che $h(\bar{0}) = (\bar{3}, \bar{1})$, $h(\bar{2})= (\bar{1}, \bar{1})$, $h(\bar{3}) = (\bar{2}, \bar{1})$, notando che non è necessario calcolare $h(\bar{1})$ essendo $\bar{1} \in G$.
 
-La seguente Figura mostra la mappa di genealogia:
+La seguente Figura mostra la mappa di genealogia $h$:
 
 ![Mappa della Genealogia h](assets/history.png)
 
@@ -100,4 +100,4 @@ La seguente Figura mostra l'albero di computazione per l'esempio fornito:
 
 ![Backtracking](assets/backtracking.png)
 
-Si noti che grazie alla propagazione dei vincoli, l'algoritmo evita l'esplorazione esaustiva dell'intero spazio delle applicazioni $(|T|^{|S|} = 3^4 = 81)$. Limitando i tentativi alla sola scelta dei generatori $(|T|^{|G|} = 3$ il carico computazionale viene abbattuto, rendendo trattabili anche strutture algebriche di dimensioni superiori."
+Si noti che grazie alla propagazione dei vincoli, l'algoritmo evita l'esplorazione esaustiva dell'intero spazio delle applicazioni $(|T|^{|S|} = 3^4 = 81)$. Limitando i tentativi alla sola scelta dei generatori $(|T|^{|G|} = 3)$ il carico computazionale viene abbattuto, rendendo trattabili anche strutture algebriche di dimensioni superiori."
