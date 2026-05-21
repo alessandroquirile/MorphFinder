@@ -16,3 +16,7 @@ class UnitalRing(Ring):
         self.multiplicative_semigroup = Monoid(elements, mul_op, unity)
         self.axioms = super().axioms + [DistributivityAxiom(), IdentityExistenceAxiom()]
         self.validate(self.validator)
+
+    @property
+    def constants(self) -> dict[Any, Any]:
+        return {"zero": self.zero, "unity": self.unity}

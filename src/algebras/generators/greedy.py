@@ -24,7 +24,7 @@ def _find_best_candidate(elements, operations, constants, generators, current_cl
 def _prune_generators(structure, generators):
     elements = set(structure.elements)
     operations = structure.operations
-    constants = structure.constants
+    constants = set(structure.constants.values())
 
     minimal_generators = set(generators)
     for g in generators:
@@ -39,7 +39,7 @@ def _prune_generators(structure, generators):
 def _greedy_expansion(structure):
     elements = set(structure.elements)
     operations = structure.operations
-    constants = structure.constants
+    constants = set(structure.constants.values())
 
     generators = []
     current_closure = _get_closure(set(), constants, operations)

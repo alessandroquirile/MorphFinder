@@ -26,5 +26,5 @@ class Monoid(Semigroup):
         return self._identity
 
     @property
-    def constants(self) -> set[Any]:
-        return {self.identity}
+    def constants(self) -> dict[str, Any]:
+        return {"identity": self.identity}

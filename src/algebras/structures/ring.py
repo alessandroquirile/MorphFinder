@@ -54,8 +54,8 @@ class Ring(AlgebraicStructure):
         return analyzer.find_identity(self._mult_magma)
 
     @property
-    def constants(self) -> set[Any]:
-        constants = {self.zero}
+    def constants(self) -> dict[str, Any]:
+        constants = {"zero": self.zero}
         if self.unity is not None:
-            constants.add(self.unity)
+            constants["unity"] = self.unity
         return constants

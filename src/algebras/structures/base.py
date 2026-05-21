@@ -25,9 +25,9 @@ class AlgebraicStructure(ABC):
         return self.carrier.elements
 
     @property
-    def constants(self) -> set[Any]:
-        """Returns the set of distinguished elements (identity, zero, etc.)."""
-        return set()
+    def constants(self) -> dict[str, Any]:
+        """Returns a dictionary of distinguished elements (identity, zero, etc.)."""
+        return {}
 
     @property
     def axioms(self) -> list[Axiom]:
@@ -43,7 +43,3 @@ class AlgebraicStructure(ABC):
         for axiom in self.axioms:
             if not validator.validate(self, axiom):
                 raise ValueError(f"Axiom {axiom.name} is not satisfied.")
-
-    def get_operation(self, index: int) -> BinaryOperation:
-        """Standardized access to operations."""
-        return self.operations[index]

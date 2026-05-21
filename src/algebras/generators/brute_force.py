@@ -14,8 +14,12 @@ class BruteForceStrategy(GeneratingSetStrategy):
     def find(self, structure) -> Set[Any]:
         elements = list(structure.elements)
         operations = structure.operations
-        constants = structure.constants
+        constants = set(structure.constants.values())
         target_size = len(elements)
+
+        # First check if constants alone generate the structure
+        if len(_get_closure(set(), constants, operations)) == target_size:
+            return set()
 
         # Iterate through possible generating set sizes starting from 1
         for size in range(1, target_size + 1):
