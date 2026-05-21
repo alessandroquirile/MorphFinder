@@ -35,12 +35,13 @@ Per determinare un sistema di generatori $G$ per $S$ ho diverse strategie:
 
 Ci sono alcune considerazioni importanti da fare: innanzitutto non è detto che il sistema di generatori $G$ sia chiuso rispetto all'operazione, ovvero non è detto che $\forall a,b \in G\ a * b \in G$. Anzi, essendo $|G| \ll |S|$ è molto probabile che $a * b \in S \setminus G$.
 
-Per convincerci di questo consideriamo le seguenti strutture algebriche $S = (\mathbb{Z}_4, +)$ e $T = (\mathbb{Z}_3, +)$, dove $+$ denota l'usuale operazione binaria di somma. Determinato $G_S = \lbrace 1 \rbrace$, si nota facilmente che  $\exists g_1, g_2 \in G\ \text{s.t.}\ g_1+g_2 \notin G$, ad esempio $\bar{1}+\bar{1} = \bar{2}$.
+Per convincerci di questo consideriamo, senza perdita di generalità, le seguenti strutture algebriche $S = (\mathbb{Z}_4, +)$ e $T = (\mathbb{Z}_3, +)$, dove $+: S \times S \to S$ denota l'usuale operazione binaria di somma. Determinato $G_S = \lbrace \bar{1} \rbrace$, si nota facilmente che  $\exists g_1, g_2 \in G\ \text{s.t.}\ g_1+g_2 \notin G$, ad esempio $\bar{1}+\bar{1} = \bar{2}$. La non-chiusura di $G$ consente all'algoritmo di modellare il problema come un Constraint Satisfaction Problem (CSP) e propagare i vincoli.  Il motore CSP, infatti, opera in tre fasi:
 
-Dato che $G$ non è chiuso, in generale, rispetto all'operazione $*$, l'algoritmo sfrutta questa proprietà come un vantaggio per modellare il problema come un Constraint Satisfaction Problem (CSP) e propagare i vincoli.
+1. Tracciamento della genealogia: l'algoritmo costruisce una funzione $h: S \setminus G \to S \times S$ per tracciare la "genealogia" di ciascun elemento di $S$ (generatori esclusi). Riprendendo l'esempio precedente, si ha che $h(\bar{0}) = +_S(\bar{3}, \bar{1})$, $h(\bar{2})= +_S(\bar{1}, \bar{1})$, $h(\bar{3}) = +_S(\bar{2}, \bar{1})$, notando che non è necessario calcolare $h(\bar{1})$ essendo $\bar{1} \in G$.
 
-Il motore CSP, infatti, opera in tre fasi:
-1. Tracciamento della genealogia: durante il calcolo della chiusura $\langle G \rangle$ di $S$, l'algoritmo memorizza la "ricetta algebrica" di ogni elemento di $S$. Ad esempio memorizza che $\bar{2} = f(\bar{1}, \bar{1})$. 
-2. Backtracking: il motore CSP tenta di un'immagine in $T$ solo agli elementi del sistema di generatori $G$. Nell'esempio, ipotizziamo un tentativo $f(\bar{1}) = a \in T$
+![Mappa della Genealogia h](assets/history.png)
+
+
+2. Backtracking: il motore CSP tenta di assegnare un'immagine in $T$ solo agli elementi del sistema di generatori $G$. Nell'esempio, ipotizziamo un tentativo $f(\bar{1}) = a \in T$
 3. Propagazione dei vincoli: sfruttando la definizione di omomorfismo di cui sopra, il valore di $f(\bar{2})$ viene individuato rapidamente accedendo alla genealogia: $f(\bar{2}) = f(\bar{1} + \bar{1}) = a + a$. Se questo calcolo genera una contraddizione con le relazioni interne della struttura, il ramo di ricerca viene scartato e viene eseguito un backtracking, riducendo drasticamente lo spazio di ricerca
 4. Verifica finale: per ogni coppia $(a,b) \in S \times S$ si controlla che l'uguaglianza $f(a*b) = f(a)\ \square\ f(b)$ sia preservata nel codominio $T$. Se il controllo ha successo, la funzione trovata è un omomorfismo valido da $S$ a $T$.
