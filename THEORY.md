@@ -24,7 +24,7 @@ There are several strategies for determining a generating system $G$ for $S$:
 
 ## How to determine $\mathcal{Hom}(S,T)$?
 
-It is important to note that the generating system $G$ is generally not closed under the operation; that is, it is likely that $\exists a,b \in G$ such that $a * b \in S \setminus G$.
+It is important to note that the generating system $G$ is generally not closed under the operation; that is, it is likely that $\exists a,b \in G$ such that $a * b \notin G$ but in $S \setminus G$ instead.
 
 Since $G$ generates $S$, any homomorphism $f \in \mathcal{Hom}(S,T)$ is uniquely determined by its restriction $f|_G : G \to T$. Consequently, we need only enumerate the $|T|^{|G|}$ mappings of the form $\varphi: G \to T$, extend each to $f: S \to T$ using the genealogy function $h$ (defined below), and verify whether $f \in \mathcal{Hom}(S,T)$.
 
