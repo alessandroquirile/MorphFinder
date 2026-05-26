@@ -13,7 +13,6 @@ class Genealogy:
         self.constants_dict = structure.constants
         self.constants_values = set(self.constants_dict.values())
         self.base_elements = self.generators | self.constants_values
-        # derivation: element -> (op_idx, arg1, arg2)
         self.recipes: Dict[Any, Tuple[int, Any, Any]] = {}
         # order in which elements were discovered to ensure dependencies are met
         self.generation_order: List[Any] = []

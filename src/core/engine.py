@@ -8,7 +8,7 @@ from src.algebras.structures.unital_ring import UnitalRing
 
 
 class Homomorphism:
-    """Represents a validated mapping between two algebraic structures."""
+    """Represents a validated homomorphism between two algebraic structures."""
     def __init__(self, mapping: Dict[Any, Any], source, target):
         self.mapping = mapping
         self.source = source
@@ -19,10 +19,7 @@ class Homomorphism:
 
 
 class MorphismFinder:
-    """
-    Core engine for finding homomorphisms using CSP backtracking 
-    and genealogy propagation.
-    """
+    """Core engine for finding homomorphisms using CSP backtracking and genealogy propagation."""
 
     def __init__(self, strategy_name: str):
         self.factory = StrategyFactory()
@@ -30,10 +27,11 @@ class MorphismFinder:
 
     def find_homomorphisms(self, source: AlgebraicStructure, target: AlgebraicStructure) -> List[Homomorphism]:
         """Finds all homomorphisms f: source -> target"""
+
         if len(source.operations) != len(target.operations):
             return []
 
-        # Find generators. Note: strategy.find considers source.constants.
+        # Find generators using specified strategy (e.g., brute force, greedy...)
         generators = list(self.strategy.find(source))
         genealogy = Genealogy(source, set(generators))
         
@@ -74,8 +72,9 @@ class MorphismFinder:
             
         return mapping
 
-    def _backtrack(self, gen_idx, generators, current_mapping, source, target, genealogy, results):
-        if gen_idx == len(generators):
+    def _backtrack(self, generator_index, generators, current_mapping, source, target, genealogy, results):
+        """Backtracking algorithm."""
+        if generator_index == len(generators):
             # All generators mapped, propagate to all elements
             try:
                 full_mapping = genealogy.propagate(current_mapping, target)
@@ -85,10 +84,10 @@ class MorphismFinder:
                 pass
             return
 
-        gen = generators[gen_idx]
+        gen = generators[generator_index]
         if gen in current_mapping:
             # Generator is already mapped (likely it's a mandatory constant)
-            self._backtrack(gen_idx + 1, generators, current_mapping, source, target, genealogy, results)
+            self._backtrack(generator_index + 1, generators, current_mapping, source, target, genealogy, results)
             return
 
         for target_val in target.elements:
@@ -98,7 +97,7 @@ class MorphismFinder:
 
             new_mapping = current_mapping.copy()
             new_mapping[gen] = target_val
-            self._backtrack(gen_idx + 1, generators, new_mapping, source, target, genealogy, results)
+            self._backtrack(generator_index + 1, generators, new_mapping, source, target, genealogy, results)
 
     def _is_valid_homomorphism(self, mapping, source, target) -> bool:
         """Final verification of the homomorphism property."""
@@ -107,8 +106,8 @@ class MorphismFinder:
             return False
 
         # 2. Check operation preservation: f(a * b) = f(a) * f(b)
-        for op_idx, source_op in enumerate(source.operations):
-            target_op = target.operations[op_idx]
+        for op_index, source_op in enumerate(source.operations):
+            target_op = target.operations[op_index]
             for a in source.elements:
                 for b in source.elements:
                     res_ab = source_op(a, b)
