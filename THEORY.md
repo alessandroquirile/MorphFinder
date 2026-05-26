@@ -173,13 +173,13 @@ monomorfismi ed epimorfismi.
 MorphFinder categorizza un omomorfismo $f: S \to T$ basandosi sulle proprietà derivate dall'analisi dell'immagine, del
 nucleo e della natura degli insiemi coinvolti:
 
-| Proprietà   | Simbolo                     | Condizione                                                                                                                   | 
-|-------------|-----------------------------|------------------------------------------------------------------------------------------------------------------------------|
-| Monomorfismo | $f: S \hookrightarrow T$    | $f$ iniettiva: tutte le classi di $\sim_f$ sono banali; equivalentemente, per gruppi/anelli, $\ker(f) = \lbrace 0_S \rbrace$ |
-| Epimorfismo | $f: S \twoheadrightarrow T$ | $f$ suriettiva: $\mathrm{Im}(f) = T$                                                                                         |
-| Isomorfismo | $f: S \cong T$              | $f$ biiettiva: iniettiva + suriettiva                                                                                        |
-| *Endomorfismo* | $f: S \to S$                | Dominio e codominio coincidono ($S = T$)                                                                                     |
-| Automorfismo | $f: S \cong S$              | Isomorfismo con $S = T$                                                                                                      |
+| Proprietà   | Simbolo                     | Condizione                                                                                                                     | 
+|-------------|-----------------------------|--------------------------------------------------------------------------------------------------------------------------------|
+| Monomorfismo | $f: S \hookrightarrow T$    | $f$ iniettiva: tutte le classi di $\sim_f$ sono banali; equivalentemente, per gruppi e anelli, $\ker(f) = \lbrace 0_S \rbrace$ |
+| Epimorfismo | $f: S \twoheadrightarrow T$ | $f$ suriettiva: $\mathrm{Im}(f) = T$                                                                                           |
+| Isomorfismo | $f: S \cong T$              | $f$ biiettiva: iniettiva + suriettiva                                                                                          |
+| *Endomorfismo* | $f: S \to S$                | Dominio e codominio coincidono ($S = T$)                                                                                       |
+| Automorfismo | $f: S \cong S$              | Isomorfismo con $S = T$                                                                                                        |
 
 Oltre alla distinzione classica tra iniettività e suriettività, MorphFinder identifica se una struttura viene mappata in
 se stessa (**Endomorfismo**). Se tale mappatura preserva perfettamente tutte le relazioni ed è biunivoca, si parla di *
