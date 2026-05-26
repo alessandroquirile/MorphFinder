@@ -1,50 +1,45 @@
 # MorphFinder
 
-MorphFinder è una libreria per trovare e classificare omomorfismi tra strutture algebriche finite, tra cui: magmi,
-semigruppi, monoidi, gruppi, gruppi abeliani, anelli, anelli commutativi, anelli unitari, campi.
+MorphFinder is a library for finding and classifying homomorphisms between finite algebraic structures, including: magmas, semigroups, monoids, groups, abelian groups, rings, commutative rings, unital rings, and fields.
 
-## Background Teorico
+## Theoretical Background
 
-Per una spiegazione approfondita dei fondamenti matematici, dell'algoritmo CSP di ricerca e della classificazione degli
-omomorfismi, consulta il file [THEORY.md](THEORY.md).
+For an in-depth explanation of the mathematical foundations, the CSP search algorithm, and the classification of homomorphisms, consult the [THEORY.md](THEORY.md) file.
 
-## Installazione
+## Installation
 
 ```bash
-# Crea e attiva un ambiente virtuale (consigliato)
+# Create and activate a virtual environment (recommended)
 python3 -m venv .venv
 source .venv/bin/activate
 
-# Installa le dipendenze
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-## Configurazione
+## Configuration
 
-La strategia per trovare un sistema di generatori per una data struttura algebrica può essere specificata nel file
-`config.yaml`:
+The strategy for finding a system of generators for a given algebraic structure can be specified in the `config.yaml` file:
 
 ```yaml
-strategy: greedy # o brute_force
+strategy: greedy # or brute_force
 ```
 
-## Esempio di Utilizzo
+## Usage Example
 
-Puoi eseguire l'esempio fornito nel file `main.py` per vedere MorphFinder in azione:
+You can run the example provided in the `main.py` file to see MorphFinder in action:
 
 ```bash
 python main.py
 ```
 
-Questo script definisce due semplici monoidi ($\mathbb{Z}_4, +, \bar{0}$) e ($\mathbb{Z}_3, +, \bar{0}$) e cerca
-omomorfismi tra di essi. L'output atteso sarà:
+This script defines two simple monoids ($\mathbb{Z}_4, +, \bar{0}$) and ($\mathbb{Z}_3, +, \bar{0}$) and searches for homomorphisms between them. The expected output will be:
 
 ```text
 Found 1 homomorphism(s) between given structures:
 f: {0, 1, 2, 3} → {0, 1, 2} | 0 ↦ 0, 1 ↦ 0, 2 ↦ 0, 3 ↦ 0 | Properties: Trivial | Ker(f): {0, 1, 2, 3} | Im(f): {0}
 ```
 
-## Esecuzione dei Test
+## Running Tests
 
-Puoi eseguire la suite di test utilizzando `pytest`.
-```
+You can run the test suite using `pytest`.
