@@ -40,7 +40,7 @@ Questo script definisce due semplici monoidi ($\mathbb{Z}_4, +, \bar{0}$) e ($\m
 omomorfismi tra di essi. L'output atteso sarà:
 
 ```text
-Found 1 homomorphism(s) between given structure:
+Found 1 homomorphism(s) between given structures:
 f: {0, 1, 2, 3} → {0, 1, 2} | 0 ↦ 0, 1 ↦ 0, 2 ↦ 0, 3 ↦ 0 | Properties: Trivial | Ker(f): {0, 1, 2, 3} | Im(f): {0}
 ```
 
