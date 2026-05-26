@@ -1,8 +1,10 @@
-from typing import Any, Dict, Set, List
 from collections import defaultdict
+from typing import Any, Dict, Set, List
+
 from src.algebras.structures.group import Group
+from src.algebras.structures.monoid import Monoid
 from src.algebras.structures.ring import Ring
-from src.algebras.structures.unital_ring import UnitalRing
+
 
 class Classifier:
     """
@@ -25,16 +27,16 @@ class Classifier:
         the quotient structure S/Ker(f) which is isomorphic to the image.
         """
         zero_element = None
-        
+
         # Determine the "zero" element of the target structure
         if isinstance(target, Ring):
             zero_element = target.zero
-        elif isinstance(target, Group):
+        elif isinstance(target, (Group, Monoid)):
             zero_element = target.identity
-        
+
         if zero_element is not None:
             return {src for src, tgt in mapping.items() if tgt == zero_element}
-        
+
         return set()
 
     @staticmethod
@@ -63,8 +65,15 @@ class Classifier:
         mapping = homomorphism.mapping
         source = homomorphism.source
         target = homomorphism.target
-        
+
         image = Classifier.get_image(mapping)
+
+        # Check if trivial (image is just the zero/identity element of the target)
+        is_trivial = False
+        if isinstance(target, (Ring, Group, Monoid)):
+            zero_or_identity = getattr(target, 'zero', None) or getattr(target, 'identity', None)
+            if zero_or_identity is not None and image == {zero_or_identity}:
+                is_trivial = True
 
         # Computational shortcut: According to the First Isomorphism Theorem
         # (and its generalization for general structures via congruence classes),
@@ -72,19 +81,21 @@ class Classifier:
         is_injective = len(mapping) == len(image)
         is_surjective = len(image) == len(target.elements)
         is_endomorphism = source == target
-        
+
         labels = []
-        
+
+        if is_trivial:
+            labels.append("Trivial")
         if is_injective:
             labels.append("Monomorphism")
         if is_surjective:
             labels.append("Epimorphism")
         if is_injective and is_surjective:
             labels.append("Isomorphism")
-        
+
         if is_endomorphism:
             labels.append("Endomorphism")
             if is_injective and is_surjective:
                 labels.append("Automorphism")
-                
+
         return labels

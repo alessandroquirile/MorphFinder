@@ -1,17 +1,16 @@
-from typing import List, Dict, Any, Set
+from typing import List, Dict, Any
 
+from src.algebras.generators.factory import StrategyFactory
 from src.algebras.structures.base import AlgebraicStructure
+from src.algebras.structures.unital_ring import UnitalRing
+from src.core.classification import Classifier
 from src.core.genealogy import Genealogy
 from src.core.pruning import Pruner
-from src.algebras.generators.factory import StrategyFactory
-from src.algebras.structures.unital_ring import UnitalRing
-
-
-from src.core.classification import Classifier
 
 
 class Homomorphism:
     """Represents a validated homomorphism between two algebraic structures."""
+
     def __init__(self, mapping: Dict[Any, Any], source, target):
         self.mapping = mapping
         self.source = source
@@ -23,6 +22,19 @@ class Homomorphism:
     def __repr__(self):
         props_str = f" | {', '.join(self.properties)}" if self.properties else ""
         return f"Homomorphism({self.mapping}{props_str})"
+
+    def pretty(self) -> str:
+        """Returns a detailed formatted algebraic representation of the homomorphism."""
+        source_elements = "{" + ", ".join(map(str, sorted(list(self.source.elements)))) + "}"
+        target_elements = "{" + ", ".join(map(str, sorted(list(self.target.elements)))) + "}"
+
+        mapping_str = ", ".join([f"{src} ↦ {tgt}" for src, tgt in self.mapping.items()])
+        props_str = f" | Properties: {', '.join(self.properties)}" if self.properties else ""
+
+        image_str = f" | Im(f): {{{', '.join(map(str, sorted(list(self.image))))}}}"
+        kernel_str = f" | Ker(f): {{{', '.join(map(str, sorted(list(self.kernel))))}}}"
+
+        return f"f: {source_elements} → {target_elements} | {mapping_str}{props_str}{kernel_str}{image_str}"
 
 
 class MorphismFinder:
@@ -52,26 +64,26 @@ class MorphismFinder:
         generators = list(self.strategy.find(source))
 
         # Phase 1: Genealogy Function
-        # Build the genealogy mapping h: S \ G -> S x S to track how elements 
+        # Build the genealogy mapping homomorphism: S \ G -> S x S to track how elements
         # are generated, enabling deterministic constraint propagation.
         genealogy = Genealogy(source, set(generators))
-        
+
         homomorphisms = []
-        
+
         # Pre-map constants using the constants dictionary
         base_mapping = self._get_constants_mapping(source, target)
-        
+
         # Identify "free" constants
         source_constants_values = set(source.constants.values())
         free_constants = [c for c in source_constants_values if c not in base_mapping]
         all_to_map = generators + free_constants
-        
+
         # Phase 2: Backtracking and Constraint Propagation
         # Assign values to generators and propagate images using the genealogy 'recipe'.
         self._backtrack(
             0, all_to_map, base_mapping, source, target, genealogy, homomorphisms
         )
-        
+
         return homomorphisms
 
     def _get_constants_mapping(self, source, target) -> Dict[Any, Any]:
@@ -79,7 +91,7 @@ class MorphismFinder:
         mapping = {}
         source_constants = source.constants
         target_constants = target.constants
-        
+
         for key, source_val in source_constants.items():
             if key in target_constants:
                 # Special case: 'unity' is only mandatory if both are Unital Rings
@@ -88,9 +100,9 @@ class MorphismFinder:
                 if key == "unity":
                     if not (isinstance(source, UnitalRing) and isinstance(target, UnitalRing)):
                         continue
-                
+
                 mapping[source_val] = target_constants[key]
-            
+
         return mapping
 
     def _backtrack(self, generator_index, generators, current_mapping, source, target, genealogy, results):
@@ -138,7 +150,7 @@ class MorphismFinder:
                     res_ab = source_op(a, b)
                     if mapping[res_ab] != target_op(mapping[a], mapping[b]):
                         return False
-        
+
         # 3. Check constants preservation
         # According to the theory, valid homomorphisms must preserve distinguished
         # elements like zero and unity (intrinsic properties of the structures).

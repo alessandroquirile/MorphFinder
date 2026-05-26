@@ -23,7 +23,7 @@ class Pruner:
 
         # 2. Group Order Pruning (Specific to groups or structures with identity/op)
         if (hasattr(source, "identity") and hasattr(source, "operation") and
-            hasattr(target, "identity") and hasattr(target, "operation")):
+                hasattr(target, "identity") and hasattr(target, "operation")):
             if not Pruner._check_group_order(source_val, target_val, source, target):
                 return False
 
@@ -63,7 +63,7 @@ class Pruner:
         order = 1
         current = element
         # Safety limit for finite structures
-        max_limit = 1000 
+        max_limit = 1000
         while current != identity and order < max_limit:
             current = operation(current, element)
             order += 1

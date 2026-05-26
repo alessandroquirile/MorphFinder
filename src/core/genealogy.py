@@ -13,7 +13,7 @@ class Genealogy:
         
         Mathematical Foundation:
         The tracker builds a 'recipe' for each element in S \ G. This is equivalent 
-        to building the genealogy function h: S \ G -> S x S described in the 
+        to building the genealogy function homomorphism: S \ G -> S x S described in the
         theory, which allows for deterministic propagation of images.
         """
         self.structure = structure
@@ -30,7 +30,7 @@ class Genealogy:
         """Builds the recipes for all elements in the structure."""
         closure = set(self.base_elements)
         new_elements = set(self.base_elements)
-        
+
         while new_elements:
             next_generation = set()
             for op_idx, op in enumerate(self.structure.operations):
@@ -44,7 +44,7 @@ class Genealogy:
                             next_generation.add(res)
                             self.recipes[res] = (op_idx, x, y)
                             self.generation_order.append(res)
-            
+
             if not next_generation:
                 break
             new_elements = next_generation

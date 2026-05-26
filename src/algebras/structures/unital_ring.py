@@ -1,7 +1,7 @@
 from typing import Any, Callable, Optional, Set
 
-from src.algebras.axioms.identity_existence import IdentityExistenceAxiom
 from src.algebras.axioms.distributivity import DistributivityAxiom
+from src.algebras.axioms.identity_existence import IdentityExistenceAxiom
 from src.algebras.structures.monoid import Monoid
 from src.algebras.structures.ring import Ring
 

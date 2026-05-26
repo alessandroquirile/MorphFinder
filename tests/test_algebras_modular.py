@@ -1,8 +1,9 @@
 import unittest
 
-from src.algebras.structures.abelian_group import AbelianGroup
+from src.algebras.analysis.finite_ring_analyzer import FiniteRingAnalyzer
 from src.algebras.axioms.associativity import AssociativityAxiom
 from src.algebras.axioms.commutativity import CommutativityAxiom
+from src.algebras.structures.abelian_group import AbelianGroup
 from src.algebras.structures.commutative_ring import CommutativeRing
 from src.algebras.structures.field import Field
 from src.algebras.structures.group import Group
@@ -11,7 +12,6 @@ from src.algebras.structures.monoid import Monoid
 from src.algebras.structures.ring import Ring
 from src.algebras.structures.semigroup import Semigroup
 from src.algebras.structures.unital_ring import UnitalRing
-from src.algebras.analysis.finite_ring_analyzer import FiniteRingAnalyzer
 from src.algebras.validation.finite_axiom_validator import FiniteAxiomValidator
 
 

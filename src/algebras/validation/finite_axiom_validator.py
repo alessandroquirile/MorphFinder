@@ -1,11 +1,11 @@
 from typing import Any
 
-from src.algebras.axioms.base import Axiom
 from src.algebras.axioms.associativity import AssociativityAxiom
+from src.algebras.axioms.base import Axiom
 from src.algebras.axioms.commutativity import CommutativityAxiom
+from src.algebras.axioms.distributivity import DistributivityAxiom
 from src.algebras.axioms.identity_existence import IdentityExistenceAxiom
 from src.algebras.axioms.inverse_existence import InverseExistenceAxiom
-from src.algebras.axioms.distributivity import DistributivityAxiom
 from src.algebras.axioms.multiplicative_inverses import MultiplicativeInversesAxiom
 from src.algebras.structures.binary_operation import CayleyTable
 from src.algebras.validation.base import Validator

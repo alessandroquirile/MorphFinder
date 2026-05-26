@@ -1,11 +1,11 @@
 import unittest
 
+from src.algebras.generators.discovery import find_minimal_generating_set
+from src.algebras.generators.factory import StrategyFactory
 from src.algebras.structures.abelian_group import AbelianGroup
 from src.algebras.structures.group import Group
 from src.algebras.structures.magma import Magma
 from src.algebras.structures.ring import Ring
-from src.algebras.generators.discovery import find_minimal_generating_set
-from src.algebras.generators.factory import StrategyFactory
 
 
 class TestGenerators(unittest.TestCase):

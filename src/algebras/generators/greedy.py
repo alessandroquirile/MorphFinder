@@ -70,7 +70,6 @@ class GreedyPruningStrategy(GeneratingSetStrategy):
     it does not guarantee a global minimum cardinality.
     """
 
-
     def find(self, structure) -> Set[Any]:
         generators = _greedy_expansion(structure)
         return _prune_generators(structure, generators)

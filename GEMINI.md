@@ -7,9 +7,12 @@
 
 ## 📌 1. Project Overview
 
-**MorphFinder** is a computational algebra tool designed to explore relationships between finite algebraic structures. It treats algebras as objects and mappings as morphisms within a categorical framework, using optimized backtracking algorithms to find and classify homomorphisms.
+**MorphFinder** is a computational algebra tool designed to explore relationships between finite algebraic structures.
+It treats algebras as objects and mappings as morphisms within a categorical framework, using optimized backtracking
+algorithms to find and classify homomorphisms.
 
 ### Key Technologies:
+
 - **Language:** Python 3.10+
 - **Testing:** Pytest
 - **Logic:** CSP (Constraint Satisfaction Problem) with Pruning Heuristics
@@ -47,11 +50,14 @@ src/
 
 MorphFinder solves for $f: S \to T$ such that $f(a * b) = f(a) \square f(b)$ using a three-phase CSP approach:
 
-1.  **Phase 1: Genealogy:** Build a recipe $h(x)$ for all elements $x \in S \setminus G$, where $G$ is a minimal generating set.
-2.  **Phase 2: Backtracking:** Systematically assign values from $T$ to the generators $G$. Propagate assignments to the rest of $S$ using the genealogy recipe.
-3.  **Phase 3: Validation:** Verify preservation of operations and distinguished constants (Zero, Unity).
+1. **Phase 1: Genealogy:** Build a recipe $h(x)$ for all elements $x \in S \setminus G$, where $G$ is a minimal
+   generating set.
+2. **Phase 2: Backtracking:** Systematically assign values from $T$ to the generators $G$. Propagate assignments to the
+   rest of $S$ using the genealogy recipe.
+3. **Phase 3: Validation:** Verify preservation of operations and distinguished constants (Zero, Unity).
 
 ### Pruning Strategies:
+
 - **Idempotency:** $x^2 = x \implies f(x)^2 = f(x)$.
 - **Group Order:** The order of $f(g)$ in $T$ must divide the order of $g$ in $S$.
 
@@ -60,6 +66,7 @@ MorphFinder solves for $f: S \to T$ such that $f(a * b) = f(a) \square f(b)$ usi
 ## 🏷 4. Categorical Classification
 
 Morphisms are classified based on the **First Isomorphism Theorem** and **Congruence Classes**:
+
 - **Monomorphism ($f: S \hookrightarrow T$):** Injective. Checked via $|S| = |Im(f)|$.
 - **Epimorphism ($f: S \twoheadrightarrow T$):** Surjective. Checked via $|Im(f)| = |T|$.
 - **Isomorphism ($f: S \cong T$):** Bijective.
@@ -71,7 +78,9 @@ Morphisms are classified based on the **First Isomorphism Theorem** and **Congru
 ## 🛠 5. Building and Running
 
 ### Setup
+
 Create a virtual environment, activate it, and install dependencies:
+
 ```bash
 # Create virtual environment
 python3 -m venv .venv
@@ -84,13 +93,17 @@ pip install -r requirements.txt
 ```
 
 ### Configuration
+
 The default generator strategy can be set in `config.yaml`:
+
 ```yaml
 strategy: greedy # or brute_force
 ```
 
 ### Testing
+
 Run the suite using `pytest`:
+
 ```bash
 pytest
 ```
