@@ -92,13 +92,14 @@ The relation $|\mathrm{Im}(f)| = |S| / |\ker(f)|$ holds for groups. For more gen
 
 MorphFinder categorizes homomorphisms based on image, kernel, and set properties:
 
-| Property       | Symbol                      | Condition                                                                                                              | 
-|----------------|-----------------------------|------------------------------------------------------------------------------------------------------------------------|
-| Monomorphism   | $f: S \hookrightarrow T$    | $f$ is injective: all $\sim_f$ classes are trivial; equivalently, $\ker(f) = \lbrace 0_S \rbrace$ for groups/rings. |
-| Epimorphism    | $f: S \twoheadrightarrow T$ | $f$ is surjective: $\mathrm{Im}(f) = T$.                                                                               |
-| Isomorphism    | $f: S \cong T$              | $f$ is bijective (injective and surjective).                                                                           |
-| *Endomorphism* | $f: S \to S$                | $S = T$.                                                                                                               |
-| Automorphism   | $f: S \cong S$              | Isomorphism with $S = T$.                                                                                              |
+| Property     | Symbol                      | Condition                                                                                                              | 
+|--------------|-----------------------------|------------------------------------------------------------------------------------------------------------------------|
+| Trivial      | $f(S) = \lbrace 0_T \rbrace$ | $f$ maps all elements of $S$ to the identity (or zero) of $T$.                                                         |
+| Monomorphism | $f: S \hookrightarrow T$    | $f$ is injective: all $\sim_f$ classes are trivial; equivalently, $\ker(f) = \lbrace 0_S \rbrace$ for groups/rings. |
+| Epimorphism  | $f: S \twoheadrightarrow T$ | $f$ is surjective: $\mathrm{Im}(f) = T$.                                                                               |
+| Isomorphism  | $f: S \cong T$              | $f$ is bijective (injective and surjective).                                                                           |
+| Endomorphism | $f: S \to S$                | $S = T$.                                                                                                               |
+| Automorphism | $f: S \cong S$              | Isomorphism with $S = T$.                                                                                              |
 
 Beyond standard injectivity/surjectivity, MorphFinder identifies mappings of a structure to itself (**Endomorphism**). A bijective endomorphism that preserves all relational structure is an **Automorphism**, representing a structural symmetry.
 
