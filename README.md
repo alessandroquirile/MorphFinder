@@ -33,8 +33,7 @@ You can run the example provided in the `main.py` file to see MorphFinder in act
 python main.py
 ```
 
-$\overline{1}$
-This script defines two simple monoids ($\mathbb{Z}_4, +, \bar{0}$) and ($\mathbb{Z}_3, +, \bar{0}$) and searches for homomorphisms between them. The expected output will be:
+This script defines two simple monoids ($\mathbb{Z}_4, +, \overline{0}$) and ($\mathbb{Z}_3, +, \overline{0}$) and searches for homomorphisms between them. The expected output will be:
 
 ```text
 Found 1 homomorphism(s) between given structures:

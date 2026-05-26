@@ -49,10 +49,10 @@ L'algoritmo costruisce una funzione $h: S \setminus G \to S \times S$ che associ
 elemento $x \in S \setminus G$ una coppia $(a, b) \in S \times S$ tale che $a * b = x$, tracciando così la "genealogia"
 di ogni elemento non-generatore.
 
-Consideriamo ad esempio i seguenti monoidi $S = (\mathbb{Z}_4, +, \bar{0})$ e $T = (\mathbb{Z}_3, +, \bar{0})$
-dove $+: S \times S \to S$ denota l'usuale operazione binaria di somma. Determinato $G_S = \lbrace \bar{1} \rbrace$, si
-ha che $h(\bar{0}) = (\bar{3}, \bar{1})$, $h(\bar{2})= (\bar{1}, \bar{1})$, $h(\bar{3}) = (\bar{2}, \bar{1})$ non
-essendo necessario calcolare $h(\bar{1})$ poiché $\bar{1} \in G$.
+Consideriamo ad esempio i seguenti monoidi $S = (\mathbb{Z}_4, +, \overline{0})$ e $T = (\mathbb{Z}_3, +, \overline{0})$
+dove $+: S \times S \to S$ denota l'usuale operazione binaria di somma. Determinato $G_S = \lbrace \overline{1} \rbrace$, si
+ha che $h(\overline{0}) = (\overline{3}, \overline{1})$, $h(\overline{2})= (\overline{1}, \overline{1})$, $h(\overline{3}) = (\overline{2}, \overline{1})$ non
+essendo necessario calcolare $h(\overline{1})$ poiché $\overline{1} \in G$.
 
 La seguente Figura mostra la mappa di genealogia $h$:
 
@@ -70,59 +70,59 @@ funzione trovata è un omomorfismo valido da $S$ a $T$.
 
 Riprendendo l'esempio precedente, l'algoritmo assegna sistematicamente un elemento $b \in \mathbb{Z}_3$ a $g \in G$.
 
-Caso per $f(\bar{1}) = \bar{1}$. Si ha che:
+Caso per $f(\overline{1}) = \overline{1}$. Si ha che:
 
-$h(\bar{2}) = (\bar{1}, \bar{1}) \implies f(\bar{2}) = f(\bar{1}) +_T f(\bar{1}) = \bar{1} + \bar{1} = \bar{2}$
+$h(\overline{2}) = (\overline{1}, \overline{1}) \implies f(\overline{2}) = f(\overline{1}) +_T f(\overline{1}) = \overline{1} + \overline{1} = \overline{2}$
 
-$h(\bar{3}) = (\bar{2}, \bar{1}) \implies f(\bar{3}) = f(\bar{2}) +_T f(\bar{1}) = \bar{2} + \bar{1} = \bar{0}$
+$h(\overline{3}) = (\overline{2}, \overline{1}) \implies f(\overline{3}) = f(\overline{2}) +_T f(\overline{1}) = \overline{2} + \overline{1} = \overline{0}$
 
-$h(\bar{0}) = (\bar{3}, \bar{1}) \implies f(\bar{0}) = f(\bar{3}) +_T f(\bar{1}) = \bar{0} + \bar{1} = \bar{1}$
+$h(\overline{0}) = (\overline{3}, \overline{1}) \implies f(\overline{0}) = f(\overline{3}) +_T f(\overline{1}) = \overline{0} + \overline{1} = \overline{1}$
 
 Quindi l'applicazione $f$ costruita è
 
 $$f: \mathbb{Z}_4 \to \mathbb{Z}_3$$
-$$\bar{0} \mapsto \bar{1}$$
-$$\bar{1} \mapsto \bar{1}$$
-$$\bar{2} \mapsto \bar{2}$$
-$$\bar{3} \mapsto \bar{0}$$
+$$\overline{0} \mapsto \overline{1}$$
+$$\overline{1} \mapsto \overline{1}$$
+$$\overline{2} \mapsto \overline{2}$$
+$$\overline{3} \mapsto \overline{0}$$
 
 La funzione $f$ preserva l'operazione su tutto $S \times S$. Ma essendo le due strutture date dei monoidi, occorre
 che $f$ preservi anche l'esistenza dell'elemento neutro ovvero $f(\varepsilon_S) = \varepsilon_T$
-ma $f(\bar{0}) = \bar{0} \ne \bar{1}$ ottenendo una contraddizione. Quindi $f \notin \mathcal{Hom}(S,T)$.
+ma $f(\overline{0}) = \overline{0} \ne \overline{1}$ ottenendo una contraddizione. Quindi $f \notin \mathcal{Hom}(S,T)$.
 
 A questo punto l'algoritmo esegue un backtracking e prova un'altra assegnazione possibile. Ad
-esempio, $f(\bar{1}) = \bar{0}$.
+esempio, $f(\overline{1}) = \overline{0}$.
 
-Caso per $f(\bar{1}) = \bar{0}$. Si ha che:
+Caso per $f(\overline{1}) = \overline{0}$. Si ha che:
 
-$h(\bar{2}) = (\bar{1}, \bar{1}) \implies f(\bar{2}) = f(\bar{1}) +_T f(\bar{1}) = \bar{0} + \bar{0} = \bar{0}$
+$h(\overline{2}) = (\overline{1}, \overline{1}) \implies f(\overline{2}) = f(\overline{1}) +_T f(\overline{1}) = \overline{0} + \overline{0} = \overline{0}$
 
-$h(\bar{3}) = (\bar{2}, \bar{1}) \implies f(\bar{3}) = f(\bar{2}) +_T f(\bar{1}) = \bar{0} + \bar{0} = \bar{0}$
+$h(\overline{3}) = (\overline{2}, \overline{1}) \implies f(\overline{3}) = f(\overline{2}) +_T f(\overline{1}) = \overline{0} + \overline{0} = \overline{0}$
 
-$h(\bar{0}) = (\bar{3}, \bar{1}) \implies f(\bar{0}) = f(\bar{3}) +_T f(\bar{1}) = \bar{0} + \bar{0} = \bar{0}$
+$h(\overline{0}) = (\overline{3}, \overline{1}) \implies f(\overline{0}) = f(\overline{3}) +_T f(\overline{1}) = \overline{0} + \overline{0} = \overline{0}$
 
 Quindi l'applicazione $f$ costruita è
 
-$$f: \bar{a} \in \mathbb{Z}_4 \mapsto \bar{0} \in \mathbb{Z}_3$$
+$$f: \overline{a} \in \mathbb{Z}_4 \mapsto \overline{0} \in \mathbb{Z}_3$$
 
 La funzione $f$ soddisfa la definizione di omomorfismo su tutto $S \times S$ e preserva l'elemento
-neutro: $f(\varepsilon_S) = \varepsilon_T \iff f(\bar{0}) = \bar{0}$, vero. Quindi $f \in \mathcal{Hom}(S,T)$. In
+neutro: $f(\varepsilon_S) = \varepsilon_T \iff f(\overline{0}) = \overline{0}$, vero. Quindi $f \in \mathcal{Hom}(S,T)$. In
 particolare si tratta di un omomorfismo banale.
 
-Proseguiamo con l'ultima assegnazione possibile, ovvero $f(\bar{1}) = \bar{2}$. Similmente a quanto fatto prima si
+Proseguiamo con l'ultima assegnazione possibile, ovvero $f(\overline{1}) = \overline{2}$. Similmente a quanto fatto prima si
 ottiene la seguente applicazione:
 
 $$f: \mathbb{Z}_4 \to \mathbb{Z}_3$$
-$$\bar{0} \mapsto \bar{2}$$
-$$\bar{1} \mapsto \bar{2}$$
-$$\bar{2} \mapsto \bar{1}$$
-$$\bar{3} \mapsto \bar{0}$$
+$$\overline{0} \mapsto \overline{2}$$
+$$\overline{1} \mapsto \overline{2}$$
+$$\overline{2} \mapsto \overline{1}$$
+$$\overline{3} \mapsto \overline{0}$$
 
 Verifico se tale applicazione preserva l'elemento neutro
-ovvero $f(\varepsilon_S) = \varepsilon_T \iff f(\bar{0}) = \bar{0}$, falso. Quindi $f \notin \mathcal{Hom}(S,T)$.
+ovvero $f(\varepsilon_S) = \varepsilon_T \iff f(\overline{0}) = \overline{0}$, falso. Quindi $f \notin \mathcal{Hom}(S,T)$.
 
 $$
-\therefore \mathcal{Hom}(S,T) = \lbrace f: \bar{a} \in \mathbb{Z}_4 \mapsto \bar{0} \in \mathbb{Z}_3 \rbrace
+\therefore \mathcal{Hom}(S,T) = \lbrace f: \overline{a} \in \mathbb{Z}_4 \mapsto \overline{0} \in \mathbb{Z}_3 \rbrace
 $$
 
 La seguente Figura mostra l'albero di computazione per l'esempio fornito:
@@ -185,18 +185,18 @@ Oltre alla distinzione classica tra iniettività e suriettività, MorphFinder id
 se stessa (**Endomorfismo**). Se tale mappatura preserva perfettamente tutte le relazioni ed è biunivoca, si parla di *
 *Automorfismo**, che rappresenta una simmetria strutturale dell'algebra stessa.
 
-Ad esempio, consideriamo $f: \bar{a} \in \mathbb{Z}_6 \mapsto \bar{2a} \in \mathbb{Z}_4$.
+Ad esempio, consideriamo $f: \overline{a} \in \mathbb{Z}_6 \mapsto \overline{2a} \in \mathbb{Z}_4$.
 
-- $\ker(f) = \lbrace \bar{0}, \bar{2}, \bar{4} \rbrace$. Poiché $\ker(f) \ne \lbrace \bar{0} \rbrace$, $f$ non è
+- $\ker(f) = \lbrace \overline{0}, \overline{2}, \overline{4} \rbrace$. Poiché $\ker(f) \ne \lbrace \overline{0} \rbrace$, $f$ non è
   iniettiva.
-- $\mathrm{Im}(f) = \lbrace \bar{0}, \bar{2} \rbrace$. Poiché $\mathrm{Im}(f) \ne \mathbb{Z}_4$, $f$ non è suriettiva.
+- $\mathrm{Im}(f) = \lbrace \overline{0}, \overline{2} \rbrace$. Poiché $\mathrm{Im}(f) \ne \mathbb{Z}_4$, $f$ non è suriettiva.
 
 Quindi $f$ non è né un monomorfismo, né un epimorfismo (e di conseguenza non è un isomorfismo).
 
-Facciamo un altro esempio e consideriamo $f: \bar{a} \in \mathbb{Z}_3 \mapsto \bar{2a} \in \mathbb{Z}_3$.
+Facciamo un altro esempio e consideriamo $f: \overline{a} \in \mathbb{Z}_3 \mapsto \overline{2a} \in \mathbb{Z}_3$.
 
-- $\ker(f) = \lbrace \bar{0} \rbrace$. Poiché $\ker(f) = \lbrace \bar{0} \rbrace$, $f$ è iniettiva.
-- $\mathrm{Im}(f) = \lbrace \bar{0}, \bar{1}, \bar{2} \rbrace$. Poiché $\mathrm{Im}(f) = \mathbb{Z}_3$, $f$ è
+- $\ker(f) = \lbrace \overline{0} \rbrace$. Poiché $\ker(f) = \lbrace \overline{0} \rbrace$, $f$ è iniettiva.
+- $\mathrm{Im}(f) = \lbrace \overline{0}, \overline{1}, \overline{2} \rbrace$. Poiché $\mathrm{Im}(f) = \mathbb{Z}_3$, $f$ è
   suriettiva.
 
 In questo caso, essendo $f$ un isomorfismo tra la struttura $\mathbb{Z}_3$ e se stessa, viene classificato come
