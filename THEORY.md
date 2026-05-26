@@ -141,8 +141,7 @@ omomorfismo $f \in \mathcal{Hom}(S,T)$ analizzandone le proprietà categoriali.
 
 ### Primo teorema di isomorfismo
 
-Il sistema sfrutta i principi del primo teorema di isomorfismo per classificare $f$. Per strutture come **gruppi e
-anelli**, il teorema afferma che:
+Il sistema sfrutta i principi del primo teorema di isomorfismo per classificare $f$. Per strutture come gruppi e anelli, il teorema afferma che:
 
 $$
 S/\ker(f) \cong \mathrm{Im}(f)
@@ -155,6 +154,7 @@ Dove:
 - $S/\ker(f)$ è l'insieme quoziente.
 
 In questi casi (grazie al teorema di Lagrange per i gruppi), vale la relazione:
+
 $$
 |\mathrm{Im}(f)| = \frac{|S|}{|\ker(f)|}
 $$

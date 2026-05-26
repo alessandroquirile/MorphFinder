@@ -46,8 +46,5 @@ f: {0, 1, 2, 3} → {0, 1, 2} | 0 ↦ 0, 1 ↦ 0, 2 ↦ 0, 3 ↦ 0 | Properties:
 
 ## Esecuzione dei Test
 
-Puoi eseguire la suite di test utilizzando `pytest`:
-
-```bash
-pytest
+Puoi eseguire la suite di test utilizzando `pytest`.
 ```
