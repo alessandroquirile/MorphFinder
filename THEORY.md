@@ -1,205 +1,113 @@
-# Teoria: MorphFinder
+# Theory: MorphFinder
 
-MorphFinder è una libreria per trovare e classificare omomorfismi tra strutture algebriche finite, tra cui: magmi,
-semigruppi, monoidi, gruppi, gruppi abeliani, anelli, anelli commutativi, anelli unitari, campi.
+MorphFinder is a library designed for the discovery and classification of homomorphisms between finite algebraic structures, including magmas, semigroups, monoids, groups, abelian groups, rings, commutative rings, unital rings, and fields.
 
-## Background teorico
+## Theoretical Background
 
-Date due strutture algebriche $(S,*)$ e $(T,\square)$, si vuole determinare l'insieme degli omomorfismi da S a T ovvero
+Given two algebraic structures $(S,*)$ and $(T,\square)$, we aim to determine the set of homomorphisms from $S$ to $T$, defined as:
 
 $$
 \mathcal{Hom}(S,T) := \lbrace f: S \to T\ \text{s.t.}\ \forall a,b \in S\ f(a*b) = f(a)\ \square\ f(b) \rbrace
 $$
 
-Si nota facilmente che $|\mathcal{Hom}(S,T)| \le |Map(S,T)| = |T|^{|S|}$, dove $Map(S,T)$ rappresenta l'insieme delle
-applicazioni da $S$ a $T$.
+It is readily observed that $|\mathcal{Hom}(S,T)| \le |Map(S,T)| = |T|^{|S|}$, where $Map(S,T)$ denotes the set of all mappings from $S$ to $T$.
 
-Un algoritmo che ricerca esaustivamente tutti i possibili omomorfismi da $S$ a $T$ impiegherebbe tempo esponenziale,
-ovvero $O(|T|^{|S|})$. Se riuscissimo a trovare un sistema di generatori $G$ per $S$, allora ridurremmo lo spazio di
-ricerca da $O(|T|^{|S|})$ a $O(|T|^{|G|})$, con $|G| \ll |S|$.
+An exhaustive algorithm searching for all possible homomorphisms from $S$ to $T$ would have an exponential time complexity of $O(|T|^{|S|})$. However, by identifying a system of generators $G$ for $S$, we can reduce the search space from $O(|T|^{|S|})$ to $O(|T|^{|G|})$, where $|G| \ll |S|$.
 
-## Come determinare un sistema di generatori $G$ per $S$?
+## How to determine a generating system $G$ for $S$?
 
-Per determinare un sistema di generatori $G$ per $S$ ho diverse strategie:
+There are several strategies for determining a generating system $G$ for $S$:
 
-- Algoritmo a forza bruta: determina il sistema minimale di generatori $G$ di una struttura algebrica $S$ enumerando
-  tutti i sottoinsiemi di $S$ in ordine di cardinalità crescente e restituendo il primo sottoinsieme $G \subseteq S$
-  tale che $\langle G \rangle = S$, cioè tale che la chiusura di G rispetto alle operazioni (e costanti) della struttura
-  coincida con l'intera struttura $S$. Garantisce di trovare l'insieme di cardinalità minima globale.
+- **Brute-Force Algorithm:** Determines the minimal generating system $G$ of an algebraic structure $S$ by enumerating all subsets of $S$ in increasing order of cardinality. It returns the first subset $G \subseteq S$ such that $\langle G \rangle = S$—that is, the closure of $G$ under the structure's operations and constants coincides with $S$ itself. This approach guarantees finding a set of globally minimal cardinality.
 
-- Algoritmo greedy: costruisce un insieme di generatori $G$ che aggiunge iterativamente l'elemento che massimizza l'
-  incremento della chiusura $\langle G \rangle$ fino a coprire tutta la struttura $S$, e successivamente rimuove gli
-  elementi ridondanti ottenendo un insieme $G$ tale che $\langle G \rangle = S$ e nessun suo sottoinsieme proprio genera
-  ancora $S$, senza però garantire che $G$ sia di cardinalità minima globale.
+- **Greedy Algorithm:** Constructs a generating set $G$ by iteratively adding the element that maximizes the growth of the closure $\langle G \rangle$ until the entire structure $S$ is covered. Redundant elements are subsequently removed to ensure $G$ is minimal in terms of inclusion, though this does not guarantee global minimum cardinality.
 
-## Come determinare $\mathcal{Hom}(S,T)$?
+## How to determine $\mathcal{Hom}(S,T)$?
 
-Ci sono alcune considerazioni importanti da fare: innanzitutto non è detto che il sistema di generatori $G$ sia chiuso
-rispetto all'operazione, ovvero non è detto che $\forall a,b \in G\ a * b \in G$. Anzi, essendo $|G| \ll |S|$ è molto
-probabile che $\exists a,b \in G\ \text{s.t.}\ a * b \in S \setminus G$.
+It is important to note that the generating system $G$ is generally not closed under the operation; that is, it is likely that $\exists a,b \in G$ such that $a * b \in S \setminus G$.
 
-Poiché $G$ genera $S$, ogni omomorfismo $f \in \mathcal{Hom}(S,T)$ è univocamente determinato dalla sua
-restrizione $f|_G : G \to T$. È quindi sufficiente enumerare le $|T|^{|G|}$ applicazioni nella forma $\varphi: G \to T$,
-estendere ciascuna a $f: S \to T$ tramite la funzione di genealogia $h$ (descritta di seguito), e verificare
-se $f \in \mathcal{Hom}(S,T)$.
+Since $G$ generates $S$, any homomorphism $f \in \mathcal{Hom}(S,T)$ is uniquely determined by its restriction $f|_G : G \to T$. Consequently, we need only enumerate the $|T|^{|G|}$ mappings of the form $\varphi: G \to T$, extend each to $f: S \to T$ using the genealogy function $h$ (defined below), and verify whether $f \in \mathcal{Hom}(S,T)$.
 
-### Funzione di genealogia
+### Genealogy Function
 
-L'algoritmo costruisce una funzione $h: S \setminus G \to S \times S$ che associa a ciascun
-elemento $x \in S \setminus G$ una coppia $(a, b) \in S \times S$ tale che $a * b = x$, tracciando così la "genealogia"
-di ogni elemento non-generatore.
+The algorithm constructs a function $h: S \setminus G \to S \times S$ that associates each element $x \in S \setminus G$ with a pair $(a, b) \in S \times S$ such that $a * b = x$, effectively tracing the "genealogy" of each non-generating element.
 
-Consideriamo ad esempio i seguenti monoidi $S = (\mathbb{Z}_4, +, \overline{0})$ e $T = (\mathbb{Z}_3, +, \overline{0})$
-dove $+: S \times S \to S$ denota l'usuale operazione binaria di somma. Determinato $G_S = \lbrace \overline{1} \rbrace$, si
-ha che $h(\overline{0}) = (\overline{3}, \overline{1})$, $h(\overline{2})= (\overline{1}, \overline{1})$, $h(\overline{3}) = (\overline{2}, \overline{1})$ non
-essendo necessario calcolare $h(\overline{1})$ poiché $\overline{1} \in G$.
+For example, consider the monoids $S = (\mathbb{Z}_4, +, \overline{0})$ and $T = (\mathbb{Z}_3, +, \overline{0})$. With $G_S = \lbrace \overline{1} \rbrace$, we have $h(\overline{0}) = (\overline{3}, \overline{1})$, $h(\overline{2}) = (\overline{1}, \overline{1})$, and $h(\overline{3}) = (\overline{2}, \overline{1})$. Note that $h(\overline{1})$ need not be computed since $\overline{1} \in G$.
 
-La seguente Figura mostra la mappa di genealogia $h$:
+The following figure illustrates the genealogy map $h$:
 
-![Mappa della Genealogia h](assets/history.png)
+![Genealogy Map](assets/history.png)
 
-### Backtracking e propagazione dei vincoli
+### Backtracking and Constraint Propagation
 
-Per costruire $\mathcal{Hom}(S,T)$, l'algoritmo inizia assegnando sistematicamente un valore in $T$ per ogni generatore
-in $G$. A questo punto entra in gioco la funzione $h$. L'algoritmo usa questa funzione come "ricettario" per costruire
-le immagini degli altri elementi di $S$, senza esplorare ulteriori assegnazioni candidate: se $h(x) = (a, b)$,
-allora $f(x) := f(a)\ \square\ f(b)$. Costruito un possibile candidato $f$, si verifica che esso soddisfi la definizione
-di omomorfismo su tutto $S \times S$ e che preservi le eventuali proprietà intrinseche delle strutture algebriche
-fornite (come zero ed unità). Se si ottiene una contraddizione, $f$ viene scartato. Se il controllo ha successo, la
-funzione trovata è un omomorfismo valido da $S$ a $T$.
+To construct $\mathcal{Hom}(S,T)$, the algorithm systematically assigns a value in $T$ to each generator in $G$. The function $h$ then acts as a "recipe" to derive images for the remaining elements of $S$ without further branching: if $h(x) = (a, b)$, then $f(x) := f(a)\ \square\ f(b)$. Once a candidate $f$ is constructed, we verify that it satisfies the homomorphism definition over $S \times S$ and preserves intrinsic properties (such as identity or zero elements). If a contradiction arises, the candidate is discarded. If the check succeeds, $f$ is a valid homomorphism.
 
-Riprendendo l'esempio precedente, l'algoritmo assegna sistematicamente un elemento $b \in \mathbb{Z}_3$ a $g \in G$.
+Applying this to our previous example, the algorithm assigns $b \in \mathbb{Z}_3$ to $g \in G$:
 
-Caso per $f(\overline{1}) = \overline{1}$. Si ha che:
+If $f(\overline{1}) = \overline{1}$:
+$h(\overline{2}) = (\overline{1}, \overline{1}) \implies f(\overline{2}) = \overline{1} + \overline{1} = \overline{2}$
+$h(\overline{3}) = (\overline{2}, \overline{1}) \implies f(\overline{3}) = \overline{2} + \overline{1} = \overline{0}$
+$h(\overline{0}) = (\overline{3}, \overline{1}) \implies f(\overline{0}) = \overline{0} + \overline{1} = \overline{1}$
 
-$h(\overline{2}) = (\overline{1}, \overline{1}) \implies f(\overline{2}) = f(\overline{1}) +_T f(\overline{1}) = \overline{1} + \overline{1} = \overline{2}$
+The mapping $f$ preserves the operation, but as the structures are monoids, $f$ must also preserve the identity element $f(\varepsilon_S) = \varepsilon_T$. Since $f(\overline{0}) = \overline{1} \ne \overline{0}$, this assignment leads to a contradiction, so $f \notin \mathcal{Hom}(S,T)$.
 
-$h(\overline{3}) = (\overline{2}, \overline{1}) \implies f(\overline{3}) = f(\overline{2}) +_T f(\overline{1}) = \overline{2} + \overline{1} = \overline{0}$
+The algorithm then backtracks to test another assignment, e.g., $f(\overline{1}) = \overline{0}$:
+$h(\overline{2}) = (\overline{1}, \overline{1}) \implies f(\overline{2}) = \overline{0} + \overline{0} = \overline{0}$
+$h(\overline{3}) = (\overline{2}, \overline{1}) \implies f(\overline{3}) = \overline{0} + \overline{0} = \overline{0}$
+$h(\overline{0}) = (\overline{3}, \overline{1}) \implies f(\overline{0}) = \overline{0} + \overline{0} = \overline{0}$
 
-$h(\overline{0}) = (\overline{3}, \overline{1}) \implies f(\overline{0}) = f(\overline{3}) +_T f(\overline{1}) = \overline{0} + \overline{1} = \overline{1}$
+Here $f(\overline{a}) = \overline{0}$ satisfies the homomorphism definition and identity preservation ($f(\overline{0}) = \overline{0}$), confirming $f \in \mathcal{Hom}(S,T)$ as the trivial homomorphism.
 
-Quindi l'applicazione $f$ costruita è
-
-$$f: \mathbb{Z}_4 \to \mathbb{Z}_3$$
-$$\overline{0} \mapsto \overline{1}$$
-$$\overline{1} \mapsto \overline{1}$$
-$$\overline{2} \mapsto \overline{2}$$
-$$\overline{3} \mapsto \overline{0}$$
-
-La funzione $f$ preserva l'operazione su tutto $S \times S$. Ma essendo le due strutture date dei monoidi, occorre
-che $f$ preservi anche l'esistenza dell'elemento neutro ovvero $f(\varepsilon_S) = \varepsilon_T$
-ma $f(\overline{0}) = \overline{0} \ne \overline{1}$ ottenendo una contraddizione. Quindi $f \notin \mathcal{Hom}(S,T)$.
-
-A questo punto l'algoritmo esegue un backtracking e prova un'altra assegnazione possibile. Ad
-esempio, $f(\overline{1}) = \overline{0}$.
-
-Caso per $f(\overline{1}) = \overline{0}$. Si ha che:
-
-$h(\overline{2}) = (\overline{1}, \overline{1}) \implies f(\overline{2}) = f(\overline{1}) +_T f(\overline{1}) = \overline{0} + \overline{0} = \overline{0}$
-
-$h(\overline{3}) = (\overline{2}, \overline{1}) \implies f(\overline{3}) = f(\overline{2}) +_T f(\overline{1}) = \overline{0} + \overline{0} = \overline{0}$
-
-$h(\overline{0}) = (\overline{3}, \overline{1}) \implies f(\overline{0}) = f(\overline{3}) +_T f(\overline{1}) = \overline{0} + \overline{0} = \overline{0}$
-
-Quindi l'applicazione $f$ costruita è
-
-$$f: \overline{a} \in \mathbb{Z}_4 \mapsto \overline{0} \in \mathbb{Z}_3$$
-
-La funzione $f$ soddisfa la definizione di omomorfismo su tutto $S \times S$ e preserva l'elemento
-neutro: $f(\varepsilon_S) = \varepsilon_T \iff f(\overline{0}) = \overline{0}$, vero. Quindi $f \in \mathcal{Hom}(S,T)$. In
-particolare si tratta di un omomorfismo banale.
-
-Proseguiamo con l'ultima assegnazione possibile, ovvero $f(\overline{1}) = \overline{2}$. Similmente a quanto fatto prima si
-ottiene la seguente applicazione:
-
-$$f: \mathbb{Z}_4 \to \mathbb{Z}_3$$
-$$\overline{0} \mapsto \overline{2}$$
-$$\overline{1} \mapsto \overline{2}$$
-$$\overline{2} \mapsto \overline{1}$$
-$$\overline{3} \mapsto \overline{0}$$
-
-Verifico se tale applicazione preserva l'elemento neutro
-ovvero $f(\varepsilon_S) = \varepsilon_T \iff f(\overline{0}) = \overline{0}$, falso. Quindi $f \notin \mathcal{Hom}(S,T)$.
+Testing the final assignment, $f(\overline{1}) = \overline{2}$:
+$f(\overline{0}) = f(\overline{3}) + f(\overline{1}) = f(\overline{2}) + \overline{1} + \overline{1} = \overline{1} + \overline{1} + \overline{2} = \overline{1} \ne \overline{0}$, leading to another contradiction.
 
 $$
 \therefore \mathcal{Hom}(S,T) = \lbrace f: \overline{a} \in \mathbb{Z}_4 \mapsto \overline{0} \in \mathbb{Z}_3 \rbrace
 $$
 
-La seguente Figura mostra l'albero di computazione per l'esempio fornito:
-
 ![Backtracking](assets/backtracking.png)
 
-Si noti che grazie alla propagazione dei vincoli, l'algoritmo evita l'esplorazione esaustiva dell'intero spazio delle
-applicazioni $(|T|^{|S|} = 3^4 = 81)$. Limitando i tentativi alla sola scelta delle immagini dei
-generatori $(|T|^{|G|} = 3)$ il carico computazionale viene abbattuto, rendendo trattabili anche strutture algebriche di
-dimensioni superiori.
+Constraint propagation significantly reduces the search space compared to the $3^4 = 81$ brute-force combinations, making this approach highly efficient.
 
-## Classificare un omomorfismo
+## Classifying Homomorphisms
 
-Una volta ottenuto $\mathcal{Hom}(S,T)$ tramite l'algoritmo CSP, MorphFinder classifica ogni
-omomorfismo $f \in \mathcal{Hom}(S,T)$ analizzandone le proprietà categoriali.
+Once $\mathcal{Hom}(S,T)$ is identified, MorphFinder classifies each $f \in \mathcal{Hom}(S,T)$ based on its categorical properties.
 
-### Primo teorema di isomorfismo
+### First Isomorphism Theorem
 
-Il sistema sfrutta i principi del primo teorema di isomorfismo per classificare $f$. Per strutture come gruppi e anelli, il teorema afferma che:
+MorphFinder utilizes the First Isomorphism Theorem, which states that for structures like groups and rings:
 
 $$
 S/\ker(f) \cong \mathrm{Im}(f)
 $$
 
-Dove:
+Where:
+- $\ker(f) := \lbrace s \in S : f(s) = 0_T \rbrace$ is the kernel.
+- $\mathrm{Im}(f) := \lbrace f(s) \in T : s \in S \rbrace$ is the image.
+- $S/\ker(f)$ is the quotient structure.
 
-- $\ker(f) := \lbrace s \in S : f(s) = 0_T \rbrace$ è il nucleo di $f$.
-- $\mathrm{Im}(f) := \lbrace f(s) \in T : s \in S \rbrace$ è l'immagine di $f$.
-- $S/\ker(f)$ è l'insieme quoziente.
+The relation $|\mathrm{Im}(f)| = |S| / |\ker(f)|$ holds for groups. For more general structures (like magmas), where a kernel might not be uniquely defined by an identity, MorphFinder uses the congruence relation $\sim_f$ where $a \sim_f b \iff f(a) = f(b)$. Here, $|\mathrm{Im}(f)|$ corresponds to the number of distinct equivalence classes in $S/{\sim_f}$.
 
-In questi casi (grazie al teorema di Lagrange per i gruppi), vale la relazione:
+### Classification Criteria
 
-$$
-|\mathrm{Im}(f)| = \frac{|S|}{|\ker(f)|}
-$$
+MorphFinder categorizes homomorphisms based on image, kernel, and set properties:
 
-Nota: Per strutture più generali (come magmi o semigruppi) che non possiedono necessariamente un elemento neutro che
-caratterizzi il nucleo, MorphFinder utilizza la relazione di congruenza $\sim_f$ definita
-da $a \sim_f b \iff f(a) = f(b)$. In tal caso, $|\mathrm{Im}(f)|$ corrisponde al numero di classi di equivalenza
-distinte in $S/{\sim_f}$, e l'iniettività coincide con la banalità di tutte le classi (ciascuna di cardinalità 1).
+| Property       | Symbol                      | Condition                                                                                                              | 
+|----------------|-----------------------------|------------------------------------------------------------------------------------------------------------------------|
+| Monomorphism   | $f: S \hookrightarrow T$    | $f$ is injective: all $\sim_f$ classes are trivial; equivalently, $\ker(f) = \lbrace 0_S \rbrace$ for groups/rings. |
+| Epimorphism    | $f: S \twoheadrightarrow T$ | $f$ is surjective: $\mathrm{Im}(f) = T$.                                                                               |
+| Isomorphism    | $f: S \cong T$              | $f$ is bijective (injective and surjective).                                                                           |
+| *Endomorphism* | $f: S \to S$                | $S = T$.                                                                                                               |
+| Automorphism   | $f: S \cong S$              | Isomorphism with $S = T$.                                                                                              |
 
-L'idea alla base è che il quoziente "pulisce" il dominio dalla ridondanza causata dalla non-iniettività. MorphFinder
-ottimizza la classificazione confrontando le cardinalità dell'immagine e del codominio per identificare velocemente
-monomorfismi ed epimorfismi.
+Beyond standard injectivity/surjectivity, MorphFinder identifies mappings of a structure to itself (**Endomorphism**). A bijective endomorphism that preserves all relational structure is an **Automorphism**, representing a structural symmetry.
 
-### Criteri di classificazione
+For example, $f: \overline{a} \in \mathbb{Z}_6 \mapsto \overline{2a} \in \mathbb{Z}_4$:
+- $\ker(f) = \lbrace \overline{0}, \overline{2}, \overline{4} \rbrace \ne \lbrace \overline{0} \rbrace \implies$ not injective.
+- $\mathrm{Im}(f) = \lbrace \overline{0}, \overline{2} \rbrace \ne \mathbb{Z}_4 \implies$ not surjective.
+Thus, $f$ is neither a monomorphism nor an epimorphism.
 
-MorphFinder categorizza un omomorfismo $f: S \to T$ basandosi sulle proprietà derivate dall'analisi dell'immagine, del
-nucleo e della natura degli insiemi coinvolti:
-
-| Proprietà   | Simbolo                     | Condizione                                                                                                                     | 
-|-------------|-----------------------------|--------------------------------------------------------------------------------------------------------------------------------|
-| Monomorfismo | $f: S \hookrightarrow T$    | $f$ iniettiva: tutte le classi di $\sim_f$ sono banali; equivalentemente, per gruppi e anelli, $\ker(f) = \lbrace 0_S \rbrace$ |
-| Epimorfismo | $f: S \twoheadrightarrow T$ | $f$ suriettiva: $\mathrm{Im}(f) = T$                                                                                           |
-| Isomorfismo | $f: S \cong T$              | $f$ biiettiva: iniettiva + suriettiva                                                                                          |
-| *Endomorfismo* | $f: S \to S$                | Dominio e codominio coincidono ($S = T$)                                                                                       |
-| Automorfismo | $f: S \cong S$              | Isomorfismo con $S = T$                                                                                                        |
-
-Oltre alla distinzione classica tra iniettività e suriettività, MorphFinder identifica se una struttura viene mappata in
-se stessa (**Endomorfismo**). Se tale mappatura preserva perfettamente tutte le relazioni ed è biunivoca, si parla di *
-*Automorfismo**, che rappresenta una simmetria strutturale dell'algebra stessa.
-
-Ad esempio, consideriamo $f: \overline{a} \in \mathbb{Z}_6 \mapsto \overline{2a} \in \mathbb{Z}_4$.
-
-- $\ker(f) = \lbrace \overline{0}, \overline{2}, \overline{4} \rbrace$. Poiché $\ker(f) \ne \lbrace \overline{0} \rbrace$, $f$ non è
-  iniettiva.
-- $\mathrm{Im}(f) = \lbrace \overline{0}, \overline{2} \rbrace$. Poiché $\mathrm{Im}(f) \ne \mathbb{Z}_4$, $f$ non è suriettiva.
-
-Quindi $f$ non è né un monomorfismo, né un epimorfismo (e di conseguenza non è un isomorfismo).
-
-Facciamo un altro esempio e consideriamo $f: \overline{a} \in \mathbb{Z}_3 \mapsto \overline{2a} \in \mathbb{Z}_3$.
-
-- $\ker(f) = \lbrace \overline{0} \rbrace$. Poiché $\ker(f) = \lbrace \overline{0} \rbrace$, $f$ è iniettiva.
-- $\mathrm{Im}(f) = \lbrace \overline{0}, \overline{1}, \overline{2} \rbrace$. Poiché $\mathrm{Im}(f) = \mathbb{Z}_3$, $f$ è
-  suriettiva.
-
-In questo caso, essendo $f$ un isomorfismo tra la struttura $\mathbb{Z}_3$ e se stessa, viene classificato come
-isomorfismo, endomorfismo e automorfismo. In particolare, $f$ rappresenta una simmetria non banale di $\mathbb{Z}_3$: si
-può verificare che $\mathrm{Aut}(\mathbb{Z}_3) \cong \mathbb{Z}_2$, confermando l'esistenza di esattamente un
-automorfismo non banale.
+For $f: \overline{a} \in \mathbb{Z}_3 \mapsto \overline{2a} \in \mathbb{Z}_3$:
+- $\ker(f) = \lbrace \overline{0} \rbrace \implies$ injective.
+- $\mathrm{Im}(f) = \mathbb{Z}_3 \implies$ surjective.
+This $f$ is an isomorphism, endomorphism, and automorphism, representing a non-trivial symmetry of $\mathbb{Z}_3$.
