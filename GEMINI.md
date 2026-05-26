@@ -1,91 +1,105 @@
 # 🌀 MorphFinder: Project Blueprint
 
-> **Status:** Implementation Phase (Algebras Complete)  
+> **Status:** Implementation Phase (CSP Engine & Classification Complete)  
 > **Concept:** Automated Algebraic Morphism Discovery & Categorical Visualization
 
 ---
 
-## 📌 1. Project Vision
+## 📌 1. Project Overview
 
-**MorphFinder** is a computational algebra tool designed to explore the relationships between finite algebraic
-structures. It uses optimized backtracking algorithms to find, classify, and visualize homomorphisms, treating algebras
-as objects and mappings as morphisms within a categorical framework.
+**MorphFinder** is a computational algebra tool designed to explore relationships between finite algebraic structures. It treats algebras as objects and mappings as morphisms within a categorical framework, using optimized backtracking algorithms to find and classify homomorphisms.
+
+### Key Technologies:
+- **Language:** Python 3.10+
+- **Testing:** Pytest
+- **Logic:** CSP (Constraint Satisfaction Problem) with Pruning Heuristics
+- **Math Foundations:** Group Theory, Ring Theory, Category Theory, First Isomorphism Theorem.
+
+---
 
 ## 🏗 2. System Architecture (`src/` layout)
 
-The project is structured to separate mathematical logic from search optimization and visualization.
+The project separates mathematical definitions from search optimization and classification logic.
 
 ```text
 src/
 ├── core/                   # The CSP-based backtracking engine
-│   ├── backtracking.py     # Main recursive search logic
+│   ├── engine.py           # Main MorphismFinder & Homomorphism classes
+│   ├── genealogy.py        # Propagation 'recipes' (Phase 1)
 │   ├── pruning.py          # Algebraic invariant filters (Order, Idempotency)
-│   └── classification.py   # Labeling (Mono/Epi/Iso/Auto)
+│   └── classification.py   # Labeling (Mono/Epi/Iso/Endo/Auto) using Isomorphism Theorems
 │
 ├── algebras/               # Structural definitions (Modular & Readable)
-│   ├── base.py             # BinaryOperation & CayleyTable abstractions
-│   ├── magma.py            # Basic closure logic
-│   ├── semigroup.py        # Associative structures
-│   ├── monoid.py           # Identity element & orders
-│   ├── group.py            # Inverses & group properties
-│   ├── abelian_group.py    # Commutative groups
-│   ├── ring.py             # Base Ring class & Zero/Unity logic
-│   ├── commutative_ring.py # Commutative multiplicative structures
-│   ├── unity_rings.py      # Rings with Multiplicative Identity
-│   └── field.py            # Commutative Unity Rings with all non-zero invertible
+│   ├── base.py             # BinaryOperation & CarrierSet abstractions
+│   ├── structures/         # Concrete types (Magma, Group, Ring, Field, etc.)
+│   ├── axioms/             # Axiomatic definitions (Associativity, Identity, etc.)
+│   ├── analysis/           # Tools for identity discovery and magma analysis
+│   ├── generators/         # Generating set discovery (BruteForce, Greedy)
+│   └── validation/         # Axiom verification logic
 │
-├── graph/                  # Categorical visualization
-│   ├── builder.py          # Maps structures to Nodes and morphisms to Edges
-│   └── exporters.py        # Export to JSON, DOT, or Cytoscape.js
-│
-├── utils/                  # Support modules
-│   ├── generators.py       # Minimum generating set discovery
-│   └── sympy_bridge.py     # Conversion between SymPy objects
-│
-└── api.py                  # Main entry point for the MorphFinder class
+└── utils/                  # Support modules
+    └── reader.py           # Configuration and file utilities
 ```
 
-## 🧠 3. Core Algorithm: Optimized Backtracking
+---
 
-To find all homomorphisms $f: A \to B$ where $f(a * b) = f(a) * f(b)$, MorphFinder treats the problem as a **Constraint
-Satisfaction Problem (CSP)**.
+## 🧠 3. Core Algorithm: Optimized Backtracking (CSP)
 
-### Key Strategies:
+MorphFinder solves for $f: S \to T$ such that $f(a * b) = f(a) \square f(b)$ using a three-phase CSP approach:
 
-1. **Minimum Generating Set ($G_{min}$):** Instead of mapping all elements of $A$, we only map a minimum set of
-   generators. This reduces search space from $|B|^{|A|}$ to $|B|^{|G_{min}|}$.
-2. **Pruning Heuristics:**
-    * **Groups:** The order of $f(g)$ in $B$ must divide the order of $g$ in $A$.
-    * **Rings:** $f(1_A) = 1_B$ must hold for unital rings.
-    * **Fields:** Characteristics must match ($char(A) = char(B)$).
-    * **Semigroups:** Idempotent elements ($x^2=x$) must map to idempotent elements.
-3. **Consistency Checking:** As each generator is mapped, the engine checks for violations of structural relations
-   before proceeding deeper into the recursion.
+1.  **Phase 1: Genealogy:** Build a recipe $h(x)$ for all elements $x \in S \setminus G$, where $G$ is a minimal generating set.
+2.  **Phase 2: Backtracking:** Systematically assign values from $T$ to the generators $G$. Propagate assignments to the rest of $S$ using the genealogy recipe.
+3.  **Phase 3: Validation:** Verify preservation of operations and distinguished constants (Zero, Unity).
 
-## 📈 4. Development Roadmap
+### Pruning Strategies:
+- **Idempotency:** $x^2 = x \implies f(x)^2 = f(x)$.
+- **Group Order:** The order of $f(g)$ in $T$ must divide the order of $g$ in $S$.
 
-Development follows a path from maximum structural rigidity to maximum entropy.
+---
 
-1. **Phase 1: Foundation (COMPLETED):** Modular implementation of Magmas, Semigroups, Monoids, Groups, and Rings with
-   structural invariants (generating sets, orders, centers).
-2. **Phase 2: CSP Engine:** Implementation of the optimized backtracking search and pruning heuristics.
-3. **Phase 4: Fields & Galois Theory (COMPLETED):** Implementation of $\mathbb{F}_{p^n}$ and field homomorphisms.
-4. **Phase 5: Lattices:** Mapping order-preserving relations ($\le$) and Join/Meet operations.
+## 🏷 4. Categorical Classification
 
-## 🏷 5. Categorical Classification
+Morphisms are classified based on the **First Isomorphism Theorem** and **Congruence Classes**:
+- **Monomorphism ($f: S \hookrightarrow T$):** Injective. Checked via $|S| = |Im(f)|$.
+- **Epimorphism ($f: S \twoheadrightarrow T$):** Surjective. Checked via $|Im(f)| = |T|$.
+- **Isomorphism ($f: S \cong T$):** Bijective.
+- **Endomorphism ($f: S \to S$):** $S = T$.
+- **Automorphism ($f: S \cong S$):** Bijective endomorphism.
 
-Every discovered morphism is automatically classified based on its properties:
+---
 
-* **Monomorphism:** Injective mapping.
-* **Epimorphism:** Surjective mapping.
-* **Isomorphism:** Bijective mapping (Structural identity).
-* **Endomorphism:** Mapping of a structure to itself ($A \to A$).
-* **Automorphism:** A bijective endomorphism.
+## 🛠 5. Building and Running
 
-## 🛠 6. Tech Stack
+### Setup
+Create a virtual environment, activate it, and install dependencies:
+```bash
+# Create virtual environment
+python3 -m venv .venv
 
-* **Language:** Python 3.10+
-* **Math Engine:** **SymPy** (for structure generation and symbolic pre-processing).
-* **Storage:** **Dictionary-based Cayley Tables** (optimized for readability and mathematical clarity).
-* **Visualization:** Graphviz / Cytoscape.js.
+# Activate virtual environment
+source .venv/bin/activate
 
+# Install dependencies
+pip install -r requirements.txt
+```
+
+### Configuration
+The default generator strategy can be set in `config.yaml`:
+```yaml
+strategy: greedy # or brute_force
+```
+
+### Testing
+Run the suite using `pytest`:
+```bash
+pytest
+```
+
+---
+
+## 📝 6. Development Conventions
+
+- **Mathematical Integrity:** New structures must inherit from `AlgebraicStructure` and register their axioms.
+- **Surgical Updates:** When modifying the engine, ensure pruning heuristics remain decoupled in `Pruner`.
+- **Documentation:** Maintain alignment between `README.md` examples and implementation logic.
+- **Type Safety:** Use Type Hints for all mathematical mappings and structures.

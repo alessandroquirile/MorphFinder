@@ -7,8 +7,12 @@ from src.algebras.generators.helpers import _get_closure
 
 class BruteForceStrategy(GeneratingSetStrategy):
     """
-    Finds the absolute minimum generating set by checking all subsets 
-    of increasing size. Guaranteed to find the smallest set.
+    Finds the absolute minimum generating set G for a structure S.
+    
+    Theoretical Approach:
+    Enumerates all subsets of S in order of increasing cardinality. 
+    Returns the first subset G whose closure <G> equals S. 
+    This guarantees finding a generating set of global minimum cardinality.
     """
 
     def find(self, structure) -> Set[Any]:

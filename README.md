@@ -1,8 +1,6 @@
 # MorphFinder
 
-MorphFinder è una libreria per esplorare omomorfismi tra strutture algebriche finite.
-
-Le strutture algebriche attualmente implementate sono: magmi, semigruppi, monoidi, gruppi, gruppi abeliani, anelli, anelli commutativi, anelli unitari, campi.
+MorphFinder è una libreria per trovare e classificare omomorfismi tra strutture algebriche finite, tra cui: magmi, semigruppi, monoidi, gruppi, gruppi abeliani, anelli, anelli commutativi, anelli unitari, campi.
 
 # Background teorico
 Date due strutture algebriche $(S,*)$ e $(T,\square)$, si vuole determinare l'insieme degli omomorfismi da S a T ovvero
@@ -20,8 +18,6 @@ Si vuole quindi determinare
 $$
 \mathcal{Hom}(G,T) := \lbrace f: S \to T\  \text{s.t.}\ \forall g_1,g_2 \in G\ f(g_1*g_2) = f(g_1)\ \square\ f(g_2) \rbrace
 $$
-
-
 
 ## Come determinare un sistema di generatori $G$ per $S$?
 
@@ -48,9 +44,9 @@ La seguente Figura mostra la mappa di genealogia $h$:
 
 
 ### Backtracking e propagazione dei vincoli
-Per costruire $\mathcal{Hom}(G,T)$, l'algoritmo inizia assegnando casualmente un valore in $T$ per ogni generatore in $G$. A questo punto entra in gioco la funzione $h$. L'algoritmo usa questa funzione come "ricettario" per costruire le immagini degli altri elementi di $S$, senza dover fare ulteriori tentativi alla cieca. Costruito un possibile omomorfismo $f$, si verifica che esso sia effettivamente un omomorfismo (ovvero che soddisfi la definizione e che preservi le eventuali proprietà intrinseche delle strutture algebriche fornite, come zero ed unità). Se si ottiene una contraddizione, scarto $f$ dai possibili omomorfismi. Se il controllo ha successo, la funzione trovata è un omomorfismo valido da $S$ a $T$.
+Per costruire $\mathcal{Hom}(G,T)$, l'algoritmo inizia assegnando sistematicamente un valore in $T$ per ogni generatore in $G$. A questo punto entra in gioco la funzione $h$. L'algoritmo usa questa funzione come "ricettario" per costruire le immagini degli altri elementi di $S$, senza dover fare ulteriori tentativi alla cieca. Costruito un possibile omomorfismo $f$, si verifica che esso sia effettivamente un omomorfismo (ovvero che soddisfi la definizione e che preservi le eventuali proprietà intrinseche delle strutture algebriche fornite, come zero ed unità). Se si ottiene una contraddizione, scarto $f$ dai possibili omomorfismi. Se il controllo ha successo, la funzione trovata è un omomorfismo valido da $S$ a $T$.
 
-Riprendendo l'esempio precedente, l'algoritmo assegna arbitrariamente un elemento $b \in \mathbb{Z}_4$ a $g \in G$.
+Riprendendo l'esempio precedente, l'algoritmo assegna sistematicamente un elemento $b \in \mathbb{Z}_3$ a $g \in G$.
 
 Caso per $f(\bar{1}) = \bar{1}$. Si ha che:
 
@@ -62,8 +58,8 @@ Quindi l'applicazione $f$ costruita è
 
 $$f: \mathbb{Z}_4 \to \mathbb{Z}_3$$
 $$\bar{0} \mapsto \bar{1}$$
-$$\bar{1} \mapsto \bar{2}$$
-$$\bar{2} \mapsto \bar{1}$$
+$$\bar{1} \mapsto \bar{1}$$
+$$\bar{2} \mapsto \bar{2}$$
 $$\bar{3} \mapsto \bar{0}$$
 
 La funzione $f$ soddisfa la definizione di omomorfismo. Ma essendo le due strutture date dei monoidi, occorre che $f$ preservi l'esistenza dell'elemento neutro ovvero $f(\varepsilon_S) = \varepsilon_T \iff f(\bar{0}) = \bar{0}$ che genera una contraddizione. Quindi $f \notin \mathcal{Hom}(S,T)$ 
@@ -101,3 +97,57 @@ La seguente Figura mostra l'albero di computazione per l'esempio fornito:
 ![Backtracking](assets/backtracking.png)
 
 Si noti che grazie alla propagazione dei vincoli, l'algoritmo evita l'esplorazione esaustiva dell'intero spazio delle applicazioni $(|T|^{|S|} = 3^4 = 81)$. Limitando i tentativi alla sola scelta dei generatori $(|T|^{|G|} = 3)$ il carico computazionale viene abbattuto, rendendo trattabili anche strutture algebriche di dimensioni superiori."
+
+## Classificare un omomorfismo
+
+Una volta ottenuto $\mathcal{Hom}(S,T)$ tramite l'algoritmo CSP, MorphFinder classifica ogni omomorfismo $f \in \mathcal{Hom}(S,T)$ analizzandone le proprietà categoriali.
+
+### Primo teorema di isomorfismo
+
+Il sistema sfrutta i principi del primo teorema di isomorfismo per classificare $f$. Per strutture come **gruppi e anelli**, il teorema afferma che:
+
+$$
+S/Ker(f) \cong Im(f)
+$$
+
+Dove:
+- $Ker(f) := \lbrace s \in S : f(s) = 0_T \rbrace$ è il nucleo di $f$.
+- $Im(f) := \lbrace f(s) \in T : s \in S \rbrace$ è l'immagine di $f$.
+- $S/Ker(f)$ è l'insieme quoziente.
+
+In questi casi (grazie al teorema di Lagrange per i gruppi), vale la relazione:
+$$
+|Im(f)| = \frac{|S|}{|Ker(f)|}
+$$
+
+**Nota:** Per strutture più generali (come magmi o semigruppi) che non possiedono necessariamente un elemento neutro "zero" che ne caratterizzi il nucleo, MorphFinder generalizza questo concetto utilizzando la **relazione di congruenza** $\sim_f$ definita da $a \sim_f b \iff f(a) = f(b)$. In tal caso, $|Im(f)|$ corrisponde semplicemente al numero di classi di equivalenza distinte in $S/\sim_f$.
+
+L'idea alla base è che il quoziente "pulisce" il dominio dalla ridondanza causata dalla non-iniettività. MorphFinder ottimizza la classificazione confrontando le cardinalità dell'immagine e del codominio per identificare velocemente monomorfismi ed epimorfismi.
+
+### Criteri di classificazione
+
+MorphFinder categorizza un omomorfismo $f: S \to T$ basandosi sulle proprietà derivate dall'analisi dell'immagine, del nucleo e della natura degli insiemi coinvolti:
+
+| Proprietà    | Simbolo | Condizione                                                      | 
+|--------------|---------|-----------------------------------------------------------------|
+| **Monomorfismo** | $f: S \hookrightarrow T$ | Iniettività ($Ker(f) = \lbrace 0_S \rbrace$ o classi di congruenza banali) |
+| **Epimorfismo**  | $f: S \twoheadrightarrow T$ | Suriettività ($Im(f) = T$) |
+| **Isomorfismo**  | $f: S \cong T$ | Biettività (Iniettività + Suriettività) |
+| **Endomorfismo** | $f: S \to S$ | Dominio e Codominio coincidono ($S = T$) |
+| **Automorfismo** | $f: S \cong S$ | Isomorfismo dove $S = T$ |
+
+Oltre alla distinzione classica tra iniettività e suriettività, MorphFinder identifica se una struttura viene mappata in se stessa (**Endomorfismo**). Se tale mappatura preserva perfettamente tutte le relazioni ed è biunivoca, si parla di **Automorfismo**, che rappresenta una simmetria strutturale dell'algebra stessa.
+
+Ad esempio, consideriamo $f: \bar{a} \in \mathbb{Z}_6 \mapsto \bar{2a} \in \mathbb{Z}_4$.
+
+- $Ker(f) = \lbrace \bar{0}, \bar{2}, \bar{4} \rbrace$. Poiché $Ker(f) \ne \lbrace \bar{0} \rbrace$, $f$ non è iniettiva
+- $Im(f) = \lbrace \bar{0}, \bar{2} \rbrace$. Poiché $Im(f) \ne \mathbb{Z}_4$, $f$ non è suriettiva
+
+Quindi $f$ non è né un monomorfismo, né un epimorfismo (e di conseguenza non è un isomorfismo).
+
+Facciamo un altro esempio e consideriamo $f: \bar{a} \in \mathbb{Z}_3 \mapsto \bar{2a} \in \mathbb{Z}_3$.
+
+- $Ker(f) = \lbrace \bar{0} \rbrace$. Poiché $Ker(f) = \lbrace \bar{0} \rbrace$, $f$ è iniettiva.
+- $Im(f) = \lbrace \bar{0}, \bar{1}, \bar{2} \rbrace$. Poiché $Im(f) = \mathbb{Z}_3$, $f$ è suriettiva.
+
+In questo caso, essendo $f$ un isomorfismo tra la struttura $\mathbb{Z}_3$ e se stessa, viene classificato sia come isomorfismo che come automorfismo (ed endomorfismo).

@@ -60,8 +60,16 @@ def _greedy_expansion(structure):
 
 class GreedyPruningStrategy(GeneratingSetStrategy):
     """
-    Finds a minimal generating set using a greedy-then-pruning approach.
+    Finds a minimal generating set G using a greedy expansion followed by pruning.
+
+    Theoretical Approach:
+    1. Expansion: Iteratively adds elements that maximize the growth of the closure <G>.
+    2. Pruning: Removes redundant elements from the resulting set.
+
+    Note: While it ensures that <G> = S and no proper subset of G generates S, 
+    it does not guarantee a global minimum cardinality.
     """
+
 
     def find(self, structure) -> Set[Any]:
         generators = _greedy_expansion(structure)

@@ -7,15 +7,22 @@ from src.algebras.generators.factory import StrategyFactory
 from src.algebras.structures.unital_ring import UnitalRing
 
 
+from src.core.classification import Classifier
+
+
 class Homomorphism:
     """Represents a validated homomorphism between two algebraic structures."""
     def __init__(self, mapping: Dict[Any, Any], source, target):
         self.mapping = mapping
         self.source = source
         self.target = target
+        self.properties = Classifier.classify(self)
+        self.image = Classifier.get_image(self.mapping)
+        self.kernel = Classifier.get_kernel(self.mapping, self.target)
 
     def __repr__(self):
-        return f"Homomorphism({self.mapping})"
+        props_str = f" | {', '.join(self.properties)}" if self.properties else ""
+        return f"Homomorphism({self.mapping}{props_str})"
 
 
 class MorphismFinder:
@@ -26,13 +33,27 @@ class MorphismFinder:
         self.strategy = self.factory.get_strategy(strategy_name)
 
     def find_homomorphisms(self, source: AlgebraicStructure, target: AlgebraicStructure) -> List[Homomorphism]:
-        """Finds all homomorphisms f: source -> target"""
+        """
+        Finds all homomorphisms f: source -> target.
+        
+        Complexity Optimization:
+        Instead of exploring the full map space O(|T|^|S|), we exploit the fact that
+        a homomorphism is uniquely determined by its values on a generating set G.
+        This reduces the search space to O(|T|^|G|), where |G| << |S|.
+        """
 
         if len(source.operations) != len(target.operations):
             return []
 
         # Find generators using specified strategy (e.g., brute force, greedy...)
+        # Note: G is typically NOT closed under the operations. This non-closure
+        # allows us to model the problem as a Constraint Satisfaction Problem (CSP)
+        # and propagate constraints through the structure's genealogy.
         generators = list(self.strategy.find(source))
+
+        # Phase 1: Genealogy Function
+        # Build the genealogy mapping h: S \ G -> S x S to track how elements 
+        # are generated, enabling deterministic constraint propagation.
         genealogy = Genealogy(source, set(generators))
         
         homomorphisms = []
@@ -40,13 +61,13 @@ class MorphismFinder:
         # Pre-map constants using the constants dictionary
         base_mapping = self._get_constants_mapping(source, target)
         
-        # Identify "free" constants: those in source.constants values but NOT in base_mapping.
-        # This handles cases where a structure has a constant that doesn't have a 
-        # mandatory target in the other structure (e.g., unity in a non-unital ring).
+        # Identify "free" constants
         source_constants_values = set(source.constants.values())
         free_constants = [c for c in source_constants_values if c not in base_mapping]
         all_to_map = generators + free_constants
         
+        # Phase 2: Backtracking and Constraint Propagation
+        # Assign values to generators and propagate images using the genealogy 'recipe'.
         self._backtrack(
             0, all_to_map, base_mapping, source, target, genealogy, homomorphisms
         )
@@ -100,7 +121,11 @@ class MorphismFinder:
             self._backtrack(generator_index + 1, generators, new_mapping, source, target, genealogy, results)
 
     def _is_valid_homomorphism(self, mapping, source, target) -> bool:
-        """Final verification of the homomorphism property."""
+        """
+        PHASE 3: Final Validation
+        Verify that the constructed mapping satisfies the homomorphism property:
+        f(a * b) = f(a) □ f(b) and preserves intrinsic structural properties.
+        """
         # 1. Check all elements are mapped
         if len(mapping) != len(source.elements):
             return False
@@ -115,6 +140,8 @@ class MorphismFinder:
                         return False
         
         # 3. Check constants preservation
+        # According to the theory, valid homomorphisms must preserve distinguished
+        # elements like zero and unity (intrinsic properties of the structures).
         source_constants = source.constants
         target_constants = target.constants
         for key, source_val in source_constants.items():

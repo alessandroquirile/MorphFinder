@@ -11,6 +11,11 @@ class Pruner:
     def is_assignment_possible(source_val: Any, target_val: Any, source, target) -> bool:
         """
         Heuristic check if assigning source_val -> target_val is possible.
+        
+        Pruning Strategies (Constraint Satisfaction):
+        Homomorphisms must preserve algebraic invariants. If f(g) = t violates
+        an invariant (like order or idempotency), the assignment is pruned
+        early to avoid exploring invalid branches of the backtracking tree.
         """
         # 1. Idempotency (Universal check)
         if not Pruner._check_idempotency(source_val, target_val, source, target):
@@ -37,6 +42,10 @@ class Pruner:
 
     @staticmethod
     def _check_group_order(source_val, target_val, source, target) -> bool:
+        """
+        In group homomorphisms, the order of the image f(g) must divide 
+        the order of the element g. This is a powerful invariant for pruning.
+        """
         source_order = Pruner._get_order(source_val, source.identity, source.operation)
         try:
             target_order = Pruner._get_order(target_val, target.identity, target.operation)

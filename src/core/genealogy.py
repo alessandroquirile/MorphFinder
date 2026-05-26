@@ -8,6 +8,14 @@ class Genealogy:
     """
 
     def __init__(self, structure, generators: Set[Any]):
+        r"""
+        Initializes the genealogy tracker.
+        
+        Mathematical Foundation:
+        The tracker builds a 'recipe' for each element in S \ G. This is equivalent 
+        to building the genealogy function h: S \ G -> S x S described in the 
+        theory, which allows for deterministic propagation of images.
+        """
         self.structure = structure
         self.generators = set(generators)
         self.constants_dict = structure.constants
