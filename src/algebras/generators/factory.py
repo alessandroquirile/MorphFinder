@@ -1,6 +1,7 @@
 from src.algebras.generators.base import GeneratingSetStrategy
 from src.algebras.generators.brute_force import BruteForceStrategy
 from src.algebras.generators.greedy import GreedyPruningStrategy
+from src.utils.reader import ConfigFileReader
 
 
 class StrategyFactory:
@@ -9,7 +10,13 @@ class StrategyFactory:
     """
 
     @staticmethod
-    def get_strategy(name: str) -> GeneratingSetStrategy:
+    def get_strategy(name: str = "") -> GeneratingSetStrategy:
+        if not name:
+            try:
+                name = ConfigFileReader.get_strategy_name()
+            except (FileNotFoundError, KeyError):
+                name = "greedy"
+
         strategies = {
             "greedy": GreedyPruningStrategy,
             "brute_force": BruteForceStrategy

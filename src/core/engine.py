@@ -40,7 +40,7 @@ class Homomorphism:
 class MorphismFinder:
     """Core engine for finding homomorphisms using CSP backtracking and genealogy propagation."""
 
-    def __init__(self, strategy_name: str):
+    def __init__(self, strategy_name: str = ""):
         self.factory = StrategyFactory()
         self.strategy = self.factory.get_strategy(strategy_name)
 
