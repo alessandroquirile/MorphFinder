@@ -54,10 +54,12 @@ class MorphismFinder:
         This reduces the search space to O(|T|^|G|), where |G| << |S|.
         """
 
+        # Homomorphisms must preserve all operations
+        # structures with differing numbers of operations cannot be homomorphic.
         if len(source.operations) != len(target.operations):
             return []
 
-        # Find generators using specified strategy (e.g., brute force, greedy...)
+        # Find generators of S using specified strategy (e.g., brute force, greedy...)
         # Note: G is typically NOT closed under the operations. This non-closure
         # allows us to model the problem as a Constraint Satisfaction Problem (CSP)
         # and propagate constraints through the structure's genealogy.
@@ -70,10 +72,11 @@ class MorphismFinder:
 
         homomorphisms = []
 
-        # Pre-map constants using the constants dictionary
+        # Pre-map mandatory structural constants (e.g., zero, unity) required by the homomorphism property.
+        # This reduces the search space and enforces necessary structural preservation constraints early.
         base_mapping = self._get_constants_mapping(source, target)
 
-        # Identify "free" constants
+        # Identify constants not fixed by the mandatory mapping; these must be assigned during backtracking.
         source_constants_values = set(source.constants.values())
         free_constants = [c for c in source_constants_values if c not in base_mapping]
         all_to_map = generators + free_constants
@@ -142,7 +145,7 @@ class MorphismFinder:
         if len(mapping) != len(source.elements):
             return False
 
-        # 2. Check operation preservation: f(a * b) = f(a) * f(b)
+        # 2. Check operation preservation: f(a * b) = f(a) □ f(b)
         for op_index, source_op in enumerate(source.operations):
             target_op = target.operations[op_index]
             for a in source.elements:
