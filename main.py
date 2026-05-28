@@ -11,6 +11,6 @@ if __name__ == "__main__":
     homomorphisms = finder.find_homomorphisms(S, T)
 
     # Results
-    print(f"Found {len(homomorphisms)} homomorphism(s) between given structure:")
+    print(f"Found {len(homomorphisms)} homomorphism(s) between given structures:")
     for homomorphism in homomorphisms:
         print(f"{homomorphism.pretty()}")
