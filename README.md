@@ -1,10 +1,12 @@
 # MorphFinder
 
-MorphFinder is a library for finding and classifying homomorphisms between finite algebraic structures, including: magmas, semigroups, monoids, groups, abelian groups, rings, commutative rings, unital rings, and fields.
+MorphFinder is a library for finding and classifying homomorphisms between finite algebraic structures, including:
+magmas, semigroups, monoids, groups, abelian groups, rings, commutative rings, unital rings, and fields.
 
 ## Theoretical Background
 
-For an in-depth explanation of the mathematical foundations, the CSP search algorithm, and the classification of homomorphisms, consult the [THEORY.md](THEORY.md) file.
+For an in-depth explanation of the mathematical foundations, the CSP search algorithm, and the classification of
+homomorphisms, consult the [THEORY.md](THEORY.md) file.
 
 ## Installation
 
@@ -19,7 +21,8 @@ pip install -r requirements.txt
 
 ## Configuration
 
-The strategy for finding a system of generators for a given algebraic structure can be specified in the `config.yaml` file:
+The strategy for finding a system of generators for a given algebraic structure can be specified in the `config.yaml`
+file:
 
 ```yaml
 strategy: greedy # or brute_force
@@ -33,7 +36,8 @@ You can run the example provided in the `main.py` file to see MorphFinder in act
 python main.py
 ```
 
-This script defines two simple monoids ($\mathbb{Z}_4, +, \overline{0}$) and ($\mathbb{Z}_3, +, \overline{0}$) and searches for homomorphisms between them. The expected output will be:
+This script defines two simple groups ($\mathbb{Z}_4, +$) and ($\mathbb{Z}_3, +$) and searches for homomorphisms between
+them. The expected output will be:
 
 ```text
 Found 1 homomorphism(s) between given structures:

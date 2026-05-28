@@ -1,11 +1,11 @@
-from src.algebras.structures.monoid import Monoid
+from src.algebras.structures.group import Group
 from src.core.engine import MorphismFinder
 from src.utils.reader import ConfigFileReader
 
 if __name__ == "__main__":
-    # (Z4, +, 0) and (Z3, +, 0)
-    S = Monoid({0, 1, 2, 3}, lambda a, b: (a + b) % 4, identity=0)
-    T = Monoid({0, 1, 2}, lambda a, b: (a + b) % 3, identity=0)
+    # (Z4, +) and (Z3, +)
+    S = Group({0, 1, 2, 3}, lambda a, b: (a + b) % 4)
+    T = Group({0, 1, 2}, lambda a, b: (a + b) % 3)
 
     # Strategy configuration for finding a generating set G of S
     strategy = ConfigFileReader.get_strategy_name()
@@ -15,6 +15,6 @@ if __name__ == "__main__":
     homomorphisms = finder.find_homomorphisms(S, T)
 
     # Results
-    print(f"Found {len(homomorphisms)} homomorphism(s) between given structures")
+    print(f"Found {len(homomorphisms)} homomorphism(s) between given structure:")
     for homomorphism in homomorphisms:
         print(f"{homomorphism.pretty()}")
