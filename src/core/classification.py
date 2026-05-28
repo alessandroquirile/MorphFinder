@@ -24,7 +24,7 @@ class Classifier:
         Returns elements of the source that map to the identity/zero of the target.
         
         Note: Based on the First Isomorphism Theorem, the kernel characterizes 
-        the quotient structure S/Ker(f) which is isomorphic to the image.
+        the quotient structure S/Ker(f) which is isomorphic to the image Im(f).
         """
         zero_element = None
 
