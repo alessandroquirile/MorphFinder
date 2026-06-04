@@ -60,6 +60,7 @@ for hom in homomorphisms:
     print(hom.pretty())
 ```
 
+<!--
 ## Manual Installation
 
 If you prefer to run the components separately:
@@ -79,6 +80,8 @@ cd frontend
 npm install
 npm run dev
 ```
+
+-->
 
 ## Running Tests
 
