@@ -81,7 +81,7 @@ class Classifier:
             zero_or_identity = getattr(target, 'zero', None)
             if zero_or_identity is None:
                 zero_or_identity = getattr(target, 'identity', None)
-        
+
         if zero_or_identity is None:
             constants = target.constants
             zero_or_identity = constants.get('zero')

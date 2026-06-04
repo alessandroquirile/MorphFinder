@@ -1,5 +1,7 @@
-from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
+
+from pydantic import BaseModel
+
 
 class StructureSchema(BaseModel):
     name: str
@@ -10,15 +12,18 @@ class StructureSchema(BaseModel):
     formula: Optional[str] = None
     constants: Dict[str, Any]
 
+
 class HomomorphismSchema(BaseModel):
     mapping: Dict[str, Any]
     properties: List[str]
     image: List[Any]
     kernel: List[Any]
 
+
 class MorphismRequest(BaseModel):
     source: StructureSchema
     target: StructureSchema
+
 
 class MorphismResponse(BaseModel):
     homomorphisms: List[HomomorphismSchema]

@@ -91,6 +91,7 @@ docker-compose up --build
 If you prefer to run services locally:
 
 #### Backend
+
 ```bash
 cd backend
 python3 -m venv .venv
@@ -100,6 +101,7 @@ uvicorn src.api.main:app --reload
 ```
 
 #### Frontend
+
 ```bash
 cd frontend
 npm install

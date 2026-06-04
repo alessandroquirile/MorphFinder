@@ -1,17 +1,22 @@
 # MorphFinder
 
-MorphFinder is a computational tool for finding and classifying homomorphisms between finite algebraic structures (magmas, semigroups, monoids, groups, rings, and fields) using an optimized CSP-based engine.
+MorphFinder is a computational tool for finding and classifying homomorphisms between finite algebraic structures (
+magmas, semigroups, monoids, groups, rings, and fields) using an optimized CSP-based engine.
 
 ## Project Structure
 
 The project is organized as a monorepo:
+
 - `backend`: FastAPI service containing the algebraic engine and search logic.
-- `frontend`: React + Vite application for interactive visualization of morphisms between magmas, semigroups, monoids, and groups. (Rings and fields are currently only supported via the backend API).
+- `frontend`: React + Vite application for interactive visualization of morphisms between magmas, semigroups, monoids,
+  and groups. (Rings and fields are currently only supported via the backend API).
 
 ## Quick Start
 
 ### Docker
-The easiest way to run MorphFinder is using Docker Compose. This will start both the backend API and the frontend dashboard.
+
+The easiest way to run MorphFinder is using Docker Compose. This will start both the backend API and the frontend
+dashboard.
 
 ```bash
 docker-compose up --build
@@ -24,18 +29,20 @@ docker-compose up --build
 
 ![Web UI](assets/webui.png)
 
-> **Note:** The Web UI is currently limited to magmas, semigroups, monoids, and groups. To analyze rings and fields, please use the Python API.
+> **Note:** The Web UI is currently limited to magmas, semigroups, monoids, and groups. To analyze rings and fields,
+> please use the Python API.
 
 The Web UI provides an interactive way to discover and visualize morphisms between algebraic structures:
 
 1. Add Structures: Click "+ Add Source" or "+ Add Target" to open the Structure Builder.
-2. Define Structure: 
+2. Define Structure:
     - Enter the elements (e.g., `0, 1, 2, 3` or `a, b, c`).
     - Choose an operation method: either fill the Cayley's Table or specify the Formula (e.g., `(a + b) % n`)
 3. Find Morphisms: Once both Source and Target are defined, click the Search icon to initiate the computation.
 4. Visualize Results:
     - The Sidebar will display all discovered homomorphisms.
-    - Click on a specific homomorphism in the sidebar to view its mapping, image, kernel, and algebraic properties in the central canvas.
+    - Click on a specific homomorphism in the sidebar to view its mapping, image, kernel, and algebraic properties in
+      the central canvas.
 
 ## Usage (Python API)
 
@@ -86,6 +93,7 @@ npm run dev
 ## Running Tests
 
 To run the backend test suite:
+
 ```bash
 cd backend
 pytest
@@ -93,4 +101,5 @@ pytest
 
 ## Theoretical Background
 
-For an in-depth explanation of the mathematical foundations, the CSP search algorithm, and the classification of homomorphisms, consult the [THEORY.md](THEORY.md) file.
+For an in-depth explanation of the mathematical foundations, the CSP search algorithm, and the classification of
+homomorphisms, consult the [THEORY.md](THEORY.md) file.
