@@ -1,7 +1,6 @@
 # MorphFinder
 
-MorphFinder is a computational tool for finding and classifying homomorphisms between finite algebraic structures (
-magmas, semigroups, monoids, groups, rings, and fields) using an optimized CSP-based engine.
+MorphFinder is a computational tool for finding and classifying homomorphisms between finite algebraic structures (magmas, semigroups, monoids, groups, rings, and fields) using an optimized CSP-based engine.
 
 ## Project Structure
 
@@ -37,12 +36,12 @@ The Web UI provides an interactive way to discover and visualize morphisms betwe
 1. Add Structures: Click "+ Add Source" or "+ Add Target" to open the Structure Builder.
 2. Define Structure:
     - Enter the elements (e.g., `0, 1, 2, 3` or `a, b, c`).
-    - Choose an operation method: either fill the Cayley's Table or specify the Formula (e.g., `(a + b) % n`)
+    - Define a binary operation: either fill the Cayley's Table or specify the Formula (e.g., `(a + b) % n`)
 3. Find Morphisms: Once both Source and Target are defined, click the Search icon to initiate the computation.
 4. Visualize Results:
     - The Sidebar will display all discovered homomorphisms.
     - Click on a specific homomorphism in the sidebar to view its mapping, image, kernel, and algebraic properties in
-      the central canvas.
+      the central and right canvas.
 
 ## Usage (Python API)
 
