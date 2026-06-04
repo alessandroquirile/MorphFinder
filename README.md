@@ -5,11 +5,11 @@ magmas, semigroups, monoids, groups, rings, and fields) using an optimized CSP-b
 
 ## Project Structure
 
-The project is organized as a monorepo:
+The project is organized as follows:
 
-- `backend`: FastAPI service containing the algebraic engine and search logic.
-- `frontend`: React + Vite application for interactive visualization of morphisms between magmas, semigroups, monoids,
-  and groups. (Rings and fields are currently only supported via the backend API).
+- `backend`: directory containing FastAPI service, the algebraic engine and search logic.
+- `frontend`: directory containing React + Vite application for interactive visualization of morphisms between magmas, semigroups, monoids,
+  and groups.
 
 ## Quick Start
 
@@ -48,7 +48,7 @@ The Web UI provides an interactive way to discover and visualize morphisms betwe
 
 You can use the core library directly within the `backend/` directory:
 
-```shell
+```python3
 from src.algebras.structures.group import Group
 from src.core.engine import MorphismFinder
 
