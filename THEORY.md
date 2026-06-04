@@ -24,12 +24,12 @@ from $O(|T|^{|S|})$ to $O(|T|^{|G|})$, where $|G| \ll |S|$.
 
 There are several strategies for determining a generating system $G$ for $S$:
 
-- **Brute-Force Algorithm:** Determines the minimal generating system $G$ of an algebraic structure $S$ by enumerating
+- Brute-Force Algorithm: Determines the minimal generating system $G$ of an algebraic structure $S$ by enumerating
   all subsets of $S$ in increasing order of cardinality. It returns the first subset $G \subseteq S$ such
   that $\langle G \rangle = S$—that is, the closure of $G$ under the structure's operations and constants coincides
   with $S$ itself. This approach guarantees finding a set of globally minimal cardinality.
 
-- **Greedy Algorithm:** Constructs a generating set $G$ by iteratively adding the element that maximizes the growth of
+- Greedy Algorithm: Constructs a generating set $G$ by iteratively adding the element that maximizes the growth of
   the closure $\langle G \rangle$ until the entire structure $S$ is covered. Redundant elements are subsequently removed
   to ensure $G$ is minimal in terms of inclusion, though this does not guarantee global minimum cardinality.
 
@@ -136,8 +136,8 @@ MorphFinder categorizes homomorphisms based on image, kernel, and set properties
 | Endomorphism           | $f: S \to S$                 | $S = T$.                                                                                                            |
 | Automorphism           | $f: S \cong S$               | Isomorphism with $S = T$.                                                                                           |
 
-Beyond standard injectivity/surjectivity, MorphFinder identifies mappings of a structure to itself (**Endomorphism**). A
-bijective endomorphism that preserves all relational structure is an **Automorphism**, representing a structural
+Beyond standard injectivity/surjectivity, MorphFinder identifies mappings of a structure to itself (endomorphism). A
+bijective endomorphism that preserves all relational structure is an automorphism, representing a structural
 symmetry.
 
 For example, $f: \overline{a} \in \mathbb{Z}_6 \mapsto \overline{2a} \in \mathbb{Z}_4$:
