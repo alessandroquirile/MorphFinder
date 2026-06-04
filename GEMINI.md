@@ -20,28 +20,25 @@ algorithms to find and classify homomorphisms.
 
 ---
 
-## 🏗 2. System Architecture (`src/` layout)
+## 🏗 2. System Architecture (Monorepo Layout)
 
-The project separates mathematical definitions from search optimization and classification logic.
+The project is organized as a monorepo with a clear separation between the Python backend and the React frontend.
 
 ```text
-src/
-├── core/                   # The CSP-based backtracking engine
-│   ├── engine.py           # Main MorphismFinder & Homomorphism classes
-│   ├── genealogy.py        # Propagation 'recipes' (Phase 1)
-│   ├── pruning.py          # Algebraic invariant filters (Order, Idempotency)
-│   └── classification.py   # Labeling (Mono/Epi/Iso/Endo/Auto) using Isomorphism Theorems
+MorphFinder/
+├── backend/                # Python FastAPI Backend
+│   ├── src/                # Core logic, engine, and algebras
+│   ├── tests/              # Backend test suite
+│   ├── Dockerfile          # Development-focused Dockerfile
+│   ├── requirements.txt    # Python dependencies
+│   └── main.py             # CLI entry point (example usage)
 │
-├── algebras/               # Structural definitions (Modular & Readable)
-│   ├── base.py             # BinaryOperation & CarrierSet abstractions
-│   ├── structures/         # Concrete types (Magma, Group, Ring, Field, etc.)
-│   ├── axioms/             # Axiomatic definitions (Associativity, Identity, etc.)
-│   ├── analysis/           # Tools for identity discovery and magma analysis
-│   ├── generators/         # Generating set discovery (BruteForce, Greedy)
-│   └── validation/         # Axiom verification logic
+├── frontend/               # React (TypeScript) + Vite Frontend
+│   ├── src/                # UI components and types
+│   ├── Dockerfile          # Development-focused Dockerfile
+│   └── package.json        # Node.js dependencies
 │
-└── utils/                  # Support modules
-    └── reader.py           # Configuration and file utilities
+└── docker-compose.yaml      # Orchestration for development
 ```
 
 ---
@@ -77,34 +74,44 @@ Morphisms are classified based on the **First Isomorphism Theorem** and **Congru
 
 ## 🛠 5. Building and Running
 
-### Setup
+### Running with Docker (Recommended)
 
-Create a virtual environment, activate it, and install dependencies:
+The easiest way to run the full stack is using Docker Compose:
 
 ```bash
-# Create virtual environment
-python3 -m venv .venv
-
-# Activate virtual environment
-source .venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
+docker-compose up --build
 ```
 
-### Configuration
+- **Frontend:** http://localhost:5173
+- **Backend API:** http://localhost:8000
+- **API Docs:** http://localhost:8000/docs
 
-The default generator strategy can be set in `config.yaml`:
+### Local Setup (Manual)
 
-```yaml
-strategy: greedy # or brute_force
+If you prefer to run services locally:
+
+#### Backend
+```bash
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn src.api.main:app --reload
+```
+
+#### Frontend
+```bash
+cd frontend
+npm install
+npm run dev
 ```
 
 ### Testing
 
-Run the suite using `pytest`:
+Run the backend test suite:
 
 ```bash
+cd backend
 pytest
 ```
 

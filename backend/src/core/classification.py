@@ -33,6 +33,12 @@ class Classifier:
             zero_element = target.zero
         elif isinstance(target, (Group, Monoid)):
             zero_element = target.identity
+        else:
+            # Fallback for dynamic/general structures
+            constants = target.constants
+            zero_element = constants.get('zero')
+            if zero_element is None:
+                zero_element = constants.get('identity')
 
         if zero_element is not None:
             return {src for src, tgt in mapping.items() if tgt == zero_element}
@@ -70,10 +76,20 @@ class Classifier:
 
         # Check if trivial (image is just the zero/identity element of the target)
         is_trivial = False
+        zero_or_identity = None
         if isinstance(target, (Ring, Group, Monoid)):
-            zero_or_identity = getattr(target, 'zero', None) or getattr(target, 'identity', None)
-            if zero_or_identity is not None and image == {zero_or_identity}:
-                is_trivial = True
+            zero_or_identity = getattr(target, 'zero', None)
+            if zero_or_identity is None:
+                zero_or_identity = getattr(target, 'identity', None)
+        
+        if zero_or_identity is None:
+            constants = target.constants
+            zero_or_identity = constants.get('zero')
+            if zero_or_identity is None:
+                zero_or_identity = constants.get('identity')
+
+        if zero_or_identity is not None and image == {zero_or_identity}:
+            is_trivial = True
 
         # Computational shortcut: According to the First Isomorphism Theorem
         # (and its generalization for general structures via congruence classes),

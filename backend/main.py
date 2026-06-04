@@ -1,6 +1,8 @@
 from src.algebras.structures.group import Group
 from src.core.engine import MorphismFinder
 
+# Example Python API
+
 if __name__ == "__main__":
     # (Z4, +) and (Z3, +)
     S = Group({0, 1, 2, 3}, lambda a, b: (a + b) % 4)

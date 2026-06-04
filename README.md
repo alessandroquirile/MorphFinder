@@ -1,65 +1,91 @@
 # MorphFinder
 
-MorphFinder is a library for finding and classifying homomorphisms between finite algebraic structures, including:
-magmas, semigroups, monoids, groups, abelian groups, rings, commutative rings, unital rings, and fields.
+MorphFinder is a computational tool for finding and classifying homomorphisms between finite algebraic structures (magmas, semigroups, monoids, groups, rings, and fields) using an optimized CSP-based engine.
 
-## Installation
+## Project Structure
 
-Clone this repository, create and activate a Python virtual environment and install all dependencies:
+The project is organized as a monorepo:
+- `backend`: FastAPI service containing the algebraic engine and search logic.
+- `frontend`: React + Vite application for interactive visualization of morphisms between magmas, semigroups, monoids and groups.
+
+## Quick Start
+
+### Docker
+The easiest way to run MorphFinder is using Docker Compose. This will start both the backend API and the frontend dashboard.
 
 ```bash
-# Create and activate a virtual environment (recommended)
-python3 -m venv .venv
-source .venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
+docker-compose up --build
 ```
 
-## Usage
+- Frontend UI: http://localhost:5173
+- Backend API: http://localhost:8000
 
-You can run the example provided in the `main.py` file to see MorphFinder in action: instantiate any algebraic structure and run `find_homomorphisms` method to find homomorphisms between the given structures. Simple as that.
+## Usage (Web UI)
 
-```python
+![Web UI](assets/webui.png)
+
+The Web UI provides an interactive way to discover and visualize morphisms between algebraic structures:
+
+1. Add Structures: Click "+ Add Source" or "+ Add Target" to open the Structure Builder.
+2. Define Structure: 
+    - Enter the elements (e.g., `0, 1, 2, 3` or `a, b, c`).
+    - Choose an operation method: either fill the Cayley's Table or specify the Formula (e.g., `(a + b) % n`)
+3. Find Morphisms: Once both Source and Target are defined, click the Search icon to initiate the computation.
+4. Visualize Results:
+    - The Sidebar will display all discovered homomorphisms.
+    - Click on a specific homomorphism in the sidebar to view its mapping, image, kernel, and algebraic properties in the central canvas.
+
+## Usage (Python API)
+
+You can use the core library directly within the `backend/` directory:
+
+```shell
 from src.algebras.structures.group import Group
 from src.core.engine import MorphismFinder
 
-# (Z4, +) and (Z3, +)
-S = Group({0, 1, 2, 3}, lambda a, b: (a + b) % 4)
-T = Group({0, 1, 2}, lambda a, b: (a + b) % 3)
+# Define structures: (Z4, +) and (Z2, +)
+Z4 = Group({0, 1, 2, 3}, lambda a, b: (a + b) % 4)
+Z3 = Group({0, 1}, lambda a, b: (a + b) % 2)
 
-# Find Hom(S,T)
+# Find Hom(Z4, Z3)
 finder = MorphismFinder()
-homomorphisms = finder.find_homomorphisms(S, T)
+homomorphisms = finder.find_homomorphisms(Z4, Z3)
 
-# Results
-print(f"Found {len(homomorphisms)} homomorphism(s) between given structures:")
-for homomorphism in homomorphisms:
-    print(f"{homomorphism.pretty()}")
+# Found 1 homomorphism(s) between given structures:
+# f: {0, 1, 2, 3} → {0, 1, 2} | 0 ↦ 0, 1 ↦ 0, 2 ↦ 0, 3 ↦ 0 
+# Properties: Trivial | Ker(f): {0, 1, 2, 3} | Im(f): {0}
+for hom in homomorphisms:
+    print(hom.pretty())
 ```
 
-The expected output is:
+## Manual Installation
 
-```text
-Found 1 homomorphism(s) between given structures:
-f: {0, 1, 2, 3} → {0, 1, 2} | 0 ↦ 0, 1 ↦ 0, 2 ↦ 0, 3 ↦ 0 | Properties: Trivial | Ker(f): {0, 1, 2, 3} | Im(f): {0}
+If you prefer to run the components separately:
+
+### Backend
+```bash
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn src.api.main:app --reload
 ```
 
-## Configuration
-
-The strategy for finding a system of generators for a given algebraic structure can be specified in the `config.yaml`
-file:
-
-```yaml
-strategy: greedy # or brute_force
+### Frontend
+```bash
+cd frontend
+npm install
+npm run dev
 ```
 
-## Running tests
+## Running Tests
 
-You can run the test suite using `pytest`.
-
+To run the backend test suite:
+```bash
+cd backend
+pytest
+```
 
 ## Theoretical Background
 
-For an in-depth explanation of the mathematical foundations, the CSP search algorithm, and the classification of
-homomorphisms, consult the [THEORY.md](THEORY.md) file.
+For an in-depth explanation of the mathematical foundations, the CSP search algorithm, and the classification of homomorphisms, consult the [THEORY.md](THEORY.md) file.
