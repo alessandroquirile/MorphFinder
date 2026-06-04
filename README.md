@@ -27,7 +27,7 @@ docker-compose up --build
 
 ## Usage (Web UI)
 
-![Web UI](assets/webui.png)
+![Web UI](assets/webui.gif)
 
 > **Note:** The Web UI is currently limited to magmas, semigroups, monoids, and groups. To analyze rings and fields,
 > please use the Python API.
