@@ -6,7 +6,7 @@ MorphFinder is a computational tool for finding and classifying homomorphisms be
 
 The project is organized as a monorepo:
 - `backend`: FastAPI service containing the algebraic engine and search logic.
-- `frontend`: React + Vite application for interactive visualization of morphisms between magmas, semigroups, monoids and groups.
+- `frontend`: React + Vite application for interactive visualization of morphisms between magmas, semigroups, monoids, and groups. (Rings and fields are currently only supported via the backend API).
 
 ## Quick Start
 
@@ -23,6 +23,8 @@ docker-compose up --build
 ## Usage (Web UI)
 
 ![Web UI](assets/webui.png)
+
+> **Note:** The Web UI is currently limited to magmas, semigroups, monoids, and groups. To analyze rings and fields, please use the Python API.
 
 The Web UI provides an interactive way to discover and visualize morphisms between algebraic structures:
 
