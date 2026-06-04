@@ -2,7 +2,9 @@ import time
 
 import uvicorn
 from fastapi import FastAPI
+from fastapi import HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
+
 from src.algebras.structures.base import AlgebraicStructure
 from src.algebras.structures.binary_operation import FiniteBinaryOperation
 from src.algebras.structures.carrier_set import FiniteCarrierSet
@@ -70,12 +72,6 @@ def build_structure(model: StructureSchema) -> AlgebraicStructure:
     return DynamicStructure(carrier, [operation], model.constants)
 
 
-from fastapi import HTTPException, status
-
-
-# ... (rest of imports)
-
-# ... (within find_morphisms function)
 @app.post("/v1/morphisms/find", response_model=MorphismResponse)
 async def find_morphisms(request: MorphismRequest):
     try:
