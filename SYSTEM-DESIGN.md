@@ -26,7 +26,7 @@ Path: `backend/src/application/`
 This layer contains application-specific business rules. It orchestrates the flow of data to and from the entities.
 
 - `FindHomomorphismsUseCase`: The primary use case that executes the discovery algorithm.
-- `Generators`: Strategies for finding minimal generating sets (`Brute Force`, `Greedy`), which support the use cases.
+- `Generators`: Strategies for finding minimal generating sets (Brute Force, Greedy), which support the use cases.
 
 ### 3. Interface Adapters
 Path: `backend/src/adapters/`
@@ -35,15 +35,15 @@ This layer consists of a set of adapters that convert data from the format most 
 
 - Controllers: `MorphismController` translates API requests into use case inputs and orchestrates the response.
 - Gateways: `ConfigFileReader` provides an interface to external configuration files.
-- `DTOs` (Data Transfer Objects): `Pydantic` schemas that define the API's contract.
+- Data Transfer Objects (DTOs): Pydantic schemas that define the API's contract.
 
 ### 4. Frameworks & Drivers (Infrastructure Layer)
 Path: `backend/src/infrastructure/`
 
 The outermost layer is generally composed of frameworks and tools such as the Database, the Web Framework, etc.
 
-- `FastAPI`: The web framework used to expose the discovery engine as a REST API.
-- `Docker`: Containerization and orchestration for the full-stack environment.
+- FastAPI: The web framework used to expose the discovery engine as a REST API.
+- Docker: Containerization and orchestration for the full-stack environment.
 - Web UI: The React/TypeScript frontend (located in the `frontend/` directory).
 
 ## Benefits of this Design
