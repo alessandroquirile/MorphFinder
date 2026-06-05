@@ -51,7 +51,7 @@ You can use the core library directly within the `backend/` directory:
 from src.domain.entities.algebras.group import Group
 from src.application.use_cases.find_homomorphisms import FindHomomorphismsUseCase
 
-# Define structures: (Z4, +) and (Z2, +)
+# Defining (Z4, +) and (Z3, +)
 Z4 = Group({0, 1, 2, 3}, lambda a, b: (a + b) % 4)
 Z3 = Group({0, 1, 2}, lambda a, b: (a + b) % 3)
 
