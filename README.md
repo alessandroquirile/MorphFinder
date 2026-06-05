@@ -103,4 +103,4 @@ homomorphisms, consult the [THEORY.md](THEORY.md) file.
 
 ## System Design
 
-MorphFinder is built implementing Robert C. Martin's Clean Architecture principles to ensure that the core algebraic domain logic is decoupled from external frameworks like FastAPI and React. For a detailed breakdown of the architectural layers, the Dependency Rule, and the benefits of this design, please refer to the [SYSTEM-DESIGN.md](SYSTEM-DESIGN.md) file.
+MorphFinder is built implementing Robert C. Martin's [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) principles to ensure that the core algebraic domain logic is decoupled from external frameworks like FastAPI and React. For a detailed breakdown of the architectural layers, the Dependency Rule, and the benefits of this design, please refer to the [SYSTEM-DESIGN.md](SYSTEM-DESIGN.md) file.
