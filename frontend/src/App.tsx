@@ -2,39 +2,30 @@ import React, {useState} from 'react';
 import {Sidebar} from './components/Sidebar';
 import {MorphismCanvas} from './components/MorphismCanvas';
 import {StructureBuilder} from './components/StructureBuilder';
-import type {Homomorphism, Structure} from './types';
-import {Plus, Search} from 'lucide-react';
+import {useFindMorphisms} from './application/hooks/useFindMorphisms';
+import type {Homomorphism, Structure} from './domain/models/types';
+import {Plus, Search, Loader2} from 'lucide-react';
 
 const App: React.FC = () => {
     const [source, setSource] = useState<Structure | null>(null);
     const [target, setTarget] = useState<Structure | null>(null);
-    const [homomorphisms, setHomomorphisms] = useState<Homomorphism[]>([]);
-    const [strategy, setStrategy] = useState<string>('');
-    const [timeElapsed, setTimeElapsed] = useState<number>(0);
     const [selectedHom, setSelectedHom] = useState<Homomorphism | null>(null);
     const [showBuilder, setShowBuilder] = useState<'source' | 'target' | null>(null);
 
+    const {
+        homomorphisms,
+        strategy,
+        timeElapsed,
+        loading,
+        findMorphisms,
+    } = useFindMorphisms();
+
     const handleFindMorphisms = async () => {
-        if (!source || !target) return;
         try {
-            const response = await fetch('http://localhost:8000/v1/morphisms/find', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({source, target}),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.detail || 'Failed to find morphisms');
-            }
-
-            setHomomorphisms(data.homomorphisms);
-            setStrategy(data.strategy);
-            setTimeElapsed(data.time_elapsed);
-            if (data.homomorphisms.length > 0) {
-                setSelectedHom(data.homomorphisms[0]);
-            } else {
+            const results = await findMorphisms(source, target);
+            if (results && results.length > 0) {
+                setSelectedHom(results[0]);
+            } else if (results) {
                 alert('No homomorphisms found.');
             }
         } catch (error) {
@@ -84,11 +75,11 @@ const App: React.FC = () => {
 
                     <button
                         onClick={handleFindMorphisms}
-                        disabled={!source || !target}
+                        disabled={!source || !target || loading}
                         className="flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-300 text-white px-4 py-2 rounded-lg font-semibold transition-all shadow-sm"
                     >
-                        <Search size={18}/>
-                        <span>Discover Morphisms</span>
+                        {loading ? <Loader2 className="animate-spin" size={18}/> : <Search size={18}/>}
+                        <span>{loading ? 'Discovering...' : 'Discover Morphisms'}</span>
                     </button>
                 </header>
 

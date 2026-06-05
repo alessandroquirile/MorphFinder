@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 import ReactFlow, {Background, type Edge, MarkerType, type Node, Position,} from 'reactflow';
 import 'reactflow/dist/style.css';
-import type {Homomorphism, Structure} from '../types';
+import type {Homomorphism, Structure} from '../domain/models/types';
 
 interface MorphismCanvasProps {
     source: Structure;

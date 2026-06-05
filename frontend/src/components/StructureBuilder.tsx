@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import type {Structure} from '../types';
+import type {Structure} from '../domain/models/types';
 import {Code, Grid, Save, Upload, X} from 'lucide-react';
 
 interface StructureBuilderProps {

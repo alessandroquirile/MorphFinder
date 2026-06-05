@@ -48,20 +48,18 @@ The Web UI provides an interactive way to discover and visualize morphisms betwe
 You can use the core library directly within the `backend/` directory:
 
 ```python3
-from src.algebras.structures.group import Group
-from src.core.engine import MorphismFinder
+from src.domain.entities.algebras.group import Group
+from src.application.use_cases.find_homomorphisms import FindHomomorphismsUseCase
 
 # Define structures: (Z4, +) and (Z2, +)
 Z4 = Group({0, 1, 2, 3}, lambda a, b: (a + b) % 4)
-Z3 = Group({0, 1}, lambda a, b: (a + b) % 2)
+Z3 = Group({0, 1, 2}, lambda a, b: (a + b) % 3)
 
 # Find Hom(Z4, Z3)
-finder = MorphismFinder()
-homomorphisms = finder.find_homomorphisms(Z4, Z3)
+use_case = FindHomomorphismsUseCase()
+homomorphisms = use_case.execute(Z4, Z3)
 
-# Found 1 homomorphism(s) between given structures:
-# f: {0, 1, 2, 3} → {0, 1, 2} | 0 ↦ 0, 1 ↦ 0, 2 ↦ 0, 3 ↦ 0 
-# Properties: Trivial | Ker(f): {0, 1, 2, 3} | Im(f): {0}
+# Results
 for hom in homomorphisms:
     print(hom.pretty())
 ```
@@ -77,7 +75,7 @@ cd backend
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-uvicorn src.api.main:app --reload
+uvicorn src.infrastructure.api.main:app --reload
 ```
 
 ### Frontend
@@ -102,3 +100,7 @@ pytest
 
 For an in-depth explanation of the mathematical foundations, the CSP search algorithm, and the classification of
 homomorphisms, consult the [THEORY.md](THEORY.md) file.
+
+## System Design
+
+MorphFinder is built implementing Robert C. Martin's Clean Architecture principles to ensure that the core algebraic domain logic is decoupled from external frameworks like FastAPI and React. For a detailed breakdown of the architectural layers, the Dependency Rule, and the benefits of this design, please refer to the [SYSTEM-DESIGN.md](SYSTEM-DESIGN.md) file.

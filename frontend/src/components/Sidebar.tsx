@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import type {Homomorphism} from '../types';
+import type {Homomorphism} from '../domain/models/types';
 import {CheckCircle2, ChevronRight, HelpCircle, Layers, X} from 'lucide-react';
 
 const LEGEND = {

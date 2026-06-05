@@ -1,18 +1,18 @@
 import unittest
 
-from src.algebras.analysis.finite_ring_analyzer import FiniteRingAnalyzer
-from src.algebras.axioms.associativity import AssociativityAxiom
-from src.algebras.axioms.commutativity import CommutativityAxiom
-from src.algebras.structures.abelian_group import AbelianGroup
-from src.algebras.structures.commutative_ring import CommutativeRing
-from src.algebras.structures.field import Field
-from src.algebras.structures.group import Group
-from src.algebras.structures.magma import Magma
-from src.algebras.structures.monoid import Monoid
-from src.algebras.structures.ring import Ring
-from src.algebras.structures.semigroup import Semigroup
-from src.algebras.structures.unital_ring import UnitalRing
-from src.algebras.validation.finite_axiom_validator import FiniteAxiomValidator
+from src.domain.services.analysis.finite_ring_analyzer import FiniteRingAnalyzer
+from src.domain.entities.axioms.associativity import AssociativityAxiom
+from src.domain.entities.axioms.commutativity import CommutativityAxiom
+from src.domain.entities.algebras.abelian_group import AbelianGroup
+from src.domain.entities.algebras.commutative_ring import CommutativeRing
+from src.domain.entities.algebras.field import Field
+from src.domain.entities.algebras.group import Group
+from src.domain.entities.algebras.magma import Magma
+from src.domain.entities.algebras.monoid import Monoid
+from src.domain.entities.algebras.ring import Ring
+from src.domain.entities.algebras.semigroup import Semigroup
+from src.domain.entities.algebras.unital_ring import UnitalRing
+from src.domain.services.validators.finite_axiom_validator import FiniteAxiomValidator
 
 
 class TestAlgebrasModular(unittest.TestCase):

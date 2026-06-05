@@ -1,6 +1,6 @@
-from src.algebras.structures.group import Group
-from src.algebras.structures.ring import Ring
-from src.core.engine import MorphismFinder
+from src.domain.entities.algebras.group import Group
+from src.domain.entities.algebras.ring import Ring
+from src.application.use_cases.find_homomorphisms import FindHomomorphismsUseCase
 
 
 def test_isomorphism_z3():
@@ -9,9 +9,9 @@ def test_isomorphism_z3():
     add_op = lambda a, b: (a + b) % 3
 
     z3 = Group(elements, add_op)
-    finder = MorphismFinder(strategy_name="brute_force")
+    finder = FindHomomorphismsUseCase(strategy_name="brute_force")
 
-    homs = finder.find_homomorphisms(z3, z3)
+    homs = finder.execute(z3, z3)
 
     # We expect 2 homomorphisms: the trivial one (all to 0) and the identity.
     # Actually, for Z3 as a group, there's also f(1)=2 which is an automorphism.
@@ -31,9 +31,9 @@ def test_trivial_homomorphism_z3():
     add_op = lambda a, b: (a + b) % 3
 
     z3 = Group(elements, add_op)
-    finder = MorphismFinder(strategy_name="brute_force")
+    finder = FindHomomorphismsUseCase(strategy_name="brute_force")
 
-    homs = finder.find_homomorphisms(z3, z3)
+    homs = finder.execute(z3, z3)
     trivial_hom = next(h for h in homs if h.mapping == {0: 0, 1: 0, 2: 0})
 
     assert "Monomorphism" not in trivial_hom.properties
@@ -55,8 +55,8 @@ def test_non_injective_ring_homomorphism():
     z3_mul = lambda a, b: (a * b) % 3
     z3 = Ring(z3_elements, z3_add, z3_mul)
 
-    finder = MorphismFinder(strategy_name="brute_force")
-    homs = finder.find_homomorphisms(z6, z3)
+    finder = FindHomomorphismsUseCase(strategy_name="brute_force")
+    homs = finder.execute(z6, z3)
 
     # f(x) = x % 3 is a valid ring homomorphism
     mod3_mapping = {i: i % 3 for i in range(6)}

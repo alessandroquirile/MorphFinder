@@ -20,28 +20,50 @@ algorithms to find and classify homomorphisms.
 
 ---
 
-## 🏗 2. System Architecture (Monorepo Layout)
+## 🏗 2. System Architecture (Clean Architecture)
 
-The project is organized as a monorepo with a clear separation between the Python backend and the React frontend.
+The project follows Robert Martin's Clean Architecture principles to ensure decoupling of domain logic from external frameworks.
+
+### Backend (Python/FastAPI)
+Located in `backend/src/`, organized into four layers:
+- **Domain:**
+    - **Entities:** Algebraic structures (`algebras/`), axioms (`axioms/`), and core value objects (`carrier_set`, `homomorphism`).
+    - **Services:** Specialized logic for categorical `classification`, structural `analysis`, `validators`, and `generating_set` management.
+- **Application:** Orchestrates business rules via **Use Cases** (e.g., `FindHomomorphismsUseCase`) and manages strategy discovery via **Generators**.
+- **Adapters:** Translates data between internal models and external formats using **Controllers**, **Gateways** (Config), and **DTOs**.
+- **Infrastructure:** Framework-specific entry points like the **FastAPI** application and server configuration.
+
+### Frontend (React/TypeScript)
+Located in `frontend/src/`, organized similarly:
+- **Domain:** Pure models and type definitions.
+- **Application:** Custom Hooks encapsulating business and orchestration logic.
+- **Adapters:** Specialized API Clients for HTTP communication.
+- **UI:** Visual React components.
+
+---
 
 ```text
 MorphFinder/
-├── backend/                # Python FastAPI Backend
-│   ├── src/                # Core logic, engine, and algebras
-│   ├── tests/              # Backend test suite
-│   ├── Dockerfile          # Development-focused Dockerfile
-│   ├── requirements.txt    # Python dependencies
-│   └── main.py             # CLI entry point (example usage)
-│
-├── frontend/               # React (TypeScript) + Vite Frontend
-│   ├── src/                # UI components and types
-│   ├── Dockerfile          # Development-focused Dockerfile
-│   └── package.json        # Node.js dependencies
-│
-└── docker-compose.yaml      # Orchestration for development
+├── backend/
+│   ├── src/
+│   │   ├── domain/
+│   │   │   ├── entities/    # Algebras, Axioms, Value Objects
+│   │   │   └── services/    # Analysis, Validators, Classification
+│   │   ├── application/     # Use Cases and Generators
+│   │   ├── adapters/        # Controllers, Gateways (Config), DTOs
+│   │   └── infrastructure/  # FastAPI Entry Point
+│   └── main.py              # CLI usage example
+├── frontend/
+│   ├── src/
+│   │   ├── domain/          # Core models/types
+│   │   ├── application/     # Hooks for business logic
+│   │   ├── adapters/        # API clients
+│   │   └── components/      # React UI
+└── docker-compose.yaml
 ```
 
 ---
+
 
 ## 🧠 3. Core Algorithm: Optimized Backtracking (CSP)
 
@@ -97,7 +119,7 @@ cd backend
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-uvicorn src.api.main:app --reload
+uvicorn src.infrastructure.api.main:app --reload
 ```
 
 #### Frontend

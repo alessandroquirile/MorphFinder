@@ -1,20 +1,20 @@
 import unittest
 
-from src.algebras.structures.abelian_group import AbelianGroup
-from src.algebras.structures.commutative_ring import CommutativeRing
-from src.algebras.structures.field import Field
-from src.algebras.structures.group import Group
-from src.algebras.structures.magma import Magma
-from src.algebras.structures.monoid import Monoid
-from src.algebras.structures.ring import Ring
-from src.algebras.structures.semigroup import Semigroup
-from src.algebras.structures.unital_ring import UnitalRing
-from src.core.engine import MorphismFinder
+from src.domain.entities.algebras.abelian_group import AbelianGroup
+from src.domain.entities.algebras.commutative_ring import CommutativeRing
+from src.domain.entities.algebras.field import Field
+from src.domain.entities.algebras.group import Group
+from src.domain.entities.algebras.magma import Magma
+from src.domain.entities.algebras.monoid import Monoid
+from src.domain.entities.algebras.ring import Ring
+from src.domain.entities.algebras.semigroup import Semigroup
+from src.domain.entities.algebras.unital_ring import UnitalRing
+from src.application.use_cases.find_homomorphisms import FindHomomorphismsUseCase
 
 
 class TestHomomorphisms(unittest.TestCase):
     def setUp(self):
-        self.finder = MorphismFinder(strategy_name="greedy")
+        self.finder = FindHomomorphismsUseCase(strategy_name="greedy")
 
     def test_magmas(self):
         # Magma M1: {0, 1} with a*b = 0
@@ -22,7 +22,7 @@ class TestHomomorphisms(unittest.TestCase):
         # Magma M2: {0, 1} with a*b = b
         m2 = Magma({0, 1}, lambda a, b: b)
 
-        homs = self.finder.find_homomorphisms(m1, m2)
+        homs = self.finder.execute(m1, m2)
         # f(a*b) = f(0). f(a)*f(b) = f(a)*f(b).
         # In M2, f(a)*f(b) = f(b). So f(0) = f(b) for all b.
         # This means f must be a constant function.
@@ -37,7 +37,7 @@ class TestHomomorphisms(unittest.TestCase):
         s1 = Semigroup({0, 1}, lambda a, b: (a * b) % 2)
         # S2: {0} multiplication
         s2 = Semigroup({0}, lambda a, b: 0)
-        homs = self.finder.find_homomorphisms(s1, s2)
+        homs = self.finder.execute(s1, s2)
         self.assertEqual(len(homs), 1)
         self.assertEqual(homs[0].mapping, {0: 0, 1: 0})
 
@@ -48,7 +48,7 @@ class TestHomomorphisms(unittest.TestCase):
         z4 = Monoid({0, 1, 2, 3}, lambda a, b: (a + b) % 4)
         z3 = Monoid({0, 1, 2}, lambda a, b: (a + b) % 3)
 
-        homs = self.finder.find_homomorphisms(z4, z3)
+        homs = self.finder.execute(z4, z3)
 
         # Solo l'omomorfismo banale f(x)=0 deve esistere.
         self.assertEqual(len(homs), 1)
@@ -58,7 +58,7 @@ class TestHomomorphisms(unittest.TestCase):
         # Z2 -> Z4
         z2 = AbelianGroup({0, 1}, lambda a, b: (a + b) % 2)
         z4 = AbelianGroup({0, 1, 2, 3}, lambda a, b: (a + b) % 4)
-        homs = self.finder.find_homomorphisms(z2, z4)
+        homs = self.finder.execute(z2, z4)
         self.assertEqual(len(homs), 2)
 
     def test_non_abelian_groups(self):
@@ -74,7 +74,7 @@ class TestHomomorphisms(unittest.TestCase):
         s3 = Group(elements, s3_op)
         z2 = Group({0, 1}, lambda a, b: (a + b) % 2)
 
-        homs = self.finder.find_homomorphisms(s3, z2)
+        homs = self.finder.execute(s3, z2)
         # Homomorphisms from S3 to Z2:
         # 1. Trivial: f(x) = 0
         # 2. Sign homomorphism: f(even) = 0, f(odd) = 1
@@ -84,14 +84,14 @@ class TestHomomorphisms(unittest.TestCase):
         # Z4 -> Z2
         z4 = Ring({0, 1, 2, 3}, lambda a, b: (a + b) % 4, lambda a, b: (a * b) % 4)
         z2 = Ring({0, 1}, lambda a, b: (a + b) % 2, lambda a, b: (a * b) % 2)
-        homs = self.finder.find_homomorphisms(z4, z2)
+        homs = self.finder.execute(z4, z2)
         self.assertEqual(len(homs), 2)  # f(x)=0 and f(x)=x%2
 
     def test_unital_rings(self):
         # Z2 -> Z2 (unital)
         z2_a = UnitalRing({0, 1}, lambda a, b: (a + b) % 2, lambda a, b: (a * b) % 2)
         z2_b = UnitalRing({0, 1}, lambda a, b: (a + b) % 2, lambda a, b: (a * b) % 2)
-        homs = self.finder.find_homomorphisms(z2_a, z2_b)
+        homs = self.finder.execute(z2_a, z2_b)
         # f(1) = 1 is mandatory for UnitalRing
         # f(0) = 0 is mandatory
         # So only f(x) = x.
@@ -102,7 +102,7 @@ class TestHomomorphisms(unittest.TestCase):
         # Z4 (commutative) -> Z2 (commutative)
         z4 = CommutativeRing({0, 1, 2, 3}, lambda a, b: (a + b) % 4, lambda a, b: (a * b) % 4)
         z2 = CommutativeRing({0, 1}, lambda a, b: (a + b) % 2, lambda a, b: (a * b) % 2)
-        homs = self.finder.find_homomorphisms(z4, z2)
+        homs = self.finder.execute(z4, z2)
         # Since it's also a Ring (not necessarily Unital Ring in its __init__ logic unless inherited),
         # but let's check what our implementation does.
         # CommutativeRing inherits from Ring.
@@ -112,7 +112,7 @@ class TestHomomorphisms(unittest.TestCase):
         # F3 -> F3
         f3_a = Field({0, 1, 2}, lambda a, b: (a + b) % 3, lambda a, b: (a * b) % 3)
         f3_b = Field({0, 1, 2}, lambda a, b: (a + b) % 3, lambda a, b: (a * b) % 3)
-        homs = self.finder.find_homomorphisms(f3_a, f3_b)
+        homs = self.finder.execute(f3_a, f3_b)
         # Field inherits from UnitalRing, so f(1)=1 is mandatory.
         # This excludes f(x)=0.
         # Only identity f(x)=x exists for F3.

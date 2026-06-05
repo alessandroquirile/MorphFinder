@@ -1,7 +1,7 @@
-from src.algebras.structures.group import Group
-from src.core.engine import MorphismFinder
+from src.domain.entities.group import Group
+from src.application.use_cases.find_homomorphisms import FindHomomorphismsUseCase
 
-# Example Python API
+# Example Python API usage
 
 if __name__ == "__main__":
     # (Z4, +) and (Z3, +)
@@ -9,8 +9,8 @@ if __name__ == "__main__":
     T = Group({0, 1, 2}, lambda a, b: (a + b) % 3)
 
     # Find Hom(S,T)
-    finder = MorphismFinder()
-    homomorphisms = finder.find_homomorphisms(S, T)
+    use_case = FindHomomorphismsUseCase()
+    homomorphisms = use_case.execute(S, T)
 
     # Results
     print(f"Found {len(homomorphisms)} homomorphism(s) between given structures:")
