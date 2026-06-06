@@ -1,4 +1,4 @@
-from src.domain.entities.group import Group
+from src.domain.entities.algebras.group import Group
 from src.application.use_cases.find_homomorphisms import FindHomomorphismsUseCase
 
 # Example Python API usage

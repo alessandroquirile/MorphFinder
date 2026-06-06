@@ -12,8 +12,6 @@ The project is organized as follows:
 
 ## Quick Start
 
-### Docker
-
 The easiest way to run MorphFinder is using Docker Compose. This will start both the backend API and the frontend
 dashboard.
 
@@ -24,7 +22,11 @@ docker-compose up --build
 - Frontend UI: http://localhost:5173
 - Backend API: http://localhost:8000
 
-## Usage (Web UI)
+## Usage
+
+You can choose to use MorphFinder either from a Web UI or the Python API.
+
+### Web UI
 
 ![Web UI](assets/webui.gif)
 
@@ -35,7 +37,7 @@ The Web UI provides an interactive way to discover and visualize morphisms betwe
 
 1. Add Structures: Click "+ Add Source" or "+ Add Target" to open the Structure Builder.
 2. Define Structure:
-    - Enter the elements (e.g., `0, 1, 2, 3` or `a, b, c`).
+    - Define the elements (e.g., `0, 1, 2, 3` or `a, b, c`).
     - Define a binary operation: either fill the Cayley's Table or specify the Formula (e.g., `(a + b) % n`)
 3. Find Morphisms: Once both Source and Target are defined, click the Search icon to initiate the computation.
 4. Visualize Results:
@@ -43,7 +45,7 @@ The Web UI provides an interactive way to discover and visualize morphisms betwe
     - Click on a specific homomorphism in the sidebar to view its mapping, image, kernel, and algebraic properties in
       the central and right canvas.
 
-## Usage (Python API)
+### Python API
 
 You can use the core library directly within the `backend/` directory:
 
@@ -59,7 +61,8 @@ Z3 = Group({0, 1, 2}, lambda a, b: (a + b) % 3)
 use_case = FindHomomorphismsUseCase()
 homomorphisms = use_case.execute(Z4, Z3)
 
-# Results
+# f: {0, 1, 2, 3} → {0, 1, 2} | 0 ↦ 0, 1 ↦ 0, 2 ↦ 0, 3 ↦ 0 
+# Properties: Trivial | Ker(f): {0, 1, 2, 3} | Im(f): {0}
 for hom in homomorphisms:
     print(hom.pretty())
 ```
