@@ -87,8 +87,10 @@ Here $f(\overline{a}) = \overline{0}$ satisfies the homomorphism definition and 
 preservation ($f(\overline{0}) = \overline{0}$), confirming $f \in \mathcal{Hom}(S,T)$ as the trivial homomorphism.
 
 Testing the final assignment, $f(\overline{1}) = \overline{2}$:
-$f(\overline{0}) = f(\overline{3}) + f(\overline{1}) = f(\overline{2}) + \overline{1} + \overline{1} = \overline{1} + \overline{1} + \overline{2} = \overline{1} \ne \overline{0}$,
-leading to another contradiction.
+$h(\overline{2}) = (\overline{1}, \overline{1}) \implies f(\overline{2}) = \overline{2} + \overline{2} = \overline{1}$
+$h(\overline{3}) = (\overline{2}, \overline{1}) \implies f(\overline{3}) = \overline{1} + \overline{2} = \overline{0}$
+$h(\overline{0}) = (\overline{3}, \overline{1}) \implies f(\overline{0}) = \overline{0} + \overline{2} = \overline{2}$
+Since $f(\overline{0}) = \overline{2} \ne \overline{0}$, this leads to another contradiction.
 
 $$
 \therefore \mathcal{Hom}(S,T) = \lbrace f: \overline{a} \in \mathbb{Z}_4 \mapsto \overline{0} \in \mathbb{Z}_3 \rbrace
