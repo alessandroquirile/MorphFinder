@@ -46,9 +46,170 @@ The outermost layer is generally composed of frameworks and tools such as the Da
 - Docker: Containerization and orchestration for the full-stack environment.
 - Web UI: The React/TypeScript frontend (located in the `frontend/` directory).
 
+
 ## Benefits of this Design
 
 1. Independent of Frameworks: The algebraic engine doesn't depend on FastAPI or any other library.
 2. Testable: The domain logic can be tested without the UI, Database, or Web Server.
 3. Independent of UI: The React frontend can be swapped for a CLI or a mobile app without changing the core logic.
 4. Flexible Configuration: The way we load strategies (YAML, Env, Database) can change without affecting the application rules.
+
+## Domain Modeling and Axiom Validation
+
+### Algebra Hierarchy
+The domain layer models finite algebraic structures using object-oriented inheritance to mirror mathematical categorization:
+
+```mermaid
+classDiagram
+    AlgebraicStructure <|-- Magma
+    Magma <|-- Semigroup
+    Semigroup <|-- Monoid
+    Monoid <|-- Group
+    Group <|-- AbelianGroup
+    
+    AlgebraicStructure <|-- Ring
+    Ring <|-- CommutativeRing
+    Ring <|-- UnitalRing
+    UnitalRing <|-- Field
+    CommutativeRing <|-- Field
+
+    class AlgebraicStructure {
+        +CarrierSet carrier
+        +Tuple[BinaryOperation] operations
+        +List[Axiom] axioms
+        +validate(Validator)
+    }
+    class Magma {
+        +FiniteBinaryOperation operation
+    }
+    class Monoid {
+        +Any identity
+    }
+    class Group {
+        +Dict inverse_map
+        +inverse(a) Any
+    }
+```
+
+### Axiom Validation Design
+When a concrete algebra (e.g., `Group`) is instantiated, it automatically appends its required axioms (e.g., `AssociativityAxiom`, `IdentityExistenceAxiom`, `InverseExistenceAxiom`) and validates them against the provided operations using the `FiniteAxiomValidator` (Domain Service). 
+
+If any axiom check fails, a `ValueError` is raised, preventing the construction of mathematically invalid structures.
+
+## Generating Set Discovery (Strategy Pattern)
+
+To optimize backtracking, the search space is restricted from $O(|T|^{|S|})$ to $O(|T|^{|G|})$ by discovering a generating set $G$ of the source structure. MorphFinder employs the Strategy Pattern to decouple the discovery method from the main usecase:
+
+```mermaid
+classDiagram
+    class GeneratingSetStrategy {
+        <<abstract>>
+        +find(AlgebraicStructure) Set
+    }
+    GeneratingSetStrategy <|-- BruteForceStrategy
+    GeneratingSetStrategy <|-- GreedyPruningStrategy
+    
+    class BruteForceStrategy {
+        +find(AlgebraicStructure) Set
+    }
+    class GreedyPruningStrategy {
+        +find(AlgebraicStructure) Set
+    }
+    
+    class StrategyFactory {
+        +get_strategy(name) GeneratingSetStrategy
+    }
+```
+
+* BruteForceStrategy: Finds the globally minimal generating set by checking all subsets in increasing size.
+* GreedyPruningStrategy: Greedily accumulates elements to maximize closure size, then prunes redundant elements. Faster for larger structures but doesn't guarantee global minimality.
+
+## Sequence Diagrams
+
+### Web UI
+This flow shows how the system handles HTTP requests from the frontend, involving data conversion and DTOs.
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant Controller as MorphismController
+    participant Config as ConfigFileReader
+    participant UseCase as FindHomomorphismsUseCase
+    participant Factory as StrategyFactory
+    participant Gen as Genealogy
+    participant Pruner
+    participant Classifier
+
+    User->>Controller: HTTP Request (MorphismRequest)
+    Controller->>Controller: _build_structure(source)
+    Controller->>Controller: _build_structure(target)
+    Controller->>Config: get_strategy_name()
+    Config-->>Controller: strategy_name
+    Controller->>UseCase: FindHomomorphismsUseCase(strategy_name)
+    UseCase->>Factory: get_strategy(strategy_name)
+    Factory-->>UseCase: strategy
+    Controller->>UseCase: execute(source, target)
+    
+    activate UseCase
+    UseCase->>UseCase: Find generators using strategy
+    UseCase->>Gen: Genealogy(source, generators)
+    UseCase->>UseCase: _backtrack(0, all_to_map, base_mapping)
+    
+    activate UseCase
+    loop Recursion / Pruning
+        UseCase->>Pruner: is_assignment_possible(gen, target_val)
+        Pruner-->>UseCase: boolean
+    end
+    deactivate UseCase
+
+    opt On Leaf of Search Tree (all generators mapped)
+        UseCase->>Gen: propagate(current_mapping, target)
+        Gen-->>UseCase: full_mapping
+        UseCase->>UseCase: _is_valid_homomorphism(full_mapping)
+        opt If valid
+            UseCase->>Classifier: classify(temp_hom)
+            Classifier-->>UseCase: properties
+            UseCase->>Classifier: get_image(full_mapping)
+            Classifier-->>UseCase: image
+            UseCase->>Classifier: get_kernel(full_mapping, target)
+            Classifier-->>UseCase: kernel
+        end
+    end
+
+    UseCase-->>Controller: List[Homomorphism]
+    deactivate UseCase
+    Controller-->>User: HTTP Response (MorphismResponse)
+```
+
+### Python API
+This flow demonstrates how the application can be used directly, bypassing the Controller and DTO layers for programmatic access.
+
+```mermaid
+sequenceDiagram
+    actor Script as main.py
+    participant UseCase as FindHomomorphismsUseCase
+    participant Gen as Genealogy
+    participant Pruner
+    participant Classifier
+
+    Script->>UseCase: FindHomomorphismsUseCase()
+    Script->>UseCase: execute(S, T)
+    activate UseCase
+    UseCase->>UseCase: Find generators
+    UseCase->>Gen: Genealogy(S, generators)
+    UseCase->>UseCase: _backtrack()
+    loop Backtracking
+        UseCase->>Pruner: is_assignment_possible()
+        Pruner-->>UseCase: boolean
+        opt All mapped
+            UseCase->>Gen: propagate()
+            Gen-->>UseCase: full_mapping
+            UseCase->>Classifier: classify / get_image / get_kernel
+            Classifier-->>UseCase: metadata
+        end
+    end
+    UseCase-->>Script: List[Homomorphism]
+    deactivate UseCase
+    Script->>Script: print results
+```
+
