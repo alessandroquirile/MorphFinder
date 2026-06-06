@@ -130,7 +130,7 @@ export const StructureBuilder: React.FC<StructureBuilderProps> = ({type, initial
                                         {elements.map((rowEl, i) => (
                                             <tr key={i}>
                                                 <th className="bg-slate-50 border-r border-b border-slate-200 p-3 text-indigo-600 text-xs font-bold">{rowEl}</th>
-                                                {elements.map((colEl, j) => (
+                                                {elements.map((_, j) => (
                                                     <td key={j} className="border-r border-b border-slate-200 p-0">
                                                         <input
                                                             type="text"

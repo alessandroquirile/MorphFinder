@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Sidebar} from './components/Sidebar';
 import {MorphismCanvas} from './components/MorphismCanvas';
 import {StructureBuilder} from './components/StructureBuilder';
-import {useFindMorphisms} from './application/hooks/useFindMorphisms';
+import {useFindMorphisms} from './adapters/presenters/useFindMorphisms';
 import type {Homomorphism, Structure} from './domain/models/types';
 import {Plus, Search, Loader2} from 'lucide-react';
 

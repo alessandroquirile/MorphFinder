@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import type {Structure, Homomorphism} from '../../domain/models/types';
-import {MorphismApiClient} from '../../adapters/api/morphismApiClient';
+import {MorphismApiClient} from '../api/morphismApiClient';
 
 export const useFindMorphisms = () => {
     const [homomorphisms, setHomomorphisms] = useState<Homomorphism[]>([]);
