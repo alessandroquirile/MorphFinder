@@ -9,7 +9,7 @@ from src.domain.services.classification import Classifier
 from src.domain.entities.homomorphism import Homomorphism
 
 
-class FindHomomorphismsUseCase:
+class FindHomomorphisms:
     """Application use case for finding homomorphisms using CSP backtracking and genealogy propagation."""
 
     def __init__(self, strategy_name: str = ""):

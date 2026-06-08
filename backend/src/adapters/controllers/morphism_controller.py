@@ -4,7 +4,7 @@ from src.domain.entities.algebras.base import AlgebraicStructure
 from src.domain.entities.binary_operation import FiniteBinaryOperation
 from src.domain.entities.carrier_set import FiniteCarrierSet
 from src.adapters.dtos.schemas import MorphismRequest, MorphismResponse, HomomorphismSchema, StructureSchema
-from src.application.use_cases.find_homomorphisms import FindHomomorphismsUseCase
+from src.application.use_cases.find_homomorphisms import FindHomomorphisms
 from src.adapters.gateways.config_reader import ConfigFileReader
 
 
@@ -24,7 +24,7 @@ class MorphismController:
         strategy = ConfigFileReader.get_strategy_name()
 
         start_time = time.perf_counter()
-        use_case = FindHomomorphismsUseCase(strategy_name=strategy)
+        use_case = FindHomomorphisms(strategy_name=strategy)
         homs = use_case.execute(source_structure, target_structure)
         end_time = time.perf_counter()
 

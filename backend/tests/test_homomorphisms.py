@@ -9,12 +9,12 @@ from src.domain.entities.algebras.monoid import Monoid
 from src.domain.entities.algebras.ring import Ring
 from src.domain.entities.algebras.semigroup import Semigroup
 from src.domain.entities.algebras.unital_ring import UnitalRing
-from src.application.use_cases.find_homomorphisms import FindHomomorphismsUseCase
+from src.application.use_cases.find_homomorphisms import FindHomomorphisms
 
 
 class TestHomomorphisms(unittest.TestCase):
     def setUp(self):
-        self.finder = FindHomomorphismsUseCase(strategy_name="greedy")
+        self.finder = FindHomomorphisms(strategy_name="greedy")
 
     def test_magmas(self):
         # Magma M1: {0, 1} with a*b = 0

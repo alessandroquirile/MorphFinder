@@ -1,6 +1,6 @@
 from src.domain.entities.algebras.group import Group
 from src.domain.entities.algebras.ring import Ring
-from src.application.use_cases.find_homomorphisms import FindHomomorphismsUseCase
+from src.application.use_cases.find_homomorphisms import FindHomomorphisms
 
 
 def test_isomorphism_z3():
@@ -9,7 +9,7 @@ def test_isomorphism_z3():
     add_op = lambda a, b: (a + b) % 3
 
     z3 = Group(elements, add_op)
-    finder = FindHomomorphismsUseCase(strategy_name="brute_force")
+    finder = FindHomomorphisms(strategy_name="brute_force")
 
     homs = finder.execute(z3, z3)
 
@@ -31,7 +31,7 @@ def test_trivial_homomorphism_z3():
     add_op = lambda a, b: (a + b) % 3
 
     z3 = Group(elements, add_op)
-    finder = FindHomomorphismsUseCase(strategy_name="brute_force")
+    finder = FindHomomorphisms(strategy_name="brute_force")
 
     homs = finder.execute(z3, z3)
     trivial_hom = next(h for h in homs if h.mapping == {0: 0, 1: 0, 2: 0})
@@ -55,7 +55,7 @@ def test_non_injective_ring_homomorphism():
     z3_mul = lambda a, b: (a * b) % 3
     z3 = Ring(z3_elements, z3_add, z3_mul)
 
-    finder = FindHomomorphismsUseCase(strategy_name="brute_force")
+    finder = FindHomomorphisms(strategy_name="brute_force")
     homs = finder.execute(z6, z3)
 
     # f(x) = x % 3 is a valid ring homomorphism

@@ -51,20 +51,20 @@ You can use the core library directly within the `backend/` directory:
 
 ```python3
 from src.domain.entities.algebras.group import Group
-from src.application.use_cases.find_homomorphisms import FindHomomorphismsUseCase
+from src.application.use_cases.find_homomorphisms import FindHomomorphisms
 
 # Defining (Z4, +) and (Z3, +)
 Z4 = Group({0, 1, 2, 3}, lambda a, b: (a + b) % 4)
 Z3 = Group({0, 1, 2}, lambda a, b: (a + b) % 3)
 
-# Find Hom(Z4, Z3)
-use_case = FindHomomorphismsUseCase()
-homomorphisms = use_case.execute(Z4, Z3)
+# Finding Hom(Z4, Z3)
+finder = FindHomomorphisms()
+homomorphisms = finder.execute(Z4, Z3)
 
 # f: {0, 1, 2, 3} → {0, 1, 2} | 0 ↦ 0, 1 ↦ 0, 2 ↦ 0, 3 ↦ 0 
 # Properties: Trivial | Ker(f): {0, 1, 2, 3} | Im(f): {0}
 for hom in homomorphisms:
-    print(hom.pretty())
+   print(hom.pretty())
 ```
 
 <!--
